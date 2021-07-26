@@ -1,9 +1,9 @@
 import { Component } from 'react';
 
-export class Cards extends Component {
+export class NineAssetCards extends Component {
     render(){
         return (
-            <div>{'ui-components/cards'}</div>
+            <div>{'ui-components/NineAssetCards'}</div>
         )
     }
 }
