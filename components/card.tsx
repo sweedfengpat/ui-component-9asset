@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import Button from '@material-ui/core/Button';
+import { Button } from '@mui/material';
 export class NineAssetCards extends Component {
     render(){
         return (

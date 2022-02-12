@@ -22,3 +22,5 @@ git submodule update
 ```
 git submodule update --remote --merge
 ```
+
+sudo npm link ../../node_modules/react
