@@ -10,6 +10,7 @@ const MainContainer = styled.div({
 export interface HotActionBarProps {
     type: 'seller' | 'buyer';
     onNewRequirementRequest?: () => void;
+    onNewPropertyRequest?: () => void;
 }
 class HotActionBar extends React.Component<HotActionBarProps> {
 
@@ -20,6 +21,10 @@ class HotActionBar extends React.Component<HotActionBarProps> {
     onCreateNew = () => {
         if (this.props.onNewRequirementRequest) {
             this.props.onNewRequirementRequest();
+        }
+
+        if (this.props.onNewPropertyRequest) {
+            this.props.onNewPropertyRequest();
         }
     }
 
