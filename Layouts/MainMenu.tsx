@@ -45,9 +45,7 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
         e.preventDefault();
         const key = item.key;
         if (this.state.expanded.includes(key)) {
-            const itemIndex = this.state.expanded.indexOf(key);
-            // console.log(this.state.expanded.splice(itemIndex, 1));
-            this.setState({ expanded: this.state.expanded.splice(itemIndex, 1) });
+            this.setState({ expanded: this.state.expanded.filter(t => t !== key) });
         } else {
             const expanded = this.state.expanded;
             expanded.push(key)
@@ -57,9 +55,20 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
     };
 
     onMenuClick = (e: MouseEvent, item: MenuItem) => {
-        console.log(e);
+       
         e.preventDefault();
-        this.props.history.push(item.link || '');
+        if (item.link !== undefined) {
+            this.props.history.push(item.link || '');
+        } else {
+            const key = item.key;
+            if (this.state.expanded.includes(key)) {
+                this.setState({ expanded: this.state.expanded.filter(t => t !== key) });
+            } else {
+                const expanded = this.state.expanded;
+                expanded.push(key)
+                this.setState({ expanded: expanded });
+            }
+        }
         e.stopPropagation();
     }
 
