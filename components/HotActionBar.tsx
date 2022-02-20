@@ -38,6 +38,7 @@ class HotActionBar extends React.Component<HotActionBarProps> {
                 </>)  : (
                 <>
                     <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: '#ff5e5e' }} onClick={this.onCreateNew}>Create Property</Button>
+                    <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: 'secondary' }} onClick={this.onCreateNew}>Create Project</Button>
                 </>) }
         </MainContainer>);
     }
