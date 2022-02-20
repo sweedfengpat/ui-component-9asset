@@ -9,8 +9,12 @@ const MainContainer = styled.div({
 
 export interface HotActionBarProps {
     type: 'seller' | 'buyer';
+
     onNewRequirementRequest?: () => void;
+    onSellPropertyRequest?: () => void;
+    
     onNewPropertyRequest?: () => void;
+    onNewProjectRequest?: () => void;
 }
 class HotActionBar extends React.Component<HotActionBarProps> {
 
@@ -18,27 +22,42 @@ class HotActionBar extends React.Component<HotActionBarProps> {
         type: 'buyer'
     }
 
-    onCreateNew = () => {
+    onCreateNewRequirement = () => {
         if (this.props.onNewRequirementRequest) {
             this.props.onNewRequirementRequest();
         }
+    }
 
+    onSellProperty = () => {
+        if (this.props.onSellPropertyRequest) {
+            this.props.onSellPropertyRequest();
+        }
+    }
+
+    onCreateNewProperty = () => {
         if (this.props.onNewPropertyRequest) {
             this.props.onNewPropertyRequest();
         }
     }
+
+    onCreateNewProject = () => {
+        if (this.props.onNewProjectRequest) {
+            this.props.onNewProjectRequest();
+        }
+    }
+
 
     render () {
         return (
         <MainContainer>
             { this.props.type === 'buyer' ? (
                 <>
-                    <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: '#ff5e5e' }} onClick={this.onCreateNew}>Create Requirement</Button>
-                    <Button variant="contained" color="secondary">Sell property/service</Button>
+                    <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: '#ff5e5e' }} onClick={this.onCreateNewRequirement}>Create Requirement</Button>
+                    <Button variant="contained" color="secondary" onClick={this.onSellProperty}>Sell property/service</Button>
                 </>)  : (
                 <>
-                    <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: '#ff5e5e' }} onClick={this.onCreateNew}>Create Property</Button>
-                    <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: 'secondary' }} onClick={this.onCreateNew}>Create Project</Button>
+                    <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: '#ff5e5e' }} onClick={this.onCreateNewProperty}>Create Property</Button>
+                    <Button variant="contained" color="secondary" onClick={this.onCreateNewProject}>Create Project</Button>
                 </>) }
         </MainContainer>);
     }
