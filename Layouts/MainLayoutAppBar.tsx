@@ -76,7 +76,17 @@ const Profile  = (props: any) => {
     );
 }
 
-export class LayoutAppBar extends React.Component {
+interface IRecipeProps {
+    mainLink?: string;
+    onAppChange?: (event: any) => { };
+    onLangChanged?:  (event: any) => { };
+}
+
+interface IRecipeState {
+
+}
+
+export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     
     menubar = [
         { text: 'คอนโด', items: [

@@ -1,3 +1,3 @@
-export * from './Components/card'
-export * from './Components/healthcheck'
+export * from './components/card'
+export * from './components/healthcheck'
 export * from './Layouts/MainLayout'

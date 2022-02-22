@@ -7,7 +7,7 @@ import { Route, RouteComponentProps, RouteProps, useHistory } from "react-router
 import styled from "styled-components";
 
 // import ProfileCard from '../../src/Components/Profile/ProfileCard';
-import { ProfileCard } from '../Components/ProfileCard';
+import { ProfileCard } from '../components/ProfileCard';
 import MainMenu from "./MainMenu";
 
 import { HotMenu } from "./HotMenu";
