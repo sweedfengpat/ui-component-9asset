@@ -1,6 +1,7 @@
 import { ArrowDropDown, ArrowDropUp, Close } from "@mui/icons-material";
-import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason, autocompleteClasses, AutocompleteCloseReason, AutocompleteRenderOptionState, Button, Chip, ClickAwayListener, Dialog, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, ListItem, ListItemText, Paper, Popper, styled, TextField, Typography } from "@mui/material";
+import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason, autocompleteClasses, AutocompleteCloseReason, AutocompleteRenderOptionState, Button, Chip, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, ListItem, ListItemText, Paper, Popper, styled, TextField, Typography } from "@mui/material";
 import React from "react";
+import { LocationsSelector } from "./LocationsSelector";
 
 export interface ProjectInfo {
 
@@ -12,6 +13,7 @@ export interface ProjectSelectorProps {
     multiple: boolean;
 
     options: any[];
+    locations: any[];
 
     renderInput?: (params: any) => React.ReactNode;
 
@@ -92,7 +94,8 @@ export default class ProjectSelector extends React.Component<ProjectSelectorProp
 
     public static defaultProps = {
         disabled: false,
-        multiple: false
+        multiple: false,
+        locations: [],
     }
 
     constructor (props: ProjectSelectorProps | Readonly<ProjectSelectorProps>) {
@@ -238,10 +241,22 @@ export default class ProjectSelector extends React.Component<ProjectSelectorProp
                         />
                     </Grid>
                     <Grid item xs={12}>
-                       
+                        <LocationsSelector
+                            renderInput={(props: any) => 
+                                <TextField {...props} sx={{}} fullWidth size="small" variant="outlined" label={t('location')} />
+                            }
+                            onLocationChanged={() => {}}
+                            onLocationCategoryChanged={() => {}}
+                            categories={this.props.locations}
+                            branches={[]}
+                        />
                     </Grid>
                 </Grid>
             </DialogContent>
+            <DialogActions sx={{ display: 'flex', justifyContent: 'flex-end', paddingX: '20px' }}>
+                <Button variant="outlined" size="small" onClick={() => { this.setState({ openNewProjectDialog: false }) }}>Cancel</Button>
+                <Button variant="contained" size="small" disableElevation>Select</Button>
+            </DialogActions>
         </Dialog>
         );
     }
