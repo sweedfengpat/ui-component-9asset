@@ -1,5 +1,5 @@
 import React from 'react';
-import { Autocomplete, TextField, Box } from "@mui/material";
+import { Autocomplete, TextField, Box, Theme, SxProps, AutocompleteRenderInputParams, AutocompleteChangeReason, AutocompleteChangeDetails } from "@mui/material";
 
 const countries = [
     { code: 'AD', label: 'Andorra', phone: '376' },
@@ -252,26 +252,46 @@ const countries = [
     { code: 'ZW', label: 'Zimbabwe', phone: '263' },
 ];
 
-interface CountryType {
+export interface CountryType {
     code: string;
     label: string;
     phone: string;
 }
 
-export const CountryAutoComplete = () => {
+export const getCountryByCode = (code: string): CountryType | undefined => {
+    return countries.find(c => c.code === code);
+}
+
+export interface CountryAutoCompleteProps {
+    value?: CountryType | undefined;
+    sx?: SxProps<Theme>;
+    defaultCountry?: string | undefined;
+
+    renderInput?: (params: AutocompleteRenderInputParams) => React.ReactNode;
+
+    onChange?: (
+        event: React.SyntheticEvent,
+        value: CountryType | null,
+        reason: AutocompleteChangeReason,
+        details?: AutocompleteChangeDetails<CountryType>,
+    ) => void;
+}
+
+export const CountryAutoComplete = (props: CountryAutoCompleteProps) => {
+
     const countryToFlag = (isoCode: string) => {
         return typeof String.fromCodePoint !== 'undefined'
-          ? isoCode
-              .toUpperCase()
-              .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-          : isoCode;
+            ? isoCode
+                .toUpperCase()
+                .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
+            : isoCode;
     }
 
     return (
     <Autocomplete
+        {...props}
         disablePortal
         options={countries as CountryType[]}
-        sx={{ width: 300 }}
         size="small"
         autoHighlight
         getOptionLabel={(option) => option.label}
@@ -281,17 +301,22 @@ export const CountryAutoComplete = () => {
             </Box>
         )}
         defaultValue={{ label: "Thailand", code: 'TH', phone: '66'}}
-        renderInput={(params) => (
-            <TextField
-                {...params}
-                label='Country'
-                variant="outlined"
-                inputProps={{
-                    ...params.inputProps,
-                    autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
-            />
-        )}
+        renderInput={(params) => {
+            return props && props.renderInput 
+            ? props?.renderInput(params)
+            : (
+                <TextField
+                    {...params}
+                    label='Country'
+                    variant="outlined"
+                    inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                />
+            );
+        }}
+        onChange={(e, v, r, d) => { props.onChange && props.onChange(e, v, r, d) }}
     />);
 }
 
