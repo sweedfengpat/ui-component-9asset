@@ -1,7 +1,21 @@
-import { AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, Container, Grid, Button, Menu, MenuItem, Avatar, IconButton, Select, Badge } from "@mui/material";
-import { KeyboardArrowDown, Notifications } from "@mui/icons-material";
+import { AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, 
+    Container, Grid, Button, Menu, MenuItem, Avatar, IconButton, Select, Badge,
+    Paper
+} from "@mui/material";
+import { KeyboardArrowDown, 
+    Notifications,
+    Apps,
+    Home as HomeIcon
+ } from "@mui/icons-material";
+
+import { 
+    green,
+    red,
+    blue
+} from '@mui/material/colors';
 import React from "react";
 import { HotMenu } from "./HotMenu";
+import axios from 'axios';
 
 const Profile  = (props: any) => {
     // const history = useHistory();
@@ -51,16 +65,23 @@ const Profile  = (props: any) => {
     const renderMenu = (
         <Menu
           anchorEl={anchorEl}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           keepMounted
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={isMenuOpen}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>
-          <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-          <MenuItem onClick={handleLogin}>Login</MenuItem>
+          {
+
+            props.isAuth === 'true' ?            
+            [
+              <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
+              <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            ]
+          :
+            <MenuItem onClick={handleLogin}>Login</MenuItem>
+          }
         </Menu>
     );
 
@@ -77,17 +98,20 @@ const Profile  = (props: any) => {
 }
 
 interface IRecipeProps {
+    userServiceUrl: string;
     mainLink?: string;
     onAppChange?: (event: any) => { };
     onLangChanged?:  (event: any) => { };
 }
 
 interface IRecipeState {
-
+    appMenuEl: any;
+    isAppMenuOpen: boolean;
+    selectLang: string;
+    isAuth: boolean;
 }
 
 export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
-    
     menubar = [
         { text: 'คอนโด', items: [
             { text: 'คอนโดโครงการ', link: '/โครงการ/คอนโด' },
@@ -117,14 +141,32 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         if(logoPath) this.logoPath = logoPath;
 
         if(menu) this.menubar = menu;
+
+        this.state = {
+            appMenuEl: null,
+            isAppMenuOpen: false,
+            selectLang: 'th',
+            isAuth: false
+        }
     }
    
     async componentDidMount () {
         const token = localStorage.getItem('9asset_token');
         console.log('component did mount: ', token);
-
-        // const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
-        // localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+        if(!token) {
+            this.setState({
+                ...this.state,
+                isAuth: false
+            })
+        } else {
+            // const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
+            // const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
+            // localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+            this.setState({
+                ...this.state,
+                isAuth: true
+            })
+        }
     }
 
     renderMenu () {
@@ -133,7 +175,33 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         return menu;
     }
 
+    handelMenuApps(event: any) {
+        this.setState({ ...this.state,
+            appMenuEl: event.currentTarget,
+            isAppMenuOpen: true
+        });
+    }
+
+    handleAppMenuClose() {
+        this.setState({ ...this.state,
+            appMenuEl: null,
+            isAppMenuOpen: false
+        }); 
+    }
+
+    onLangChange(e: any) {
+
+        this.setState({
+            ...this.state,
+            selectLang: e.target.value
+        })
+        
+        if(this.props && this.props.onLangChanged) {
+            this.props.onLangChanged(e);
+        }
+    }
     render() {
+
         return (
             <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
                 <Toolbar>
@@ -172,27 +240,24 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     <div style={{ flexGrow: 1 }}></div>
                     {/* { this.renderSellerBuyerButtons() } */}
                     <Select variant="outlined" size="small" 
-                        inputProps={{ margin: 'dense' }} value={'home'} 
-                        onChange={this.props.onAppChange} >
-                        <MenuItem value={'home'}>Home</MenuItem>
-                        <MenuItem value={'buyer'}>Seller Center</MenuItem>
-                        <MenuItem value={'seller'}>Buyer Center</MenuItem>
-                    </Select>
-
-                    <Select variant="outlined" size="small" 
-                        inputProps={{ margin: 'dense' }} value={'en'} 
-                        onChange={this.props.onLangChanged} >
+                        inputProps={{ margin: 'dense' }} value={this.state.selectLang} 
+                        onChange={this.onLangChange.bind(this)} >
                         <MenuItem value={'en'}>EN</MenuItem>
                         <MenuItem value={'th'}>TH</MenuItem>
                         <MenuItem value={'cn'}>CN</MenuItem>
                     </Select>
-                    <IconButton aria-label="show 17 new notifications" color="inherit">
+                    <IconButton color="inherit" onClick={this.handelMenuApps.bind(this)} >
+                        <Badge badgeContent={0} color="error">
+                            <Apps />
+                        </Badge>
+                    </IconButton>
+                    {/* <IconButton aria-label="show 17 new notifications" color="inherit">
                         <Badge badgeContent={17} color="error">
                             <Notifications />
                         </Badge>
-                    </IconButton>
+                    </IconButton> */}
                     <div style={{ display: 'flex' }}>
-                        <Profile {...this.props} />
+                        <Profile {...this.props} isAuth={this.state.isAuth} />
                     </div>
                 </Toolbar>
                 <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} justifyContent='center' alignItems='center'>
@@ -200,6 +265,46 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         { this.renderMenu() }
                     </Grid>
                 </Grid>
+                <Menu
+                    id="menu-appbar"
+                    anchorEl={this.state.appMenuEl}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={Boolean(this.state.isAppMenuOpen)}
+                    onClose={this.handleAppMenuClose.bind(this)}
+                >
+                    <Grid container spacing={2} style={{paddingTop: '0px', paddingBottom: '0px'}}>
+                        <Grid item xs={12}>
+                            <Grid container >
+                                <Grid key= {1} item style={{margin: '10px'}}>
+                                    <IconButton aria-label="Home" >
+                                        <HomeIcon fontSize="large" style={{ color: green[500] }}/>
+                                    </IconButton>
+                                    <div style={{textAlign: 'center'}}>Home</div>
+                                </Grid>
+                                <Grid key= {2} item style={{margin: '10px'}}>
+                                    <IconButton aria-label="buyer" >
+                                        <HomeIcon fontSize="large" style={{ color: red[500] }}/>
+                                    </IconButton>
+                                    <div style={{textAlign: 'center'}}>Buyer</div>
+                                </Grid>
+                                <Grid key= {3} item style={{margin: '10px'}}>
+                                    <IconButton aria-label="seller" >
+                                        <HomeIcon fontSize="large" style={{ color: blue[500] }}/>
+                                    </IconButton>
+                                    <div style={{textAlign: 'center'}}>Seller</div>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Menu>
             </AppBar>
         );
     }
