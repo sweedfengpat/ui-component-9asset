@@ -1,6 +1,6 @@
 import { AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, 
     Container, Grid, Button, Menu, MenuItem, Avatar, IconButton, Select, Badge,
-    Paper
+    Paper, Autocomplete, TextField
 } from "@mui/material";
 import { KeyboardArrowDown, 
     Notifications,
@@ -16,6 +16,10 @@ import {
 import React from "react";
 import { HotMenu } from "./HotMenu";
 import axios from 'axios';
+import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect'
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import SearchIcon from '@mui/icons-material/Search';
 
 const Profile  = (props: any) => {
     // const history = useHistory();
@@ -102,6 +106,8 @@ interface IRecipeProps {
     mainLink?: string;
     onAppChange?: (event: any) => { };
     onLangChanged?:  (event: any) => { };
+    onMobileFilterClick:  (event: any) => { };
+    onMobileSearchClick:  (event: any) => { };
 }
 
 interface IRecipeState {
@@ -200,6 +206,19 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
             this.props.onLangChanged(e);
         }
     }
+
+    onMobileFilterClick(e: any) {
+        if(this.props.onMobileFilterClick) {
+            this.props.onMobileFilterClick(e);
+        }
+    }
+
+    onMobileSearchClick(e: any) {
+        if(this.props.onMobileSearchClick) {
+            this.props.onMobileSearchClick(e);
+        }
+    }
+
     render() {
 
         return (
@@ -209,9 +228,9 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         <img src={this.logoPath} style={{ height: '40px' }} />
                     </a>
                     
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                    {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                     
-                    </Box>
+                    </Box> */}
                     <Button
                         color="primary"
                         style={{ color: '#f4762a', marginLeft: '10px', textTransform: 'none' }}
@@ -219,24 +238,26 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     >
                         Thailand
                     </Button>
-                    <Button
-                        color="info"
-                        style={{ color: '#5e5e5e'}}
-                    >
-                        โครงการ
-                    </Button>
-                    <Button
-                        color="primary"
-                        style={{ color: '#5e5e5e' }}
-                    >
-                        ขาย
-                    </Button>
-                    <Button
-                        color="primary"
-                        style={{ color: '#5e5e5e' }}
-                    >
-                        เช่า
-                    </Button>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
+                        <Button
+                            color="info"
+                            style={{ color: '#5e5e5e'}}
+                        >
+                            โครงการ
+                        </Button>
+                        <Button
+                            color="primary"
+                            style={{ color: '#5e5e5e' }}
+                        >
+                            ขาย
+                        </Button>
+                        <Button
+                            color="primary"
+                            style={{ color: '#5e5e5e' }}
+                        >
+                            เช่า
+                        </Button>
+                    </Box>
                     <div style={{ flexGrow: 1 }}></div>
                     {/* { this.renderSellerBuyerButtons() } */}
                     <Select variant="outlined" size="small" 
@@ -260,9 +281,23 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         <Profile {...this.props} isAuth={this.state.isAuth} />
                     </div>
                 </Toolbar>
-                <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} justifyContent='center' alignItems='center'>
-                    <Grid item maxWidth={'900px'} >
+                <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} 
+                    justifyContent='center' alignItems='center'   
+                >
+                    <Grid item maxWidth={'900px'} sx={{display: { xs: 'none', sm: 'none', md: 'flex' } }} >
                         { this.renderMenu() }
+                    </Grid>
+                    <Grid item width={"100%"} sx={{display: { xs: 'flex', sm: 'flex', md: 'none' } }} >
+                        <Grid container justifyContent="space-between" direction="row"  alignItems="center" >
+                            <Grid item xs={12} md={12} style={{paddingLeft: '10px', paddingRight: '10px'}}>
+                                <Button size="small" variant="outlined" startIcon={<SearchIcon />}
+                                    sx={{width: '100%', bgcolor: 'white', color: 'black', textAlign: 'left',
+                                        justifyContent: 'left'
+                                    }}
+                                    onClick={this.onMobileSearchClick.bind(this)} 
+                                >Search</Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Menu
