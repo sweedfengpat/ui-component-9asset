@@ -59,7 +59,7 @@ export class YearPicker extends React.Component<YearPickerProps, YearPickerState
             onOpen={() => this.setState({ open: true })}
             onClose={() => this.setState({ open: false })}
             value={this.state.value}
-            onChange={(e, v) => this.setState({ value: v })}
+            onChange={(e, v) => this.setState({ value: v as   { label: string, value: string } | null })}
         />
         );
     }

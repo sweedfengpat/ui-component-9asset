@@ -298,26 +298,26 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
                                         <div style={{ display: 'table', padding: '10px' }}>
                                             <div style={{ display: 'table-row', padding: '10px', marginBottom: '10px' }}>
                                                 <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px' }}>
-                                                    <span style={{ fontWeight: '600' }}>Sell</span>
+                                                    <span style={{ fontWeight: 600 }}>Sell</span>
                                                 </div>
                                                 <div style={{ display: 'table-cell' }}>
-                                                    <span style={{ fontWeight: '400', color: 'rgb(244, 118, 42)' }}>9,000,000 บาท</span>
+                                                    <span style={{ fontWeight: 400 , color: 'rgb(244, 118, 42)' }}>9,000,000 บาท</span>
                                                 </div>
                                             </div>
                                             <div style={{ display: 'table-row', padding: '10px' }}>
                                                 <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px' }}>
-                                                    <span style={{ fontWeight: '600' }}>Rent</span>
+                                                    <span style={{ fontWeight: 600 }}>Rent</span>
                                                 </div>
                                                 <div style={{ display: 'table-cell' }}>
-                                                    <span style={{ fontWeight: '400', color: 'rgb(244, 118, 42)' }}>350,000 บาท</span>
+                                                    <span style={{ fontWeight: 400, color: 'rgb(244, 118, 42)' }}>350,000 บาท</span>
                                                 </div>
                                             </div>
                                             <div style={{ display: 'table-row', padding: '10px' }}>
                                                 <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px' }}>
-                                                    <span style={{ fontWeight: '600' }}>Lease</span>
+                                                    <span style={{ fontWeight: 600 }}>Lease</span>
                                                 </div>
                                                 <div style={{ display: 'table-cell' }}>
-                                                    <span style={{ fontWeight: '400', color: 'rgb(244, 118, 42)' }}>5,000,000 บาท</span>
+                                                    <span style={{ fontWeight: 400, color: 'rgb(244, 118, 42)' }}>5,000,000 บาท</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -343,15 +343,15 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
                                 <DetailContainer>
                                     <CardContent sx={{ height: '205px', padding: '5px 8px 10px 8px' }}>
                                         <div style={{ display: 'block' }}>
-                                            <span style={{ color: '#f4762a', fontWeight: '800', fontSize: '1.2em' }}>ขาย คอนโด : CM03596 ขายดาวน์ ขาดทุน คอนโด มอนเต้ พระราม 9</span>
+                                            <span style={{ color: '#f4762a', fontWeight: 800, fontSize: '1.2em' }}>ขาย คอนโด : CM03596 ขายดาวน์ ขาดทุน คอนโด มอนเต้ พระราม 9</span>
                                         </div>
                                         <div style={{ display: 'block' }}>
-                                            <span style={{ color: '#000000', fontWeight: '400', fontSize: '.8em' }}>813 รามคำแหง 12 ถนนรามคำแหง จ.กรุงเทพฯ</span>
+                                            <span style={{ color: '#000000', fontWeight: 400, fontSize: '.8em' }}>813 รามคำแหง 12 ถนนรามคำแหง จ.กรุงเทพฯ</span>
                                         </div>
                                     </CardContent>
                                     <CardActions sx={{ display: 'flex', justifyContent: 'space-between', padding: '2px 4px 4px 4px', m: 0, height: '24px' }}>
                                         <Box>
-                                            <p style={{ fontSize: '.9em'}}>Status: <span style={{ color: 'green', fontWeight: '600' }}>Online</span></p>
+                                            <p style={{ fontSize: '.9em'}}>Status: <span style={{ color: 'green', fontWeight: 600 }}>Online</span></p>
                                         </Box>  
                                         <Box>
                                         <Button

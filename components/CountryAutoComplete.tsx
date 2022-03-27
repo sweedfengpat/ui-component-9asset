@@ -316,7 +316,7 @@ export const CountryAutoComplete = (props: CountryAutoCompleteProps) => {
                 />
             );
         }}
-        onChange={(e, v, r, d) => { props.onChange && props.onChange(e, v, r, d) }}
+        onChange={(e, v, r, d) => { props.onChange && props.onChange(e, v as CountryType, r, d) }}
     />);
 }
 
