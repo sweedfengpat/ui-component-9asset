@@ -105,6 +105,7 @@ const Price = (props: { type: string, value: number | undefined, unit: string}) 
 
 export interface PropertyCardProps extends WithTranslationProps {
     info: any;
+    type: 'projects' | 'properties';
     onPriceChangeRequest: (id: string) => void;
     onEditRequest?: (id: string) => void;
     onDeleteRequest?: (id: string) => void;
@@ -282,7 +283,7 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
         const cover = (this.props.info.pictures as any[]).find(i => i.isCover === true);
         return <ImageListItem
                 component={'img'}
-                src={ cover ? `${process.env.REACT_APP_SELLER_SERVICE_API_BASE}/properties/${this.props.info.id}/image/${cover.url || '' }` : defaultImage }
+                src={ cover ? `${process.env.REACT_APP_SELLER_SERVICE_API_BASE}/${this.props.type}/${this.props.info.id}/image/${cover.url || '' }` : defaultImage }
                 sx={{ width: 'auto', maxWidth: '100%', maxHeight: '250px', objectFit: 'cover' }}
             />;
     }

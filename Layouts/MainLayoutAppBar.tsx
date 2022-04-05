@@ -16,7 +16,7 @@ import {
 import React from "react";
 import { HotMenu } from "./HotMenu";
 import axios from 'axios';
-import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect'
+import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
