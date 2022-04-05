@@ -9,6 +9,7 @@ export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
 
     return (
     <NumberFormat
+        fullWidth={ (props as TextFieldProps).fullWidth }
         id={props.id}
         name={props.name}
         label={props.label}

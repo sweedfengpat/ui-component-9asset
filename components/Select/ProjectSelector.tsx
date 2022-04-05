@@ -1,24 +1,19 @@
 import { ArrowDropDown, ArrowDropUp, Close } from "@mui/icons-material";
-import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason, autocompleteClasses, AutocompleteCloseReason, AutocompleteRenderOptionState, Button, Chip, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, ListItem, ListItemText, Paper, Popper, styled, TextField, Typography } from "@mui/material";
+import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason, autocompleteClasses, AutocompleteCloseReason, AutocompleteRenderInputParams, AutocompleteRenderOptionState, Button, CircularProgress, ClickAwayListener, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, InputAdornment, InputLabel, ListItem, ListItemText, Paper, Popper, styled, TextField, Typography } from "@mui/material";
 import React from "react";
-import { LocationsSelector } from "./LocationsSelector";
-
-export interface ProjectInfo {
-
-}
+import { ProjectInfo } from "../../types";
 
 export interface ProjectSelectorProps {
     id?: string;
     disabled: boolean;
     multiple: boolean;
 
-    options: any[];
-    locations: any[];
+    options: ProjectInfo[];
 
     renderInput?: (params: any) => React.ReactNode;
 
     onOpen?: (event: React.FocusEvent) => void;
-    onAddNewItemRequested?: () => void;
+    onAddNewItemRequested?: (project: ProjectInfo | undefined) => void;
     onClose?: (event: React.ChangeEvent<{}>, reason: AutocompleteCloseReason) => void;
     onChange?: (
         event: React.ChangeEvent<{}>,
@@ -90,7 +85,7 @@ const PopperComponent = (props: PopperComponentProps) => {
     return <StyledAutocompletePopper {...other} />;
 }
 
-export default class ProjectSelector extends React.Component<ProjectSelectorProps, ProjectSelectorState> {
+export class ProjectSelector extends React.Component<ProjectSelectorProps, ProjectSelectorState> {
 
     public static defaultProps = {
         disabled: false,
@@ -152,12 +147,16 @@ export default class ProjectSelector extends React.Component<ProjectSelectorProp
         this.setState({ inputAnchorEl: anchorEl as HTMLElement });
     }
 
-    handleAddNewItemRequest = () => {
+    handleAddNewItem = () => {
         this.setState({ openNewProjectDialog: true, openPopper: false }, () => {
-            if (this.props.onAddNewItemRequested) {
-                this.props.onAddNewItemRequested();
-            }
+        
         });
+    }
+
+    handleAddNewItemRequested = () => {
+        if (this.props.onAddNewItemRequested) {
+
+        }
     }
 
     handleClickAway = () => {
@@ -166,7 +165,6 @@ export default class ProjectSelector extends React.Component<ProjectSelectorProp
 
     handleChange = (event: React.ChangeEvent<{}>, value: string | string[] | object | object[] | null, reason: AutocompleteChangeReason, detail?: AutocompleteChangeDetails<any>) => {
         this.setState({ selected: Array.isArray(value) ? value : [value] });
-        console.log(value);
         if (this.props.onChange) {
             this.props.onChange(event, value, reason, detail);
         }
@@ -241,21 +239,66 @@ export default class ProjectSelector extends React.Component<ProjectSelectorProp
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <LocationsSelector
-                            renderInput={(props: any) => 
-                                <TextField {...props} sx={{}} fullWidth size="small" variant="outlined" label={t('location')} />
-                            }
-                            onLocationChanged={() => {}}
-                            onLocationCategoryChanged={() => {}}
-                            categories={this.props.locations}
-                            branches={[]}
+                        <Divider />
+                        <InputLabel style={{ marginTop: '15px'}}>Location</InputLabel>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Autocomplete
+                            renderInput={(params: AutocompleteRenderInputParams): React.ReactNode =>
+                                <TextField {...params} fullWidth size="small" label="Province"  />
+                            } 
+                            options={[]}
                         />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Autocomplete
+                            renderInput={(params: AutocompleteRenderInputParams): React.ReactNode =>
+                                <TextField {...params} fullWidth size="small" label="District"  />
+                            } 
+                            options={[]}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Autocomplete
+                            renderInput={(params: AutocompleteRenderInputParams): React.ReactNode =>
+                                <TextField {...params} fullWidth size="small" label="Sundistrict"  />
+                            } 
+                            options={[]}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Autocomplete
+                            renderInput={(params: AutocompleteRenderInputParams): React.ReactNode =>
+                                <TextField {...params} fullWidth size="small" label="Road"  />
+                            } 
+                            options={[]}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Autocomplete
+                            renderInput={(params: AutocompleteRenderInputParams): React.ReactNode =>
+                                <TextField {...params} fullWidth size="small" label="Address No."  />
+                            } 
+                            options={[]}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField fullWidth size="small" label="Postal Code"  />
                     </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions sx={{ display: 'flex', justifyContent: 'flex-end', paddingX: '20px' }}>
-                <Button variant="outlined" size="small" onClick={() => { this.setState({ openNewProjectDialog: false }) }}>Cancel</Button>
-                <Button variant="contained" size="small" disableElevation>Select</Button>
+                <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => { this.setState({ openNewProjectDialog: false }) }}
+                >Cancel</Button>
+                <Button
+                    variant="contained"
+                    size="small"
+                    disableElevation
+                    onClick={() => this.handleAddNewItemRequested}
+                >Add</Button>
             </DialogActions>
         </Dialog>
         );
@@ -275,6 +318,7 @@ export default class ProjectSelector extends React.Component<ProjectSelectorProp
     }
 
     renderPopper = () => {
+        const loading = false;
         return (
         <StyledPopper
             open={ this.state.openPopper }
@@ -295,8 +339,17 @@ export default class ProjectSelector extends React.Component<ProjectSelectorProp
                             label="Project"
                             placeholder="Project Name"
                             id="select-project-name-text"
+                            InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                    <React.Fragment>
+                                    { loading ? <CircularProgress color="inherit" size={20} /> : params.InputProps.endAdornment }
+                                    </React.Fragment>
+                                )
+                            }}
                         />)
                     }
+                    loading={loading}
                     disablePortal={true}
                     options={this.props.options}
                     renderOption={ (props: any, option: any, state: AutocompleteRenderOptionState) => {
@@ -313,6 +366,7 @@ export default class ProjectSelector extends React.Component<ProjectSelectorProp
                         </ListItem>
                         );
                     }}
+                    filterOptions={(x) => x}
                     getOptionLabel={ (option: any) => `${option.project.name.TH}` }
                     PaperComponent={({children}) => <Paper elevation={0} >{children}</Paper>}
                     disableCloseOnSelect={ this.props.multiple || false }
@@ -326,7 +380,7 @@ export default class ProjectSelector extends React.Component<ProjectSelectorProp
                             size="small"
                             variant="outlined"
                             color="primary"
-                            onMouseDown={this.handleAddNewItemRequest}
+                            onMouseDown={this.handleAddNewItem}
                             sx={{ marginLeft: '10px', textTransform: 'capitalize' }} 
                         >
                             { 'Add a new item' }

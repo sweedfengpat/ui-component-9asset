@@ -1,8 +1,11 @@
 import React from "react";
-import { Grid, Paper, Box, IconButton, Button, styled, MenuProps, Menu, MenuItem, alpha, ImageListItem, PaperProps, Card, CardContent, CardActions, Chip, Typography, Dialog, Slide, DialogTitle, DialogContent, DialogActions, TextField, InputAdornment, Checkbox, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { Grid, Paper, Box, IconButton, Button, styled, MenuProps, Menu, MenuItem, alpha, ImageListItem, PaperProps, Card, CardContent, CardActions, Chip, Typography, Dialog, Slide, DialogTitle, DialogContent, DialogActions, TextField, InputAdornment, Checkbox, List, ListItem, ListItemButton, ListItemIcon, ListItemText, DialogContentText } from "@mui/material";
 import { WithTranslationProps } from "react-i18next";
-import { AutoGraph, Ballot, CalendarTodayOutlined, DeleteForeverOutlined, Edit, EditOutlined, KeyboardArrowDown, PriceChangeOutlined, RocketLaunch, VisibilityOffOutlined } from "@mui/icons-material";
+import { AutoGraph, Ballot, CalendarTodayOutlined, DeleteForeverOutlined, Edit, EditOutlined, HighlightOffOutlined, KeyboardArrowDown, PriceChangeOutlined, RocketLaunch, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 import { TransitionProps } from "@mui/material/transitions";
+import defaultImage from "../assets/images/no_image.jpeg";
+import { PostStatus, Status } from "../../consts";
+import dayjs from "dayjs";
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -67,7 +70,7 @@ const DetailContainer = styled((props: PaperProps) => (
     
 }));
 
-const Transition = React.forwardRef(function Transition(
+export const PriceDialogTransition = React.forwardRef(function Transition(
     props: TransitionProps & {
       children: React.ReactElement<any, any>;
     },
@@ -76,19 +79,54 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export interface PropertyCardProps extends WithTranslationProps {
+const ConfirmDialogTransition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+      children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+    ) {
+        return <Slide direction="up" ref={ref} {...props} />;
+    }
+);
 
+const Price = (props: { type: string, value: number | undefined, unit: string}) => {
+    return (
+    <div style={{ display: 'table-row', padding: '10px', marginBottom: '10px' }}>
+        <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px'}}>
+            <span style={{ fontWeight: '600' }}>{props.type}</span>
+        </div>
+        <div style={{ display: 'table-cell', paddingLeft: '10px' }}>
+            <span style={{ fontWeight: '400', color: 'rgb(244, 118, 42)'}}>{ props.value || '-' }</span>
+            <span style={{ fontWeight: '400', fontSize: '0.9em', marginLeft: '5px' }}>{props.unit}</span>
+        </div>
+    </div>
+    );
 }
 
+export interface PropertyCardProps extends WithTranslationProps {
+    info: any;
+    onPriceChangeRequest: (id: string) => void;
+    onEditRequest?: (id: string) => void;
+    onDeleteRequest?: (id: string) => void;
+    onOnlineRequest?: (id: string) => void;
+    onOfflineRequest?: (id: string) => void;
+    onViewRequest?: (id: string) => void;
+
+    onBoostingRequest?: (id: string) => void;
+    onStopBoostingRequest?: (id: string) => void;
+} 
+
 export interface PropertyCardStates {
-    anchorEl: HTMLElement | null,
-    priceDialog: boolean;
+    anchorEl: HTMLElement | null;
+    openConfirmDialog: boolean;
+    confirmDialogMode: 'Delete' | 'Offline' | 'Online' | null;
 }
 
 export default class PropertyCard extends React.Component<PropertyCardProps, PropertyCardStates> {
     state = {
         anchorEl: null,
-        priceDialog: false
+        openConfirmDialog: false,
+        confirmDialogMode: null
     }
 
     handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -96,7 +134,9 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
     }
 
     handlePriceChange = (event: React.MouseEvent<HTMLElement>) => {
-        this.setState({ priceDialog: true });
+        if (this.props.onPriceChangeRequest) {
+            this.props.onPriceChangeRequest(this.props.info.id);
+        }
     }
 
     handleClose = () => {
@@ -108,138 +148,118 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
         this.handleClose()
     }
 
+    handleStopBoost = () => {
+        
+        this.handleClose()
+    }
+
     handleBoosting = () => {
         
         this.handleClose()
     }
 
     handleEdit = () => {
-        
-        this.handleClose()
+        this.handleClose();
+        if (this.props.onEditRequest) {
+            this.props.onEditRequest(this.props.info.id);
+        }
     }
 
     handleView = () => {
         this.handleClose()
+        if (this.props.onViewRequest) {
+            this.props.onViewRequest(this.props.info.id);
+        }
     }
 
     handleOffline = () => {
-        this.handleClose()
+        this.handleClose();
+        this.setState({ openConfirmDialog: true, confirmDialogMode: 'Offline' });
+    }
+
+    handleOnline = () => {
+        this.handleClose();
+        this.setState({ openConfirmDialog: true, confirmDialogMode: 'Online' });
     }
 
     handleDelete = () => {
-        this.handleClose()
+        this.handleClose();
+        this.setState({ openConfirmDialog: true, confirmDialogMode: 'Delete' });
     }
 
-    renderPriceDialog = () => {
-        return (
-        <Dialog
-            open={this.state.priceDialog}
-            TransitionComponent={Transition}
-            keepMounted
-            onClose={() => { this.setState({ priceDialog: false }) }}
-            sx={{ p: 1 }}
-        >
-            <DialogTitle sx={{ padding: '10px' }}><Typography variant="h4">Edit Price</Typography></DialogTitle>
-            <DialogContent>
-                <List sx={{ width: '100%', maxWidth: '400px' }}>
-                <ListItem
-                        disablePadding
-                    >
-                        <ListItemIcon sx={{ width: '42px' }}>
-                            <Checkbox
-                                edge="start"
-                                // checked={checked.indexOf(value) !== -1}
-                                tabIndex={-1}
-                                disableRipple
-                                sx={{ margin: 0 }}
-                                // inputProps={{ 'aria-labelledby': labelId }}
-                            />
-                        </ListItemIcon>
-                        <TextField 
-                            label="Sell"
-                            fullWidth
-                            size="small"
-                            margin="dense"
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end"><span style={{ fontSize: '0.7em' }}>THB</span></InputAdornment>
-                            }}
-                        />
-                    </ListItem>
-                    <ListItem
-                        disablePadding
-                    >
-                        <ListItemIcon sx={{ width: '42px' }}>
-                            <Checkbox
-                                edge="start"
-                                // checked={checked.indexOf(value) !== -1}
-                                tabIndex={-1}
-                                disableRipple
-                                sx={{ margin: 0 }}
-                                // inputProps={{ 'aria-labelledby': labelId }}
-                            />
-                        </ListItemIcon>
-                        <TextField 
-                            label="Rent"
-                            fullWidth
-                            size="small"
-                            margin="dense"
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end"><span style={{ fontSize: '0.7em' }}>THB</span></InputAdornment>
-                            }}
-                        />
-                    </ListItem>
-                </List>
-                {/* <Grid container spacing={2} rowSpacing={1} sx={{ width: '400px' }}>
-                    <Grid item xs="auto" sx={{ p: 0 }}>
-                        <Checkbox value={true} sx={{ }}></Checkbox>
-                    </Grid>
-                    <Grid item xs>
-                        
-                        
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField 
-                            label="Rent"
-                            fullWidth
-                            size="small"
-                            margin="dense"
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end"><span style={{ fontSize: '0.7em' }}>THB</span></InputAdornment>
-                            }} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField 
-                            label="Lease"
-                            fullWidth
-                            size="small"
-                            margin="dense"
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end"><span style={{ fontSize: '0.7em' }}>THB</span></InputAdornment>
-                            }} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField 
-                            label="Mortage"
-                            fullWidth
-                            size="small"
-                            margin="dense"
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end"><span style={{ fontSize: '0.7em' }}>THB</span></InputAdornment>
-                            }} />
-                    </Grid>
-                
-                </Grid> */}
-            </DialogContent>
-            <DialogActions>
-                <Button variant="outlined" size="small" onClick={() => { this.setState({ priceDialog: false }); }} >Cancel</Button>
-                <Button variant="contained" size="small" disableElevation onClick={() => { this.setState({ priceDialog: false }); }} >Save</Button>
-            </DialogActions>
-        </Dialog>
-        )
+    handleConfirm = (status: boolean) => {
+        this.setState({ openConfirmDialog: false }, () => {
+            if (status) {
+                if (this.state.confirmDialogMode === 'Delete' && this.props.onDeleteRequest) {
+                    this.props.onDeleteRequest(this.props.info.id);
+                } else if (this.state.confirmDialogMode === 'Online' && this.props.onOnlineRequest) {
+                    this.props.onOnlineRequest(this.props.info.id);
+                } else if (this.state.confirmDialogMode === 'Offline' && this.props.onOfflineRequest) {
+                    this.props.onOfflineRequest(this.props.info.id);
+                }
+            }
+        });
     }
 
     renderMenu = () => {
         const open = Boolean(this.state.anchorEl);
+        const menuItem = [];
+        console.log(this.props.info.isBoosting === false)
+
+        if (this.props.info.isBoosting === true) {
+            menuItem.push(
+                <MenuItem key='stop-boost' onClick={this.handleStopBoost} disableRipple>
+                    <HighlightOffOutlined />
+                    Stop Boost
+                </MenuItem>
+            );
+        } else {
+            menuItem.push(
+                <MenuItem key='boost' onClick={this.handleBoost} disableRipple>
+                    <RocketLaunch />
+                    Boost
+                </MenuItem>
+            );
+        }
+
+        menuItem.push(
+            <MenuItem key="boosting" onClick={this.handleBoosting} disableRipple>
+                <AutoGraph />
+                Boosting
+            </MenuItem>
+        );
+
+        menuItem.push(
+            <MenuItem key="edit" onClick={this.handleEdit} disableRipple>
+                <Edit />
+                Edit
+            </MenuItem>
+        );
+
+        menuItem.push(
+            <MenuItem key="view" onClick={this.handleView} disableRipple>
+                <Ballot />
+                View
+            </MenuItem>
+        );
+
+        if (this.props.info.status === PostStatus.Online) {
+            menuItem.push(
+                <MenuItem key="online" onClick={this.handleOffline} disableRipple>
+                    <VisibilityOffOutlined />
+                    Offline
+                </MenuItem>
+            );
+
+        } else if (this.props.info.status === PostStatus.Offline || this.props.info.status === PostStatus.Draft) {
+            menuItem.push(
+                <MenuItem key="offline" onClick={this.handleOnline} disableRipple>
+                    <VisibilityOutlined />
+                    Online
+                </MenuItem>
+            );
+        }
+
         return (
         <StyledMenu
             MenuListProps={{
@@ -249,27 +269,8 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
             open={open}
             onClose={this.handleClose}
         >
-            <MenuItem onClick={this.handleBoost} disableRipple>
-                <RocketLaunch />
-                Boost/Stop
-            </MenuItem>
-            <MenuItem onClick={this.handleBoosting} disableRipple>
-                <AutoGraph />
-                Boosting
-            </MenuItem>
-            <MenuItem onClick={this.handleEdit} disableRipple>
-                <Edit />
-                Edit
-            </MenuItem>
-            <MenuItem onClick={this.handleView} disableRipple>
-                <Ballot />
-                View
-            </MenuItem>
-            <MenuItem onClick={this.handleOffline} disableRipple>
-                <VisibilityOffOutlined />
-                Offline
-            </MenuItem>
-            <MenuItem onClick={this.handleDelete} disableRipple>
+            { menuItem }
+            <MenuItem key="delete" onClick={this.handleDelete} disableRipple>
                 <DeleteForeverOutlined />
                 Delete
             </MenuItem>
@@ -277,55 +278,87 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
         );
     }
 
+    renderCoverImage(): React.ReactNode {
+        const cover = (this.props.info.pictures as any[]).find(i => i.isCover === true);
+        return <ImageListItem
+                component={'img'}
+                src={ cover ? `${process.env.REACT_APP_SELLER_SERVICE_API_BASE}/properties/${this.props.info.id}/image/${cover.url || '' }` : defaultImage }
+                sx={{ width: 'auto', maxWidth: '100%', maxHeight: '250px', objectFit: 'cover' }}
+            />;
+    }
+
+    renderStatus (): React.ReactNode {
+        const status = this.props.info.status as PostStatus;
+        const color = {
+            [PostStatus.Draft]: 'grey',
+            [PostStatus.Online]: 'green',
+            [PostStatus.Offline]: 'red',
+            [PostStatus.Pending]: 'red',
+            [PostStatus.Deleted]: 'red',
+            [PostStatus.Supend]: 'red'
+        };
+        return (
+            <span style={{ color: color[status], fontWeight: '600', textTransform: 'capitalize' }}>{status}</span>
+        );
+    }
+
+    renderDialog(): React.ReactNode {
+        let message = '';
+        if (this.state.confirmDialogMode === 'Delete') {
+            message = `Would you like to delete the property ${this.props.info.code} ?`;
+        } else if (this.state.confirmDialogMode === 'Online') {
+            message = `Would you like to online the property ${this.props.info.code} ?`;
+        } else if (this.state.confirmDialogMode === 'Offline') {
+            message = `Would you like to offline the property ${this.props.info.code} ?`;
+        }
+
+        return (
+        <Dialog open={this.state.openConfirmDialog} TransitionComponent={ConfirmDialogTransition} keepMounted 
+            onClose={() => this.handleConfirm(false)}
+            aria-describedby="delete-confirm-dialog-slide-description">
+            <DialogTitle>{`Confirmation`}</DialogTitle>
+            <DialogContent>
+                <DialogContentText id="delete-confirm-dialog-slide-description">
+                    { message }
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => this.handleConfirm(false)} variant="outlined">Cancel</Button>
+                <Button onClick={() => this.handleConfirm(true)} color="primary" variant="contained">Yes</Button>
+            </DialogActions>
+        </Dialog>
+        );
+    }
+
     render(): React.ReactNode {
         const open = Boolean(this.state.anchorEl);
+        
+        const created = dayjs(this.props.info.created.date).format('DD-MM-YYYY HH:mm');
+        const priceDate = dayjs(this.props.info.priceAtDate).format('DD-MM-YYYY HH:mm');
         return (
-        <Paper style={{ width: '100%', margin: '5px' }} variant="outlined" elevation={0}>
+        <Paper style={{ width: '100%', margin: '5px' }} variant="outlined" elevation={0} >
             <div style={{ width: '100%' }}>
                 <Box sx={{ display: 'flex', p: 1 }}>
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={3}>
-                                <ImageListItem
-                                    component={'img'}
-                                    src='https://cdn.9asset.com/download/property_gallery/67414/property_Images_201120201605862197722_full.jpg'
-                                    sx={{ width: '100%' }}
-                                />
+                            <Grid item xs={3} sx={{ display: 'flex', justifyContent:'center' }}>
+                                { this.renderCoverImage() }
                             </Grid>
                             <Grid item xs={3}>
                                 <PricingContainer>
                                     <CardContent sx={{ height: '200px', padding: '10px 8px' }}>
                                         <div style={{ display: 'table', padding: '10px' }}>
-                                            <div style={{ display: 'table-row', padding: '10px', marginBottom: '10px' }}>
-                                                <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px' }}>
-                                                    <span style={{ fontWeight: 600 }}>Sell</span>
-                                                </div>
-                                                <div style={{ display: 'table-cell' }}>
-                                                    <span style={{ fontWeight: 400 , color: 'rgb(244, 118, 42)' }}>9,000,000 บาท</span>
-                                                </div>
-                                            </div>
-                                            <div style={{ display: 'table-row', padding: '10px' }}>
-                                                <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px' }}>
-                                                    <span style={{ fontWeight: 600 }}>Rent</span>
-                                                </div>
-                                                <div style={{ display: 'table-cell' }}>
-                                                    <span style={{ fontWeight: 400, color: 'rgb(244, 118, 42)' }}>350,000 บาท</span>
-                                                </div>
-                                            </div>
-                                            <div style={{ display: 'table-row', padding: '10px' }}>
-                                                <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px' }}>
-                                                    <span style={{ fontWeight: 600 }}>Lease</span>
-                                                </div>
-                                                <div style={{ display: 'table-cell' }}>
-                                                    <span style={{ fontWeight: 400, color: 'rgb(244, 118, 42)' }}>5,000,000 บาท</span>
-                                                </div>
-                                            </div>
+                                            <Price type="Sell" value={this.props.info.price.sell?.value} unit="บาท" />
+                                            <Price type="Rent" value={this.props.info.price.rent?.value} unit="บาท" />
+                                            <Price type="Lease" value={this.props.info.price.lease?.value} unit="บาท" />
+                                            <Price type="Redemption" value={this.props.info.price.redemption?.value} unit="บาท" />
+                                            <Price type="Mortgage" value={this.props.info.price.mortgage?.value} unit="บาท" />
                                         </div>
                                             
                                     </CardContent>
                                     <CardActions sx={{ display: 'flex', justifyContent: 'space-between', padding: '2px 4px 4px 4px', m: 0, height: '24px' }}>
                                         <Box>
-                                            <Chip label={'20-01-2022'} size="small" variant="outlined" icon={<CalendarTodayOutlined />} sx={{ padding: '5px' }} />
+                                            <Chip label={priceDate} size="small" variant="outlined" icon={<CalendarTodayOutlined />} sx={{ padding: '5px' }} />
                                         </Box>  
                                         <Box>
                                             <IconButton
@@ -343,16 +376,21 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
                                 <DetailContainer>
                                     <CardContent sx={{ height: '205px', padding: '5px 8px 10px 8px' }}>
                                         <div style={{ display: 'block' }}>
-                                            <span style={{ color: '#f4762a', fontWeight: 800, fontSize: '1.2em' }}>ขาย คอนโด : CM03596 ขายดาวน์ ขาดทุน คอนโด มอนเต้ พระราม 9</span>
+                                            <span style={{ color: '#f4762a', fontWeight: '800', fontSize: '0.9em', marginRight: '5px' }}>[{this.props.info.code}]</span>
+                                            <span style={{ color: '#f4762a', fontWeight: '800', fontSize: '1.2em' }}>{this.props.info.topic.th}</span>
                                         </div>
                                         <div style={{ display: 'block' }}>
-                                            <span style={{ color: '#000000', fontWeight: 400, fontSize: '.8em' }}>813 รามคำแหง 12 ถนนรามคำแหง จ.กรุงเทพฯ</span>
+                                            <span style={{ color: '#000000', fontWeight: '400', fontSize: '.8em' }}>{this.props.info.location}</span>
+                                        </div>
+                                        <div style={{ display: 'block' }}>
+                                            { this.props.info.category?.category_Name_EN || '-' }
                                         </div>
                                     </CardContent>
                                     <CardActions sx={{ display: 'flex', justifyContent: 'space-between', padding: '2px 4px 4px 4px', m: 0, height: '24px' }}>
                                         <Box>
-                                            <p style={{ fontSize: '.9em'}}>Status: <span style={{ color: 'green', fontWeight: 600 }}>Online</span></p>
+                                            <p style={{ fontSize: '.9em'}}>Status: { this.renderStatus() }</p>
                                         </Box>  
+                                        <Box><Chip label={created} size="small" variant="outlined" icon={<CalendarTodayOutlined />} sx={{ padding: '5px' }} /></Box>
                                         <Box>
                                         <Button
                                                 id="property-action-button"
@@ -374,8 +412,10 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
                     </Box>
                 </Box>
                 { this.renderMenu() }
-                { this.renderPriceDialog() }
+                {/* { this.renderPriceDialog() } */}
             </div>
+
+            { this.renderDialog() }
         </Paper>
         );
     }
