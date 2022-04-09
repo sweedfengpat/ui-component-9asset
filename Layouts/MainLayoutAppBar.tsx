@@ -21,6 +21,18 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 
+const getFirstLetter = (user: any) => {
+    const userInfo = user;
+    if (userInfo) {
+        if (userInfo.displayName) {
+            return userInfo.displayName[0];
+        } else if (userInfo.email) {
+            return (userInfo.email as string)[0].toUpperCase();
+        }
+    }
+    return undefined;
+}
+
 const Profile  = (props: any) => {
     // const history = useHistory();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -55,14 +67,11 @@ const Profile  = (props: any) => {
     }
 
     const getUserName = () => {
-        const userInfo = props.user;
-        if (userInfo) {
-            if (userInfo.displayName) {
-                return userInfo.displayName[0];
-            } else if (userInfo.email) {
-                return (userInfo.email as string)[0].toUpperCase();
-            }
+        const username = getFirstLetter(props.user);
+        if(username){
+            return username;
         }
+
         return '9';
     }
 
@@ -114,7 +123,11 @@ interface IRecipeState {
     appMenuEl: any;
     isAppMenuOpen: boolean;
     selectLang: string;
-    isAuth: boolean;
+    isAuth: string;
+    buyerUrl?: string;
+    sellerUrl?: string;
+    homeUrl?: string;
+    user?: any;
 }
 
 export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
@@ -152,26 +165,34 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
             appMenuEl: null,
             isAppMenuOpen: false,
             selectLang: 'th',
-            isAuth: false
+            isAuth: 'false',
+            user: null
         }
     }
    
     async componentDidMount () {
         const token = localStorage.getItem('9asset_token');
-        console.log('component did mount: ', token);
+        // console.log('component did mount: ', token.split(':'));
         if(!token) {
             this.setState({
                 ...this.state,
-                isAuth: false
+                isAuth: 'false'
             })
         } else {
             // const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
-            // const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
-            // localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
-            this.setState({
-                ...this.state,
-                isAuth: true
-            })
+            if(this.props.userServiceUrl) {
+                try {
+                    const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
+                    localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+                    this.setState({ user: user });
+                    this.setState({
+                        ...this.state,
+                        isAuth: 'true'
+                    })
+                } catch (error) {
+                    this.setState({ user: null, isAuth: 'false' });
+                }
+            }
         }
     }
 
@@ -219,6 +240,18 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         }
     }
 
+    openApp(app: string) {
+        if(app === 'home') {
+            window.open(this.state.sellerUrl ? this.state.homeUrl: 'https://my.9asset.com/', '_blank');
+        } else if(app === 'seller') {
+            window.open(this.state.sellerUrl ? this.state.sellerUrl: 'https://my.9asset.com/seller/', '_blank');
+        } else if(app === 'buyer') {
+            window.open(this.state.sellerUrl ? this.state.buyerUrl: 'https://my.9asset.com/buyer/', '_blank')
+        }
+
+    }
+
+
     render() {
 
         return (
@@ -260,6 +293,12 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     </Box>
                     <div style={{ flexGrow: 1 }}></div>
                     {/* { this.renderSellerBuyerButtons() } */}
+                    <div style={{marginRight: '10px'}}>
+                        { 
+                            this.state.user 
+                            && this.state.user.displayName ? this.state.user.displayName : '' 
+                        }
+                    </div>
                     <Select variant="outlined" size="small" 
                         inputProps={{ margin: 'dense' }} value={this.state.selectLang} 
                         onChange={this.onLangChange.bind(this)} >
@@ -278,7 +317,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         </Badge>
                     </IconButton> */}
                     <div style={{ display: 'flex' }}>
-                        <Profile {...this.props} isAuth={this.state.isAuth} />
+                        <Profile {...this.props} isAuth={this.state.isAuth} user={this.state.user} />
                     </div>
                 </Toolbar>
                 <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} 
@@ -320,19 +359,22 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                             <Grid container >
                                 <Grid key= {1} item style={{margin: '10px'}}>
                                     <IconButton aria-label="Home" >
-                                        <HomeIcon fontSize="large" style={{ color: green[500] }}/>
+                                        <HomeIcon fontSize="large" style={{ color: green[500] }}  
+                                            onClick={ () => this.openApp('home') }/>
                                     </IconButton>
                                     <div style={{textAlign: 'center'}}>Home</div>
                                 </Grid>
                                 <Grid key= {2} item style={{margin: '10px'}}>
                                     <IconButton aria-label="buyer" >
-                                        <HomeIcon fontSize="large" style={{ color: red[500] }}/>
+                                        <HomeIcon fontSize="large" style={{ color: red[500] }}  
+                                            onClick={ () => this.openApp('buyer') }/>
                                     </IconButton>
                                     <div style={{textAlign: 'center'}}>Buyer</div>
                                 </Grid>
                                 <Grid key= {3} item style={{margin: '10px'}}>
                                     <IconButton aria-label="seller" >
-                                        <HomeIcon fontSize="large" style={{ color: blue[500] }}/>
+                                        <HomeIcon fontSize="large" style={{ color: blue[500] }} 
+                                            onClick={ () => this.openApp('seller') } />
                                     </IconButton>
                                     <div style={{textAlign: 'center'}}>Seller</div>
                                 </Grid>
