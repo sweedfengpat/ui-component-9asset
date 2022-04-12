@@ -113,12 +113,15 @@ const Profile  = (props: any) => {
 
 interface IRecipeProps {
     userServiceUrl: string;
+    useExternalLinkComponent: boolean;
     mainLink?: string;
+    menubar: any;
     onAppChange?: (event: any) => { };
     onLangChanged?:  (event: any) => { };
     onMobileFilterClick:  (event: any) => { };
     onMobileSearchClick:  (event: any) => { };
     onMenuClick?: (id: number) => {};
+    onSubMenuItemClick?: (id: number) => {};
 }
 
 interface IRecipeState {
@@ -133,26 +136,27 @@ interface IRecipeState {
 }
 
 export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
-    menubar = [
-        { text: 'คอนโด', items: [
-            { text: 'คอนโดโครงการ', link: '/โครงการ/คอนโด' },
-            { text: 'ขายคอนโด', link: '/ขาย/คอนโด' },
-            { text: 'เช่าคอนโด', link: '/เช่า/คอนโด' },
-            { text: 'เซ้งคอนโด', link: '/เซ้ง/คอนโด' }
-        ] },
-        { text: 'บ้านเดี่ยว', items: [
-            { text: 'คอนโดบ้านเดี่ยว', link: '/โครงการ/บ้านเดี่ยว' },
-            { text: 'ขายบ้านเดี่ยว', link: '/ขาย/บ้านเดี่ยว' },
-            { text: 'เช่าบ้านเดี่ยว', link: '/เช่า/บ้านเดี่ยว' },
-            { text: 'เซ้งบ้านเดี่ยว', link: '/เซ้ง/บ้านเดี่ยว' }
-        ] },
-        { text: 'ทาวน์เฮาส์-โฮม', items: [] },
-        { text: 'อาคารพาณิชย์', items: [] },
-        { text: 'โฮมออฟฟิส', items: [] },
-        { text: 'บ้านแฝด', items: [] },
-        { text: 'อพาร์ทเมนท์', items: [] },
-        { text: 'ที่ดิน', items: [] }
-    ];
+    // menubar = [
+    //     { text: 'คอนโด', items: [
+    //         { text: 'คอนโดโครงการ', link: '/โครงการ/คอนโด' },
+    //         { text: 'ขายคอนโด', link: '/ขาย/คอนโด' },
+    //         { text: 'เช่าคอนโด', link: '/เช่า/คอนโด' },
+    //         { text: 'เซ้งคอนโด', link: '/เซ้ง/คอนโด' }
+    //     ] },
+    //     { text: 'บ้านเดี่ยว', items: [
+    //         { text: 'คอนโดบ้านเดี่ยว', link: '/โครงการ/บ้านเดี่ยว' },
+    //         { text: 'ขายบ้านเดี่ยว', link: '/ขาย/บ้านเดี่ยว' },
+    //         { text: 'เช่าบ้านเดี่ยว', link: '/เช่า/บ้านเดี่ยว' },
+    //         { text: 'เซ้งบ้านเดี่ยว', link: '/เซ้ง/บ้านเดี่ยว' }
+    //     ] },
+    //     { text: 'ทาวน์เฮาส์-โฮม', items: [] },
+    //     { text: 'อาคารพาณิชย์', items: [] },
+    //     { text: 'โฮมออฟฟิส', items: [] },
+    //     { text: 'บ้านแฝด', items: [] },
+    //     { text: 'อพาร์ทเมนท์', items: [] },
+    //     { text: 'ที่ดิน', items: [] }
+    // ];
+    menubar = [];
 
     logoPath: any = '';
 
@@ -161,7 +165,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         const { logoPath, menu } = props;
         if(logoPath) this.logoPath = logoPath;
 
-        if(menu) this.menubar = menu;
+        this.menubar = [...this.props.menubar];
 
         this.state = {
             appMenuEl: null,
@@ -199,8 +203,15 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     }
 
     renderMenu () {
-        const menu = this.menubar.map((t, i) => <HotMenu text={t.text} items={t.items} />);
-        menu.push( <HotMenu text={'...'} items={[]} /> );
+        const menu = this.menubar.map((t, i) => <HotMenu text={t.text} items={t.items} 
+            useExternalLinkComponent={this.props.useExternalLinkComponent}
+            onMenuItemClick={this.props.onSubMenuItemClick}
+        />);
+        
+        menu.push( <HotMenu text={'...'} items={[]} 
+            useExternalLinkComponent={this.props.useExternalLinkComponent} 
+            onMenuItemClick={this.props.onSubMenuItemClick}
+        /> );
         return menu;
     }
 

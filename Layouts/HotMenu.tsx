@@ -47,11 +47,14 @@ const StyledMenu = styled((props: MenuProps) => (
 export interface Item {
     text: string;
     link: string;
+    id?: string;
 }
 
 export interface HotMenuProps {
     text: string;
     items: Item[];
+    useExternalLinkComponent?: boolean;
+    onMenuItemClick?: any;
 }
 
 export interface HotMenuState {
@@ -99,7 +102,15 @@ export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
             onClose={this.handleClose}
         >
         {
-            this.props.items.map(item => <MenuItem component={Link} to={item.link}>{item.text}</MenuItem>)
+            this.props.items.map(item => {
+              if(this.props.useExternalLinkComponent) {
+                return <MenuItem onClick={() => {
+                  this.props.onMenuItemClick && this.props.onMenuItemClick(item);
+                }}>{item.text}</MenuItem> 
+              } else {
+                return <MenuItem component={Link} to={item.link}>{item.text}</MenuItem>
+              }
+            })
         }
         </StyledMenu>
         </>);
