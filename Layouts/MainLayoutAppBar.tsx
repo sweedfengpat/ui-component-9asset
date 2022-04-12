@@ -5,7 +5,8 @@ import { AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box,
 import { KeyboardArrowDown, 
     Notifications,
     Apps,
-    Home as HomeIcon
+    Home as HomeIcon,
+    ThreeSixty
  } from "@mui/icons-material";
 
 import { 
@@ -117,6 +118,7 @@ interface IRecipeProps {
     onLangChanged?:  (event: any) => { };
     onMobileFilterClick:  (event: any) => { };
     onMobileSearchClick:  (event: any) => { };
+    onMenuClick?: (id: number) => {};
 }
 
 interface IRecipeState {
@@ -251,6 +253,11 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
 
     }
 
+    onMenuClick(id: number) {
+
+        this.props.onMenuClick && this.props.onMenuClick(id);
+    }
+
 
     render() {
 
@@ -264,29 +271,32 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                     
                     </Box> */}
-                    <Button
+                    {/* <Button
                         color="primary"
                         style={{ color: '#f4762a', marginLeft: '10px', textTransform: 'none' }}
                         endIcon={<KeyboardArrowDown />}
                     >
                         Thailand
-                    </Button>
+                    </Button> */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
                         <Button
                             color="info"
                             style={{ color: '#5e5e5e'}}
+                            onClick={()=> this.onMenuClick(0)}
                         >
                             โครงการ
                         </Button>
                         <Button
                             color="primary"
                             style={{ color: '#5e5e5e' }}
+                            onClick={()=> this.onMenuClick(1)}
                         >
                             ขาย
                         </Button>
                         <Button
                             color="primary"
                             style={{ color: '#5e5e5e' }}
+                            onClick={()=> this.onMenuClick(2)}
                         >
                             เช่า
                         </Button>
@@ -299,13 +309,13 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                             && this.state.user.displayName ? this.state.user.displayName : '' 
                         }
                     </div>
-                    <Select variant="outlined" size="small" 
+                    {/* <Select variant="outlined" size="small" 
                         inputProps={{ margin: 'dense' }} value={this.state.selectLang} 
                         onChange={this.onLangChange.bind(this)} >
                         <MenuItem value={'en'}>EN</MenuItem>
                         <MenuItem value={'th'}>TH</MenuItem>
                         <MenuItem value={'cn'}>CN</MenuItem>
-                    </Select>
+                    </Select> */}
                     <IconButton color="inherit" onClick={this.handelMenuApps.bind(this)} >
                         <Badge badgeContent={0} color="error">
                             <Apps />
