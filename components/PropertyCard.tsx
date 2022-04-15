@@ -1,11 +1,13 @@
 import React from "react";
 import { Grid, Paper, Box, IconButton, Button, styled, MenuProps, Menu, MenuItem, alpha, ImageListItem, PaperProps, Card, CardContent, CardActions, Chip, Typography, Dialog, Slide, DialogTitle, DialogContent, DialogActions, TextField, InputAdornment, Checkbox, List, ListItem, ListItemButton, ListItemIcon, ListItemText, DialogContentText } from "@mui/material";
 import { WithTranslationProps } from "react-i18next";
-import { AutoGraph, Ballot, CalendarTodayOutlined, DeleteForeverOutlined, Edit, EditOutlined, HighlightOffOutlined, KeyboardArrowDown, PriceChangeOutlined, RocketLaunch, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
+import { AutoGraph, Ballot, CalendarTodayOutlined, DeleteForeverOutlined, Edit, EditOutlined, Face, HighlightOffOutlined, KeyboardArrowDown, LocalOfferOutlined, PriceChangeOutlined, RocketLaunch, Tag, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 import { TransitionProps } from "@mui/material/transitions";
 import defaultImage from "../assets/images/no_image.jpeg";
 import { PostStatus, Status } from "../../consts";
 import dayjs from "dayjs";
+import { AssetDetail, PriceRange, SellerProperty } from "../../types";
+import NumberFormat from 'react-number-format';
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -89,24 +91,31 @@ const ConfirmDialogTransition = React.forwardRef(function Transition(
     }
 );
 
-const Price = (props: { type: string, value: number | undefined, unit: string}) => {
-    return (
-    <div style={{ display: 'table-row', padding: '10px', marginBottom: '10px' }}>
-        <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px'}}>
-            <span style={{ fontWeight: '600' }}>{props.type}</span>
+const Price = (props: { type: string, value: string | number | PriceRange | undefined, unit: string}) => {
+    
+    if (typeof props.value === 'number' || typeof props.value === 'string' || props.value === undefined) {
+        return (
+        <div style={{ display: 'table-row', padding: '10px', marginBottom: '10px' }}>
+            <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px'}}>
+                <span style={{ fontWeight: '600' }}>{props.type}</span>
+            </div>
+            <div style={{ display: 'table-cell', paddingLeft: '10px' }}>
+                <span style={{ fontWeight: '400', color: 'rgb(244, 118, 42)'}}>
+                    <NumberFormat decimalSeparator="." decimalScale={2} thousandSeparator={true} displayType='text' value={ props.value || '-' }></NumberFormat>
+                </span>
+                <span style={{ fontWeight: '400', fontSize: '0.9em', marginLeft: '5px' }}>{props.unit}</span>
+            </div>
         </div>
-        <div style={{ display: 'table-cell', paddingLeft: '10px' }}>
-            <span style={{ fontWeight: '400', color: 'rgb(244, 118, 42)'}}>{ props.value || '-' }</span>
-            <span style={{ fontWeight: '400', fontSize: '0.9em', marginLeft: '5px' }}>{props.unit}</span>
-        </div>
-    </div>
-    );
+        );
+    }
+
+    return (<></>);
 }
 
 export interface PropertyCardProps extends WithTranslationProps {
     info: any;
     type: 'projects' | 'properties';
-    onPriceChangeRequest: (id: string) => void;
+    onPriceChangeRequest: (item: any) => void;
     onEditRequest?: (id: string) => void;
     onDeleteRequest?: (id: string) => void;
     onOnlineRequest?: (id: string) => void;
@@ -135,8 +144,8 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
     }
 
     handlePriceChange = (event: React.MouseEvent<HTMLElement>) => {
-        if (this.props.onPriceChangeRequest) {
-            this.props.onPriceChangeRequest(this.props.info.id);
+        if (this.props.onPriceChangeRequest && this.props.info) {
+            this.props.onPriceChangeRequest(this.props.info);
         }
     }
 
@@ -161,14 +170,14 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
 
     handleEdit = () => {
         this.handleClose();
-        if (this.props.onEditRequest) {
+        if (this.props.onEditRequest && this.props.info.id) {
             this.props.onEditRequest(this.props.info.id);
         }
     }
 
     handleView = () => {
         this.handleClose()
-        if (this.props.onViewRequest) {
+        if (this.props.onViewRequest && this.props.info.id) {
             this.props.onViewRequest(this.props.info.id);
         }
     }
@@ -190,7 +199,7 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
 
     handleConfirm = (status: boolean) => {
         this.setState({ openConfirmDialog: false }, () => {
-            if (status) {
+            if (status && this.props.info.id) {
                 if (this.state.confirmDialogMode === 'Delete' && this.props.onDeleteRequest) {
                     this.props.onDeleteRequest(this.props.info.id);
                 } else if (this.state.confirmDialogMode === 'Online' && this.props.onOnlineRequest) {
@@ -205,9 +214,8 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
     renderMenu = () => {
         const open = Boolean(this.state.anchorEl);
         const menuItem = [];
-        console.log(this.props.info.isBoosting === false)
 
-        if (this.props.info.isBoosting === true) {
+        if ((this.props.info as any).isBoosting === true) {
             menuItem.push(
                 <MenuItem key='stop-boost' onClick={this.handleStopBoost} disableRipple>
                     <HighlightOffOutlined />
@@ -331,11 +339,142 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
         );
     }
 
+    renderPrices(): React.ReactNode {
+        const items = [];
+        if (this.props.info.price) {
+
+            const price = this.props.info.price;
+
+            if (price.sell?.value) {
+                items.push(<Price key="Sell" type="Sell" value={price.sell?.value} unit="บาท" />);
+            }
+
+            if (price.rent?.value) {
+                items.push(<Price key="rent" type="Rent" value={price.rent?.value} unit="บาท" />);
+            }
+
+            if (price.lease?.value) {
+                items.push(<Price key="lease" type="Lease" value={price.lease?.value} unit="บาท" />);
+            }
+
+            if (price.redemption?.value) {
+                items.push(<Price key="redemption" type="Redemption" value={price.redemption?.value} unit="บาท" />);
+            }
+
+            if (price.mortgage?.value) {
+                items.push(<Price key="mortgage" type="Mortgage" value={price.mortgage?.value} unit="บาท" />);
+            }
+        }
+        return (
+        <div style={{ display: 'table', padding: '10px' }}>
+            { items }        
+        </div>
+        );
+    }
+
+    renderPropertyDetail(): React.ReactNode {
+        const detail = this.props.info.assetDetail as AssetDetail;
+        if (detail) {
+            const items = [];
+            if (detail.unitType) {
+                items.push(
+                    <Grid key='unitType' item xs={12}>
+                        <span style={{ marginRight: '10px' }}>ประเภท</span><span>{ detail.unitType }</span> 
+                    </Grid>
+                );
+            }
+
+            if (detail.noOfBedRoom) {
+                items.push(
+                    <Grid key='bedroom' item xs={6}>
+                        <span>ห้องนอน { detail.noOfBedRoom } ห้อง</span> 
+                    </Grid>
+                );
+            }
+
+            if (detail.noOfBathRoom) {
+                items.push(
+                    <Grid key='bathroom' item xs={6}>
+                        <span>ห้องน้ำ { detail.noOfBathRoom } ห้อง</span> 
+                    </Grid>
+                );
+            }
+
+            if (this.props.info.category.type === 'Commercail') {
+            items.push(<Grid key="nooffloor" item xs={6}>
+                { detail.noOfFloor ? (<span>จำนวนชั้น {detail.noOfFloor}</span>) : <span></span>}
+            </Grid>);
+            }
+
+            if (detail.locatedOnFloor) {
+                items.push(
+                    <Grid key='floor' item xs={6}>
+                        <span>ชั้นที่ { detail.locatedOnFloor }</span> 
+                    </Grid>
+                );
+            }
+            if (detail.direction) {
+                items.push(
+                    <Grid key='direction' item xs={6}>
+                        <span>ทิศ { detail.direction }</span> 
+                    </Grid>
+                );
+            }
+
+            if (this.props.info.category.type === 'Condominium') {
+                items.push(
+                    <Grid key='view' item xs={6}>
+                        <span>วิว { detail.view || '-' }</span> 
+                    </Grid>
+                );
+            }
+            if (detail.noOfParkingSlot) {
+                items.push(
+                    <Grid key='parkingslot' item xs={6}>
+                        <span>จำนวนที่จอดรถ { detail.noOfParkingSlot }</span> 
+                    </Grid>
+                );
+            }
+
+            if (this.props.info.category.type === 'Condominium') {
+                items.push(
+                    <Grid key='quota' item xs={6}>
+                        <span>โควต้า { detail.quota || '-' }</span> 
+                    </Grid>
+                );
+            }
+
+            if (this.props.info.category.type === 'Condominium') {
+                items.push(
+                    <Grid key='referId' item xs={6}>
+                        <span>Refer ID { detail.referId || '-' }</span> 
+                    </Grid>
+                );
+            }
+
+            if (detail.usableArea) {
+                items.push(
+                    <Grid key='floor' item xs={6}>
+                        <span>พื้นที่ใช้สอย { detail.usableArea } ตร.ม.</span> 
+                    </Grid>
+                );
+            }
+            if (detail.landSize && this.props.info.category.type === 'House') {
+                items.push(
+                    <Grid key='direction' item xs={6}>
+                        <span>ขนาดที่ดิน { detail.landSize.sqw } ตร.ว.</span> 
+                    </Grid>
+                );
+            }
+            return (<Grid container sx={{ fontSize: '0.9em' }}>{items}</Grid>);
+        }
+    }
+
     render(): React.ReactNode {
         const open = Boolean(this.state.anchorEl);
         
-        const created = dayjs(this.props.info.created.date).format('DD-MM-YYYY HH:mm');
-        const priceDate = dayjs(this.props.info.priceAtDate).format('DD-MM-YYYY HH:mm');
+        const created = this.props.info.created ? dayjs(this.props.info.created.date).format('DD-MM-YYYY HH:mm') : null;
+        
         return (
         <Paper style={{ width: '100%', margin: '5px' }} variant="outlined" elevation={0} >
             <div style={{ width: '100%' }}>
@@ -348,18 +487,11 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
                             <Grid item xs={3}>
                                 <PricingContainer>
                                     <CardContent sx={{ height: '200px', padding: '10px 8px' }}>
-                                        <div style={{ display: 'table', padding: '10px' }}>
-                                            <Price type="Sell" value={this.props.info.price.sell?.value} unit="บาท" />
-                                            <Price type="Rent" value={this.props.info.price.rent?.value} unit="บาท" />
-                                            <Price type="Lease" value={this.props.info.price.lease?.value} unit="บาท" />
-                                            <Price type="Redemption" value={this.props.info.price.redemption?.value} unit="บาท" />
-                                            <Price type="Mortgage" value={this.props.info.price.mortgage?.value} unit="บาท" />
-                                        </div>
-                                            
+                                        { this.renderPrices() }
                                     </CardContent>
                                     <CardActions sx={{ display: 'flex', justifyContent: 'space-between', padding: '2px 4px 4px 4px', m: 0, height: '24px' }}>
                                         <Box>
-                                            <Chip label={priceDate} size="small" variant="outlined" icon={<CalendarTodayOutlined />} sx={{ padding: '5px' }} />
+                                            {/* <Chip label={created} size="small" variant="outlined" icon={<CalendarTodayOutlined />} sx={{ padding: '5px' }} /> */}
                                         </Box>  
                                         <Box>
                                             <IconButton
@@ -376,16 +508,28 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
                             <Grid item xs={6}>
                                 <DetailContainer>
                                     <CardContent sx={{ height: '205px', padding: '5px 8px 10px 8px' }}>
-                                        <div style={{ display: 'block' }}>
-                                            <span style={{ color: '#f4762a', fontWeight: '800', fontSize: '0.9em', marginRight: '5px' }}>[{this.props.info.code}]</span>
-                                            <span style={{ color: '#f4762a', fontWeight: '800', fontSize: '1.2em' }}>{this.props.info.topic.th}</span>
-                                        </div>
-                                        <div style={{ display: 'block' }}>
-                                            <span style={{ color: '#000000', fontWeight: '400', fontSize: '.8em' }}>{this.props.info.location}</span>
-                                        </div>
-                                        <div style={{ display: 'block' }}>
-                                            { this.props.info.category?.category_Name_EN || '-' }
-                                        </div>
+
+                                        <Grid container>
+                                            <Grid item xs={12}>
+                                                <Chip variant="outlined" size="small" icon={<LocalOfferOutlined />} color="primary" label={this.props.info.code} />
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <span style={{ color: '#f4762a', fontWeight: '800', fontSize: '1.2em' }}>{this.props.info.topic.th}</span>
+                                            </Grid>
+
+                                            <Grid item xs={6} sx={{ margin: '5px 0px' }}>
+                                                <span style={{ color: '#6e6e6e', fontSize: '0.9em' }}>{ this.props.info.category?.category_Name_EN || '-' }</span>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                { this.props.info.location || '' }
+                                            </Grid>
+
+                                            <Grid item xs={12} sx={{ padding: '5px 10px'}}>
+                                            { this.renderPropertyDetail() }
+                                            </Grid>
+
+                                        </Grid>
+                                        
                                     </CardContent>
                                     <CardActions sx={{ display: 'flex', justifyContent: 'space-between', padding: '2px 4px 4px 4px', m: 0, height: '24px' }}>
                                         <Box>
