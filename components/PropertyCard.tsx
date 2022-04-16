@@ -97,13 +97,13 @@ const Price = (props: { type: string, value: string | number | PriceRange | unde
         return (
         <div style={{ display: 'table-row', padding: '10px', marginBottom: '10px' }}>
             <div style={{ display: 'table-cell', minWidth: '70px', paddingLeft: '5px'}}>
-                <span style={{ fontWeight: '600' }}>{props.type}</span>
+                <span style={{ fontWeight: 600 }}>{props.type}</span>
             </div>
             <div style={{ display: 'table-cell', paddingLeft: '10px' }}>
-                <span style={{ fontWeight: '400', color: 'rgb(244, 118, 42)'}}>
+                <span style={{ fontWeight: 400, color: 'rgb(244, 118, 42)'}}>
                     <NumberFormat decimalSeparator="." decimalScale={2} thousandSeparator={true} displayType='text' value={ props.value || '-' }></NumberFormat>
                 </span>
-                <span style={{ fontWeight: '400', fontSize: '0.9em', marginLeft: '5px' }}>{props.unit}</span>
+                <span style={{ fontWeight: 400, fontSize: '0.9em', marginLeft: '5px' }}>{props.unit}</span>
             </div>
         </div>
         );
@@ -289,9 +289,18 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
 
     renderCoverImage(): React.ReactNode {
         const cover = (this.props.info.pictures as any[]).find(i => i.isCover === true);
+        let imageUrl = undefined;
+        if(!cover) {
+            // From legacy db no isCover
+            if(this.props.info.pictures.length > 0) {
+                imageUrl = this.props.info.pictures[0]
+            }
+        } else {
+            imageUrl = `${process.env.REACT_APP_SELLER_SERVICE_API_BASE}/${this.props.type}/${this.props.info.id}/image/${cover.url || '' }`
+        }
         return <ImageListItem
                 component={'img'}
-                src={ cover ? `${process.env.REACT_APP_SELLER_SERVICE_API_BASE}/${this.props.type}/${this.props.info.id}/image/${cover.url || '' }` : defaultImage }
+                src={ imageUrl ? imageUrl : defaultImage }
                 sx={{ width: 'auto', maxWidth: '100%', maxHeight: '250px', objectFit: 'cover' }}
             />;
     }
@@ -307,7 +316,7 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
             [PostStatus.Supend]: 'red'
         };
         return (
-            <span style={{ color: color[status], fontWeight: '600', textTransform: 'capitalize' }}>{status}</span>
+            <span style={{ color: color[status], fontWeight: 600, textTransform: 'capitalize' }}>{status}</span>
         );
     }
 
@@ -514,7 +523,7 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
                                                 <Chip variant="outlined" size="small" icon={<LocalOfferOutlined />} color="primary" label={this.props.info.code} />
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <span style={{ color: '#f4762a', fontWeight: '800', fontSize: '1.2em' }}>{this.props.info.topic.th}</span>
+                                                <span style={{ color: '#f4762a', fontWeight: 800, fontSize: '1.2em' }}>{this.props.info.topic.th}</span>
                                             </Grid>
 
                                             <Grid item xs={6} sx={{ margin: '5px 0px' }}>

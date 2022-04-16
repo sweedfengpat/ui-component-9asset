@@ -6,8 +6,10 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { Route, RouteComponentProps, RouteProps, useHistory } from "react-router-dom";
 import styled from "styled-components";
 
+import { useState } from 'react';
+
 // import ProfileCard from '../../src/Components/Profile/ProfileCard';
-import { ProfileCard } from '../Components/ProfileCard';
+import { ProfileCard } from '../components/ProfileCard';
 import MainMenu from "./MainMenu";
 
 import { HotMenu } from "./HotMenu";
@@ -121,13 +123,28 @@ const Profile  = (props: any) => {
 
     const userName = getUserName();
 
-    return (<>
-    <Avatar
-        alt="9 Asset"
-        style={{ height: '30px', width: '30px', margin: '12px' }}
-        onClick={handleProfileMenuOpen}
-    >{ userName }</Avatar>
-    {renderMenu}</>
+    console.log('xxxx: ', props.user.photoUrl);
+
+    return (
+    <>
+        {
+            props.user.photoUrl ?
+            <Avatar
+                alt={`${userName}`}
+                style={{ height: '30px', width: '30px', margin: '12px' }}
+                onClick={handleProfileMenuOpen}
+                src={props.user.photoUrl}
+                />
+            :
+            <Avatar
+                alt="9 Asset"
+                style={{ height: '30px', width: '30px', margin: '12px' }}
+                onClick={handleProfileMenuOpen}
+            >{ userName }
+            </Avatar>
+        }
+        {renderMenu}
+    </>
     );
 }
 
@@ -167,9 +184,14 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     }
 
     async componentDidMount () {
-        const token = localStorage.getItem('9asset_token');
-        const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
-        localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+        try {
+            const token = localStorage.getItem('9asset_token');
+            const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
+            localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+        } catch {
+            console.log('error to load 9asset_token');
+            // localStorage.clear();
+        }
     }
 
     onLangChanged = (event: any) => {
@@ -251,7 +273,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                             </Badge>
                                         </IconButton>
                                         <div style={{ display: 'flex' }}>
-                                            <Profile user={{}} />
+                                            <Profile user={user} />
                                         </div>
                                     </Toolbar>
                                     <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} justifyContent='center' alignItems='center'>
@@ -265,7 +287,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                 <Toolbar />
                                 <Grid container style={{ height: '42px' }}>
                                 </Grid>
-                                <ProfileCard></ProfileCard>
+                                <ProfileCard user={user}></ProfileCard>
                               
                                 <Divider></Divider>
                                 <MainMenu menu={menu} ></MainMenu>

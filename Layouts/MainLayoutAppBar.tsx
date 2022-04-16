@@ -156,7 +156,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     //     { text: 'อพาร์ทเมนท์', items: [] },
     //     { text: 'ที่ดิน', items: [] }
     // ];
-    menubar = [];
+    menubar: any[] = [];
 
     logoPath: any = '';
 

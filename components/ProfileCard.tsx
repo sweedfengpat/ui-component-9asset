@@ -3,7 +3,11 @@ import React from "react";
 
 import './ProfileCard.less';
 
-export class ProfileCard extends React.Component {
+interface ProfileCardProps {
+    user: any;
+}
+
+export class ProfileCard extends React.Component<ProfileCardProps, any> {
     render() {
         return (
             <div className="profile-container">
@@ -15,10 +19,10 @@ export class ProfileCard extends React.Component {
                     mt:1
                     }}
                 >
-                    <Avatar style={{ height: 75, width: 75, marginBottom: 10 }} >TS</Avatar>
-                    <Typography color="textPrimary" variant="subtitle1" className="profile-text">Theeraphon Samathi</Typography>
+                    <Avatar style={{ height: 75, width: 75, marginBottom: 10 }} src={this.props.user.photoUrl}>TS</Avatar>
+                    <Typography color="textPrimary" variant="subtitle1" className="profile-text">{this.props.user.displayName}</Typography>
                     <Typography color="textPrimary" variant="body2" className="profile-text">085 472 9223</Typography>
-                    <Typography color="textPrimary" variant="body2" className="profile-text">theeraphon.sa@gmail.com</Typography>
+                    <Typography color="textPrimary" variant="body2" className="profile-text">{this.props.user.email}</Typography>
                 </Box>
             </div>
         );
