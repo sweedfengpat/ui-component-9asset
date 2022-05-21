@@ -239,6 +239,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         isAuth: 'true'
                     })
                 } catch (error) {
+                    localStorage.clear();
                     this.setState({ user: null, isAuth: 'false' });
                 }
             }
