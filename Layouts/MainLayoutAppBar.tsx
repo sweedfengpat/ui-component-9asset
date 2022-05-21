@@ -14,7 +14,7 @@ import {
     red,
     blue
 } from '@mui/material/colors';
-import React from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { HotMenu } from "./HotMenu";
 import axios from 'axios';
 import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
@@ -133,6 +133,48 @@ interface IRecipeState {
     sellerUrl?: string;
     homeUrl?: string;
     user?: any;
+}
+
+export const AdvanceSearch = () => {
+    const frameStyle = {
+        width: '100%',
+        // height: '100%',
+        border: 'none'
+      }
+    
+    const iframeEl = useRef(null);
+    const [iframeHeight, setIframeHeight] = useState('auto');
+
+    useEffect(() => {
+      function bindEvent(element: any, eventName: any, eventHandler: any) {
+          if (element.addEventListener){
+              element.addEventListener(eventName, eventHandler, false);
+          } else if (element.attachEvent) {
+              element.attachEvent('on' + eventName, eventHandler);
+          }
+      }
+      bindEvent(window, 'message', (e: any) => {
+        const { target, type, value } = e.data;
+        console.log('Header APP receive: ', e.data, target, type);
+
+        if( target !== '9assetApp') return;
+
+        console.log('Header APP receive 2: ', type, value);
+        if(type == 'setheight') {
+            console.log('Header APP receive value: ', `${value}px`);
+            //   frame.height = `${value}px` ; //height
+            setIframeHeight(`${value}px`);
+        }
+      })
+    }, [])
+    
+    return (
+        <div style={{width: '100%', zIndex: 10, position: 'relative'}}>
+            <iframe ref={iframeEl} src="https://my.9asset.com/search-component/" 
+                style={frameStyle} 
+                height={iframeHeight} />
+        </div>
+    )
 }
 
 export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
@@ -311,6 +353,9 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         >
                             เช่า
                         </Button>
+                        <div style={{position: 'absolute', left: '250px', width: '450px'}}>
+                            <AdvanceSearch />
+                        </div>
                     </Box>
                     <div style={{ flexGrow: 1 }}></div>
                     {/* { this.renderSellerBuyerButtons() } */}
