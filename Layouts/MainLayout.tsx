@@ -15,6 +15,7 @@ import MainMenu from "./MainMenu";
 import { HotMenu } from "./HotMenu";
 import Logo from '../assets/images/9asset-logo.png';
 import { withRouter, WithRouterProps } from "react-router";
+import { LayoutAppBar } from './MainLayoutAppBar';
 
 
 export interface MenuItem {
@@ -183,16 +184,16 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         
     }
 
-    async componentDidMount () {
-        try {
-            const token = localStorage.getItem('9asset_token');
-            const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
-            localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
-        } catch {
-            console.log('error to load 9asset_token');
-            // localStorage.clear();
-        }
-    }
+    // async componentDidMount () {
+    //     try {
+    //         const token = localStorage.getItem('9asset_token');
+    //         const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
+    //         localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+    //     } catch {
+    //         console.log('error to load 9asset_token');
+    //         // localStorage.clear();
+    //     }
+    // }
 
     onLangChanged = (event: any) => {
         this.props.i18n.changeLanguage(event.target.value);
@@ -228,7 +229,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                     return (
                         <MainLayoutRoot>
                             <ElevationScroll {...props}>
-                                <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
+                                {/* <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
                                     <Toolbar>
                                         <img src={Logo} style={{ height: '40px' }} />
                                         
@@ -281,7 +282,19 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                             { this.renderMenu() }
                                         </Grid>
                                     </Grid>
-                                </AppBar>
+                                </AppBar> */}
+                                <LayoutAppBar 
+                                    logoPath = {Logo}
+                                    userServiceUrl={`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`}
+                                    useExternalLinkComponent={false}
+                                    menubar={this.menubar}
+                                    onAppChange={(event)=> { console.log('onAppChange'); return {}}}
+                                    onLangChanged={this.onLangChanged.bind(this)}
+                                    onMobileFilterClick={(event)=> console.log('onMobileFilterClick')}
+                                    onMobileSearchClick={(event)=> console.log('onMobileSearchClick')}
+                                    onMenuClick={(id)=> console.log('onMenuClick')}
+                                    onSubMenuItemClick={(id) => console.log('onSubMenuItemClick:', id)}
+                                />
                             </ElevationScroll>
                             <CustomDrawer variant="permanent" classes={{ paper: 'drawer-menu' }} >
                                 <Toolbar />

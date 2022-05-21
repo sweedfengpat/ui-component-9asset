@@ -116,12 +116,13 @@ interface IRecipeProps {
     useExternalLinkComponent: boolean;
     mainLink?: string;
     menubar: any;
-    onAppChange?: (event: any) => { };
-    onLangChanged?:  (event: any) => { };
-    onMobileFilterClick:  (event: any) => { };
-    onMobileSearchClick:  (event: any) => { };
-    onMenuClick?: (id: number) => {};
-    onSubMenuItemClick?: (id: number) => {};
+    onAppChange?: (event: any) => void;
+    onLangChanged?:  (event: any) => void;
+    onMobileFilterClick:  (event: any) => void;
+    onMobileSearchClick:  (event: any) => void;
+    onMenuClick?: (id: number) => void;
+    onSubMenuItemClick?: (id: number) => void;
+    logoPath?: string;
 }
 
 interface IRecipeState {
