@@ -4,11 +4,19 @@ import { WithTranslationProps } from "react-i18next";
 import { AutoGraph, Ballot, CalendarTodayOutlined, DeleteForeverOutlined, Edit, EditOutlined, Face, HighlightOffOutlined, KeyboardArrowDown, LocalOfferOutlined, PriceChangeOutlined, RocketLaunch, Tag, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 import { TransitionProps } from "@mui/material/transitions";
 import defaultImage from "../assets/images/no_image.jpeg";
-import { PostStatus, Status } from "../../consts";
+// import { PostStatus, Status } from "../../consts";
 import dayjs from "dayjs";
-import { AssetDetail, PriceRange, SellerProperty } from "../../types";
+// import { AssetDetail, PriceRange } from "../types";
 import NumberFormat from 'react-number-format';
 
+enum PostStatus {
+    Draft= 'Draft',
+    Online= 'Online',
+    Offline= 'Offline',
+    Pending= 'Pending',
+    Deleted= 'Deleted',
+    Supend= 'Supend',
+}
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
         elevation={1}
@@ -91,7 +99,7 @@ const ConfirmDialogTransition = React.forwardRef(function Transition(
     }
 );
 
-const Price = (props: { type: string, value: string | number | PriceRange | undefined, unit: string}) => {
+const Price = (props: { type: string, value: string | number | undefined, unit: string}) => {
     
     if (typeof props.value === 'number' || typeof props.value === 'string' || props.value === undefined) {
         return (
@@ -382,7 +390,7 @@ export default class PropertyCard extends React.Component<PropertyCardProps, Pro
     }
 
     renderPropertyDetail(): React.ReactNode {
-        const detail = this.props.info.assetDetail as AssetDetail;
+        const detail = this.props.info.assetDetail; // as AssetDetail;
         if (detail) {
             const items = [];
             if (detail.unitType) {
