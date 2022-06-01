@@ -68,86 +68,86 @@ const ElevationScroll = (props: ElevationScrollProps) => {
     });
 }
 
-const Profile  = (props: any) => {
-    const history = useHistory();
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const isMenuOpen = Boolean(anchorEl);
+// const Profile  = (props: any) => {
+//     const history = useHistory();
+//     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+//     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+//         setAnchorEl(event.currentTarget);
+//     };
+//     const isMenuOpen = Boolean(anchorEl);
 
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    }
+//     const handleMenuClose = () => {
+//         setAnchorEl(null);
+//     }
 
-    const handleProfileClicked = () => {
-        history.push('/myprofile');
-        setAnchorEl(null);
-    }
+//     const handleProfileClicked = () => {
+//         history.push('/myprofile');
+//         setAnchorEl(null);
+//     }
 
-    const handleChangePassword = () => {
-        history.push('/changepassword');
-        setAnchorEl(null);
-    }
+//     const handleChangePassword = () => {
+//         history.push('/changepassword');
+//         setAnchorEl(null);
+//     }
 
-    const handleLogout = () => {
-        history.push('/logout');
-        setAnchorEl(null);
-    }
+//     const handleLogout = () => {
+//         history.push('/logout');
+//         setAnchorEl(null);
+//     }
 
-    const getUserName = () => {
-        const userInfo = props.user;
-        if (userInfo) {
-            if (userInfo.displayName) {
-                return userInfo.displayName[0];
-            } else if (userInfo.email) {
-                return (userInfo.email as string)[0].toUpperCase();
-            }
-        }
-        return '9';
-    }
+//     const getUserName = () => {
+//         const userInfo = props.user;
+//         if (userInfo) {
+//             if (userInfo.displayName) {
+//                 return userInfo.displayName[0];
+//             } else if (userInfo.email) {
+//                 return (userInfo.email as string)[0].toUpperCase();
+//             }
+//         }
+//         return '9';
+//     }
 
-    const renderMenu = (
-        <Menu
-          anchorEl={anchorEl}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          keepMounted
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={isMenuOpen}
-          onClose={handleMenuClose}
-        >
-          <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>
-          <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </Menu>
-    );
+//     const renderMenu = (
+//         <Menu
+//           anchorEl={anchorEl}
+//           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+//           keepMounted
+//           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+//           open={isMenuOpen}
+//           onClose={handleMenuClose}
+//         >
+//           <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>
+//           <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
+//           <MenuItem onClick={handleLogout}>Logout</MenuItem>
+//         </Menu>
+//     );
 
-    const userName = getUserName();
+//     const userName = getUserName();
 
-    console.log('xxxx: ', props.user.photoUrl);
+//     console.log('xxxx: ', props.user.photoUrl);
 
-    return (
-    <>
-        {
-            props.user.photoUrl ?
-            <Avatar
-                alt={`${userName}`}
-                style={{ height: '30px', width: '30px', margin: '12px' }}
-                onClick={handleProfileMenuOpen}
-                src={props.user.photoUrl}
-                />
-            :
-            <Avatar
-                alt="9 Asset"
-                style={{ height: '30px', width: '30px', margin: '12px' }}
-                onClick={handleProfileMenuOpen}
-            >{ userName }
-            </Avatar>
-        }
-        {renderMenu}
-    </>
-    );
-}
+//     return (
+//     <>
+//         {
+//             props.user.photoUrl ?
+//             <Avatar
+//                 alt={`${userName}`}
+//                 style={{ height: '30px', width: '30px', margin: '12px' }}
+//                 onClick={handleProfileMenuOpen}
+//                 src={props.user.photoUrl}
+//                 />
+//             :
+//             <Avatar
+//                 alt="9 Asset"
+//                 style={{ height: '30px', width: '30px', margin: '12px' }}
+//                 onClick={handleProfileMenuOpen}
+//             >{ userName }
+//             </Avatar>
+//         }
+//         {renderMenu}
+//     </>
+//     );
+// }
 
 export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     menu: MenuItem[];

@@ -58,6 +58,7 @@ const Profile  = (props: any) => {
 
     const handleLogout = () => {
         // history.push('/logout');
+        window.open('https://my.9asset.com/login/logout', '_self');
         setAnchorEl(null);
     }
 
@@ -136,7 +137,7 @@ interface IRecipeState {
     user?: any;
 }
 
-export const AdvanceSearch = () => {
+export const AdvanceSearch = (props) => {
     const frameStyle = {
         width: '100%',
         // height: '100%',
@@ -156,11 +157,7 @@ export const AdvanceSearch = () => {
       }
       bindEvent(window, 'message', (e: any) => {
         const { target, type, value } = e.data;
-        console.log('Header APP receive: ', e.data, target, type);
-
         if( target !== '9assetApp') return;
-
-        console.log('Header APP receive 2: ', type, value);
         if(type == 'setheight') {
             console.log('Header APP receive value: ', `${value}px`);
             //   frame.height = `${value}px` ; //height
@@ -171,7 +168,7 @@ export const AdvanceSearch = () => {
     
     return (
         <div style={{width: '100%', zIndex: 10, position: 'relative'}}>
-            <iframe ref={iframeEl} src="https://my.9asset.com/search-component/" 
+            <iframe ref={iframeEl} src={`https://my.9asset.com/search-component/${props.lang || 'th'}/`}
                 style={frameStyle} 
                 height={iframeHeight} />
         </div>
@@ -305,7 +302,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         } else if(app === 'buyer') {
             window.open(this.state.sellerUrl ? this.state.buyerUrl: 'https://my.9asset.com/buyer/', '_blank')
         }
-
+        this.handleAppMenuClose();
     }
 
     onMenuClick(id: number) {
