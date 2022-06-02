@@ -1,20 +1,15 @@
 import { AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, Container, Grid, Button, Menu, MenuItem, Avatar, IconButton, Select, Badge } from "@mui/material";
-import { KeyboardArrowDown, Notifications } from "@mui/icons-material";
 import axios from "axios";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
-import { Route, RouteComponentProps, RouteProps, useHistory } from "react-router-dom";
+import { Route, RouteComponentProps, RouteProps } from "react-router-dom";
 import styled from "styled-components";
 
-import { useState } from 'react';
-
-// import ProfileCard from '../../src/Components/Profile/ProfileCard';
 import { ProfileCard } from '../components/ProfileCard';
-import MainMenu from "./MainMenu";
+import MainMenu, { MenuSection } from "./MainMenu";
 
 import { HotMenu } from "./HotMenu";
 import Logo from '../assets/images/9asset-logo.png';
-import { withRouter, WithRouterProps } from "react-router";
 import { LayoutAppBar } from './MainLayoutAppBar';
 
 
@@ -150,7 +145,7 @@ const ElevationScroll = (props: ElevationScrollProps) => {
 // }
 
 export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
-    menu: MenuItem[];
+    menu: MenuSection[];
     onLanguageChanged: (lang: string) => void;
     type?: 'seller' | 'buyer' | 'none' | undefined;
     onProfileMenuItemClick?: (e: any) => void;
@@ -241,6 +236,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     userServiceUrl={`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`}
                                     useExternalLinkComponent={false}
                                     menubar={this.menubar}
+                                    menu={menu}
                                     onAppChange={(event)=> { console.log('onAppChange'); return {}}}
                                     onLangChanged={this.onLangChanged.bind(this)}
                                     onMobileFilterClick={(event)=> console.log('onMobileFilterClick')}
@@ -251,13 +247,20 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     allowNoLoginAccessSite={false}
                                 />
                             </ElevationScroll>
-                            <CustomDrawer variant="permanent" classes={{ paper: 'drawer-menu' }} >
+                            <CustomDrawer
+                                variant="permanent"
+                                classes={{ paper: 'drawer-menu' }}
+                                sx={{
+                                    display: { xs: 'none', sm: 'block' },
+                                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                                }}
+                            >
                                 <Toolbar />
                                 <Grid container style={{ height: '42px' }}>
                                 </Grid>
                                 <ProfileCard user={user}></ProfileCard>
                               
-                                <Divider></Divider>
+                                <Divider variant="middle"></Divider>
                                 <MainMenu menu={menu} ></MainMenu>
                             </CustomDrawer>
                             <MainContainer>

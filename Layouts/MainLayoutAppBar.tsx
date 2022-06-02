@@ -1,13 +1,16 @@
 import {
     AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, 
     Container, Grid, Button, Menu, MenuItem, Avatar, IconButton, Select, Badge,
-    Paper, Autocomplete, TextField
+    Paper, Autocomplete, TextField, Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar
 } from "@mui/material";
 import { KeyboardArrowDown, 
     Notifications,
     Apps,
     Home as HomeIcon,
-    ThreeSixty
+    ThreeSixty,
+    StarBorder,
+    ChevronLeft,
+    AccountBoxOutlined
  } from "@mui/icons-material";
 
 import { 
@@ -22,6 +25,7 @@ import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detec
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
+import MainMenu from "./MainMenu";
 
 const getFirstLetter = (user: any) => {
     const userInfo = user;
@@ -37,6 +41,8 @@ const getFirstLetter = (user: any) => {
 
 const Profile  = (props: any) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [menuType, setMenuType] = React.useState<string>('default');
+
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -72,6 +78,10 @@ const Profile  = (props: any) => {
         window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
     }
 
+    const onChangeMenuRequested = (val: string) => {
+        setMenuType(val);
+    }
+
     const getUserName = () => {
         const username = getFirstLetter(props.user);
         if(username){
@@ -81,27 +91,186 @@ const Profile  = (props: any) => {
         return '9';
     }
 
-    const renderMenu = (
-        <Menu
-          anchorEl={anchorEl}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          keepMounted
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={isMenuOpen}
-          onClose={handleMenuClose}
-        >
-          {
+    const renderCommonMenu = (<>
+        <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('language')}>
+            <ListItemButton>
+                <ListItemText>Profile</ListItemText>
+            </ListItemButton>
+        </ListItem>
+        <Divider variant="middle" />
+        <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('language')}>
+            <ListItemButton>
+                <ListItemText>Launguage</ListItemText>
+                <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>EN</ListItemIcon>
+            </ListItemButton>
+        </ListItem>
+        <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('currency')}>
+            <ListItemButton>
+                <ListItemText>Price Display</ListItemText>
+                <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>THB</ListItemIcon>
+            </ListItemButton>
+        </ListItem>
+    </>);
 
-            props.isAuth === 'true' ?            
-            [
-              <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
-              <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            ]
-          :
-            <MenuItem onClick={handleLogin}>Login</MenuItem>
-          }
-        </Menu>
+    const renderMainMenu = () => {
+        return (
+            <MainMenu menu={props.menu} skipCommon={true} ></MainMenu>
+        );
+    }
+
+    const renderNonAuthMenu = (
+        <List
+            sx={{
+                width: '100%',
+                minWidth: 300,
+                maxWidth: 360,
+                bgcolor: 'background.paper'
+            }}
+            subheader={<ListSubheader sx={{ lineHeight: '30px', marginTop: '10px' }}>My Account</ListSubheader>}
+        >
+            <ListItem component="div" disablePadding>
+                <ListItemButton 
+                    sx={{ textAlign: 'center' }}
+                    // onClick={handleLogin}
+                    component="a" href="/login"
+                    >
+                    <ListItemText
+                        primary="Sign in"
+                        primaryTypographyProps={{
+                            color: 'primary',
+                            fontWeight: 'medium',
+                            variant: 'body1',
+                        }}
+                    />
+                </ListItemButton>
+                or
+                <ListItemButton component="a" href="/login/register" sx={{ textAlign: 'center' }}>
+                    <ListItemText
+                        primary="Sign up"
+                        primaryTypographyProps={{
+                            color: 'primary',
+                            fontWeight: 'medium',
+                            variant: 'body1',
+                        }}
+                    />
+                </ListItemButton>
+            </ListItem>
+            { renderCommonMenu }
+        </List>
+    );
+
+    const renderAuthMenu = (
+        <List
+            sx={{
+                width: '100%',
+                minWidth: 300,
+                maxWidth: 360,
+                bgcolor: 'background.paper'
+            }}
+            subheader={<ListSubheader sx={{ lineHeight: '30px', marginTop: '10px' }}>My Account</ListSubheader>}
+        >
+            <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                    <Avatar><AccountBoxOutlined /></Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="9 Asset" secondary="admin@9asset.com"></ListItemText>
+            </ListItem>
+            { renderCommonMenu }
+            <Divider variant="middle" />
+            { renderMainMenu() }
+        </List>
+    );
+
+    const renderLangMenu = (
+        <List
+            sx={{
+                width: '100%',
+                minWidth: 300,
+                maxWidth: 360,
+                bgcolor: 'background.paper'
+            }}
+        >
+            
+            <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('default')}>
+                <ListItemButton>
+                    <ListItemIcon><ChevronLeft /></ListItemIcon>
+                    <ListItemText primaryTypographyProps={{
+                        color: 'default',
+                        variant: 'subtitle2',
+                    }}>Launguage</ListItemText>
+                </ListItemButton>
+            </ListItem>
+            <ListItem component="div" disablePadding>
+                <ListItemButton><ListItemText>English</ListItemText></ListItemButton>
+            </ListItem>
+            <ListItem component="div" disablePadding>
+                <ListItemButton><ListItemText>Chinese</ListItemText></ListItemButton>
+            </ListItem>
+            <ListItem component="div" disablePadding>
+                <ListItemButton><ListItemText>ภาษาไทย</ListItemText></ListItemButton>
+            </ListItem>
+        </List>
+    );
+
+    const renderCurrencyMenu = (
+        <List
+            sx={{
+                width: '100%',
+                minWidth: 300,
+                maxWidth: 360,
+                bgcolor: 'background.paper'
+            }}
+        >
+            
+            <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('default')}>
+                <ListItemButton>
+                    <ListItemIcon><ChevronLeft /></ListItemIcon>
+                    <ListItemText primaryTypographyProps={{
+                        color: 'default',
+                        variant: 'subtitle2',
+                    }}>Price Display</ListItemText>
+                </ListItemButton>
+            </ListItem>
+            <ListItem component="div" disablePadding>
+                <ListItemButton><ListItemText>THB</ListItemText></ListItemButton>
+            </ListItem>
+            <ListItem component="div" disablePadding>
+                <ListItemButton><ListItemText>USD</ListItemText></ListItemButton>
+            </ListItem>
+            <ListItem component="div" disablePadding>
+                <ListItemButton><ListItemText>CNY</ListItemText></ListItemButton>
+            </ListItem>
+        </List>
+    );
+
+    const renderMenu = (
+        
+        <Popover
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            open={isMenuOpen}
+            keepMounted
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            onClose={handleMenuClose}
+        >
+            { 
+                menuType === 'default' ? (false ? renderNonAuthMenu : renderAuthMenu) : 
+                    ( menuType === 'language' ? (renderLangMenu) :
+                        ( menuType === 'currency' ? (renderCurrencyMenu) : renderNonAuthMenu ) 
+                    )
+            }
+            
+            {/*   {
+            //     props.isAuth === 'true' ?            
+            //     [
+            //       <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
+            //       <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
+            //       <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            //     ]
+            //   :
+            //     <MenuItem onClick={handleLogin}>Login</MenuItem>
+            //   } */}
+        </Popover>
     );
 
     const userName = getUserName();
@@ -112,7 +281,8 @@ const Profile  = (props: any) => {
         style={{ height: '30px', width: '30px', margin: '12px' }}
         onClick={handleProfileMenuOpen}
     >{ userName }</Avatar>
-    {renderMenu}</>
+    {renderMenu}
+    </>
     );
 }
 
@@ -121,6 +291,7 @@ interface IRecipeProps {
     useExternalLinkComponent: boolean;
     mainLink?: string;
     menubar: any;
+    menu: any[];
     onAppChange?: (event: any) => void;
     onLangChanged?:  (event: any) => void;
     onMobileFilterClick:  (event: any) => void;
@@ -203,15 +374,17 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     //     { text: 'ที่ดิน', items: [] }
     // ];
     menubar: any[] = [];
+    menu: any[] = [];
 
     logoPath: any = '';
 
     constructor(props: any) {
         super(props);
-        const { logoPath, menu } = props;
+        const { logoPath } = props;
         if(logoPath) this.logoPath = logoPath;
 
         this.menubar = [...this.props.menubar];
+        this.menu = props.menu;
 
         this.state = {
             appMenuEl: null,
