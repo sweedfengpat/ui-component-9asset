@@ -35,25 +35,26 @@ const getFirstLetter = (user: any) => {
 }
 
 const Profile  = (props: any) => {
-    // const history = useHistory();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const isMenuOpen = Boolean(anchorEl);
 
-    const handleMenuClose = () => {
+    const handleMenuClose = (e: any) => {
         setAnchorEl(null);
     }
 
     const handleProfileClicked = () => {
         // history.push('/myprofile');
         setAnchorEl(null);
+        props.onProfileMenuItemClick && props.onProfileMenuItemClick('/myprofile');
     }
 
     const handleChangePassword = () => {
         // history.push('/changepassword');
         setAnchorEl(null);
+        props.onProfileMenuItemClick && props.onProfileMenuItemClick('/changepassword');
     }
 
     const handleLogout = () => {
@@ -123,6 +124,7 @@ interface IRecipeProps {
     onMobileSearchClick:  (event: any) => void;
     onMenuClick?: (id: number) => void;
     onSubMenuItemClick?: (id: number) => void;
+    onProfileMenuItemClick?: (id: number) => void;
     logoPath?: string;
 }
 
@@ -137,7 +139,7 @@ interface IRecipeState {
     user?: any;
 }
 
-export const AdvanceSearch = (props) => {
+export const AdvanceSearch = (props: any) => {
     const frameStyle = {
         width: '100%',
         // height: '100%',
@@ -382,7 +384,9 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         </Badge>
                     </IconButton> */}
                     <div style={{ display: 'flex' }}>
-                        <Profile {...this.props} isAuth={this.state.isAuth} user={this.state.user} />
+                        <Profile {...this.props} isAuth={this.state.isAuth} user={this.state.user} 
+                            onProfileMenuItemClick={this.props.onProfileMenuItemClick}
+                        />
                     </div>
                 </Toolbar>
                 <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} 

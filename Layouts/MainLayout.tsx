@@ -151,8 +151,9 @@ const ElevationScroll = (props: ElevationScrollProps) => {
 
 export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     menu: MenuItem[];
-    type?: 'seller' | 'buyer' | 'none' | undefined;
     onLanguageChanged: (lang: string) => void;
+    type?: 'seller' | 'buyer' | 'none' | undefined;
+    onProfileMenuItemClick?: (e: any) => void;
 }
 
 
@@ -216,6 +217,12 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         return menu;
     }
 
+    onProfileMenuItemClick(e: any){
+        if(this.props.onProfileMenuItemClick) {
+            this.props.onProfileMenuItemClick(e);
+        }
+    }
+
     render() {
         const menu = this.props.menu;
         const user = JSON.parse(localStorage.getItem(`9_asets.userinfo`) || '{}');
@@ -229,60 +236,6 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                     return (
                         <MainLayoutRoot>
                             <ElevationScroll {...props}>
-                                {/* <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
-                                    <Toolbar>
-                                        <img src={Logo} style={{ height: '40px' }} />
-                                        
-                                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                                        
-                                        </Box>
-                                        <Button
-                                            color="primary"
-                                            style={{ color: '#f4762a', marginLeft: '10px', textTransform: 'none' }}
-                                            endIcon={<KeyboardArrowDown />}
-                                        >
-                                            Thailand
-                                        </Button>
-                                        <Button
-                                            color="info"
-                                            style={{ color: '#5e5e5e'}}
-                                        >
-                                            โครงการ
-                                        </Button>
-                                        <Button
-                                            color="primary"
-                                            style={{ color: '#5e5e5e' }}
-                                        >
-                                            ขาย
-                                        </Button>
-                                        <Button
-                                            color="primary"
-                                            style={{ color: '#5e5e5e' }}
-                                        >
-                                            เช่า
-                                        </Button>
-                                        <div style={{ flexGrow: 1 }}></div>
-                                        { this.renderSellerBuyerButtons() }
-                                        <Select variant="outlined" size="small" inputProps={{ margin: 'dense' }} value={'en'} className="swith-language-select" onChange={this.onLangChanged}>
-                                            <MenuItem value={'en'}>EN</MenuItem>
-                                            <MenuItem value={'th'}>TH</MenuItem>
-                                            <MenuItem value={'cn'}>CN</MenuItem>
-                                        </Select>
-                                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                                            <Badge badgeContent={17} color="error">
-                                                <Notifications />
-                                            </Badge>
-                                        </IconButton>
-                                        <div style={{ display: 'flex' }}>
-                                            <Profile user={user} />
-                                        </div>
-                                    </Toolbar>
-                                    <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} justifyContent='center' alignItems='center'>
-                                        <Grid item maxWidth={'900px'} >
-                                            { this.renderMenu() }
-                                        </Grid>
-                                    </Grid>
-                                </AppBar> */}
                                 <LayoutAppBar 
                                     logoPath = {Logo}
                                     userServiceUrl={`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`}
@@ -294,6 +247,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     onMobileSearchClick={(event)=> console.log('onMobileSearchClick')}
                                     onMenuClick={(id)=> console.log('onMenuClick')}
                                     onSubMenuItemClick={(id) => console.log('onSubMenuItemClick:', id)}
+                                    onProfileMenuItemClick={this.onProfileMenuItemClick.bind(this)}
                                 />
                             </ElevationScroll>
                             <CustomDrawer variant="permanent" classes={{ paper: 'drawer-menu' }} >
