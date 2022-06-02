@@ -68,6 +68,8 @@ const Profile  = (props: any) => {
         // history.push('/logout');
         props.handleLogin && props.handleLogin();
         setAnchorEl(null);
+        const currentUrl = encodeURIComponent(window.location.href);
+        window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
     }
 
     const getUserName = () => {
@@ -162,7 +164,7 @@ export const AdvanceSearch = (props: any) => {
         const { target, type, value } = e.data;
         if( target !== '9assetApp') return;
         if(type === 'setheight') {
-            console.log('Header APP receive value: ', `${value}px`);
+            // console.log('Header APP receive value: ', `${value}px`);
             //   frame.height = `${value}px` ; //height
             setIframeHeight(`${value}px`);
         }
