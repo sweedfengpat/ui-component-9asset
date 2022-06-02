@@ -242,10 +242,13 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                 try {
                     const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
                     localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
-                    this.setState({ user: user });
+                    // this.setState({ user: user });
+
+                    console.log('Success get user', user);
                     this.setState({
                         ...this.state,
-                        isAuth: 'true'
+                        isAuth: 'true',
+                        user: user
                     })
                 } catch (error) {
                     localStorage.clear();
@@ -327,6 +330,10 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         this.props.onMenuClick && this.props.onMenuClick(id);
     }
 
+    getUserDisplayName() {
+        return this.state.user 
+            && this.state.user.displayName ? this.state.user.displayName : '' ;
+    }
 
     render() {
 
@@ -376,10 +383,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     <div style={{ flexGrow: 1 }}></div>
                     {/* { this.renderSellerBuyerButtons() } */}
                     <div style={{marginRight: '10px'}}>
-                        { 
-                            this.state.user 
-                            && this.state.user.displayName ? this.state.user.displayName : '' 
-                        }
+                        {  this.getUserDisplayName() }
                     </div>
                     {/* <Select variant="outlined" size="small" 
                         inputProps={{ margin: 'dense' }} value={this.state.selectLang} 
