@@ -1,4 +1,5 @@
-import { AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, 
+import {
+    AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, 
     Container, Grid, Button, Menu, MenuItem, Avatar, IconButton, Select, Badge,
     Paper, Autocomplete, TextField
 } from "@mui/material";
@@ -160,7 +161,7 @@ export const AdvanceSearch = (props: any) => {
       bindEvent(window, 'message', (e: any) => {
         const { target, type, value } = e.data;
         if( target !== '9assetApp') return;
-        if(type == 'setheight') {
+        if(type === 'setheight') {
             console.log('Header APP receive value: ', `${value}px`);
             //   frame.height = `${value}px` ; //height
             setIframeHeight(`${value}px`);

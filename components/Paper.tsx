@@ -10,6 +10,7 @@ export const CustomPaper = styled(Paper)({
 
 export interface NaPaperProps {
     label?: string;
+    children?: React.ReactNode;
 }
 
 export default class NaPaper extends React.Component<NaPaperProps, any> {

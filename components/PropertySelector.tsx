@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControl, MenuItem, InputLabel, Select } from '@mui/material';
-import { Category } from '../Types/Category.interface';
+import { Category } from '../types/Category.interface';
 
 export interface PropertySelectorProps {
     selected: number | undefined;

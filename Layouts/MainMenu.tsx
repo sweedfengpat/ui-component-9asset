@@ -1,11 +1,11 @@
-import { Collapse, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled } from "@mui/material";
+import { Collapse, List, ListItem, ListItemIcon, ListItemText, styled } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 
 const ActiveListItem = styled(ListItem)({
 
-})
+});
 
 export interface MenuItem {
     key: string;
@@ -84,10 +84,10 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
         const isActive = this.props.location.pathname === item.link;
         if (item.items && item.items.length > 0) {
             return (<>
-                <ListItem selected={ isActive || false } button key={item.key} onClick={(e) => this.onMenuClick(e as any, item)}>
+                <ListItem selected={ isActive || false } button key={item.key} onClick={(e: any) => this.onMenuClick(e as any, item)}>
                     <ListItemIcon>{<item.icon />}</ListItemIcon>
                     <ListItemText primary={item.title} ></ListItemText>
-                    {expanded ? <ExpandLess onClick={(e) => this.handleClick(e as any, item)} /> : <ExpandMore onClick={(e) => this.handleClick(e as any, item)} />}
+                    {expanded ? <ExpandLess onClick={(e: any) => this.handleClick(e as any, item)} /> : <ExpandMore onClick={(e: any) => this.handleClick(e as any, item)} />}
                 </ListItem>
                 <Collapse in={expanded} unmountOnExit>
                     <List component="div" disablePadding>
@@ -99,7 +99,7 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
             </>);
         } else {
             return (<>
-                <ListItem selected={ isActive || false } button key={item.key} onClick={(e) => this.onMenuClick(e as any, item)}>
+                <ListItem selected={ isActive || false } button key={item.key} onClick={(e: any) => this.onMenuClick(e as any, item)}>
                     <ListItemIcon>{<item.icon />}</ListItemIcon>
                     <ListItemText primary={item.title}></ListItemText>
                 </ListItem>
