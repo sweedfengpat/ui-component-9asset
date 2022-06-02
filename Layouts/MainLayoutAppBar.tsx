@@ -129,6 +129,7 @@ interface IRecipeProps {
     onSubMenuItemClick?: (id: number) => void;
     onProfileMenuItemClick?: (id: number) => void;
     logoPath?: string;
+    allowNoLoginAccessSite?: boolean | undefined;
 }
 
 interface IRecipeState {
@@ -229,6 +230,12 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                 ...this.state,
                 isAuth: 'false'
             })
+
+            if(this.props.allowNoLoginAccessSite !== true 
+                && process.env.REACT_APP_NODE_ENV === 'production') {
+                const currentUrl = encodeURIComponent(window.location.href);
+                window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
+            }
         } else {
             // const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
             if(this.props.userServiceUrl) {
@@ -243,6 +250,11 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                 } catch (error) {
                     localStorage.clear();
                     this.setState({ user: null, isAuth: 'false' });
+
+                    if(!this.props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
+                        const currentUrl = encodeURIComponent(window.location.href);
+                        window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
+                    }
                 }
             }
         }

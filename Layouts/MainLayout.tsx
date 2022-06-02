@@ -248,6 +248,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     onMenuClick={(id)=> console.log('onMenuClick')}
                                     onSubMenuItemClick={(id) => console.log('onSubMenuItemClick:', id)}
                                     onProfileMenuItemClick={this.onProfileMenuItemClick.bind(this)}
+                                    allowNoLoginAccessSite={true}
                                 />
                             </ElevationScroll>
                             <CustomDrawer variant="permanent" classes={{ paper: 'drawer-menu' }} >
