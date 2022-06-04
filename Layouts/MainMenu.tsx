@@ -1,7 +1,7 @@
 import { Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, MenuItem, styled, Menu } from "@mui/material";
 import { ExpandLess, ExpandMore, KeyboardArrowDown } from "@mui/icons-material";
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router";
 
 const ActiveListItem = styled(ListItem)({
 
@@ -47,11 +47,13 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
     }
 
     componentDidMount () {
-        this.setState({ expanded: this.props.menu.map(m => m.key) });
+        this.setState({ expanded: 
+            this.props.menu ?
+            this.props.menu.map(m => m.key): [] });
     }
 
     render () {
-        const section = this.props.menu;
+        const section = this.props.menu || [];
         const skipCommon = this.props.skipCommon === true;
         return (
         <>
@@ -209,4 +211,4 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
 
     }
 }
-export default withRouter(MainMenu);
+export default MainMenu;
