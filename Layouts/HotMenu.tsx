@@ -81,7 +81,7 @@ export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
         this.setState({ open: false, anchorEl: null });
     };
 
-    render (): React.ReactNode {
+    render () {
         return (<>
         <Button
             color="primary"

@@ -1,7 +1,7 @@
 import { Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, MenuItem, styled, Menu } from "@mui/material";
 import { ExpandLess, ExpandMore, KeyboardArrowDown } from "@mui/icons-material";
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router";
+// import { RouteComponentProps, withRouter } from "react-router";
 
 const ActiveListItem = styled(ListItem)({
 
@@ -23,8 +23,10 @@ export interface IMenuItem {
     items?: IMenuItem[];
 }
 
-export interface MainMenuProps extends RouteComponentProps {
-    menu: MenuSection[];
+export interface MainMenuProps  {
+    menu: MenuSection[]; 
+    history: any;
+    location: any;
     skipCommon?: boolean;
 }
 

@@ -92,10 +92,15 @@ const Profile  = (props: any) => {
     }
 
     const renderCommonMenu = (<>
-        <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('language')}>
-            <ListItemButton>
-                <ListItemText>Profile</ListItemText>
-            </ListItemButton>
+        <ListItem component="div" disablePadding
+            // onClick={(e: any) => onChangeMenuRequested('language')}
+        >
+              <ListItemText style={{
+                  paddingLeft: '16px',
+                  paddingRight: '16px',
+                  paddingTop: '8px',
+                  paddingBottom: '8px'
+                }}>Profile</ListItemText>
         </ListItem>
         <Divider variant="middle" />
         <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('language')}>
@@ -114,7 +119,9 @@ const Profile  = (props: any) => {
 
     const renderMainMenu = () => {
         return (
-            <MainMenu menu={props.menu} skipCommon={true} ></MainMenu>
+            <MainMenu menu={props.menu} skipCommon={true} history={props.history}
+                location={props.location}
+            ></MainMenu>
         );
     }
 
@@ -131,24 +138,30 @@ const Profile  = (props: any) => {
             <ListItem component="div" disablePadding>
                 <ListItemButton 
                     sx={{ textAlign: 'center' }}
-                    // onClick={handleLogin}
-                    component="a" href="/login"
+                    onClick={handleLogin}
+                    component="a" 
+                    // href="/login"
+                    // style={{backgroundColor: '#f4762a'}}
                     >
                     <ListItemText
                         primary="Sign in"
                         primaryTypographyProps={{
-                            color: 'primary',
+                            color: '#f4762a',
                             fontWeight: 'medium',
                             variant: 'body1',
                         }}
                     />
                 </ListItemButton>
                 or
-                <ListItemButton component="a" href="/login/register" sx={{ textAlign: 'center' }}>
+                <ListItemButton component="a" 
+                    href="https://my.9asset.com/login/register" 
+                    sx={{ textAlign: 'center' }}
+                    // style={{backgroundColor: 'rgb(108, 172, 25)'}}
+                    >
                     <ListItemText
                         primary="Sign up"
                         primaryTypographyProps={{
-                            color: 'primary',
+                            color: '#f4762a',
                             fontWeight: 'medium',
                             variant: 'body1',
                         }}
@@ -254,7 +267,7 @@ const Profile  = (props: any) => {
             onClose={handleMenuClose}
         >
             { 
-                menuType === 'default' ? (false ? renderNonAuthMenu : renderAuthMenu) : 
+                menuType === 'default' ? (props.isAuth === 'true' ? renderAuthMenu : renderNonAuthMenu) : 
                     ( menuType === 'language' ? (renderLangMenu) :
                         ( menuType === 'currency' ? (renderCurrencyMenu) : renderNonAuthMenu ) 
                     )
