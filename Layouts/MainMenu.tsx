@@ -61,7 +61,7 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
         <>
             <List>
                 { !skipCommon ? (<>
-                <ListItem component="div" disablePadding>
+                <ListItem component="div" disablePadding onClick={(e: any) => this.onMenuClick(e as any, { link: '/myprofile', key: '', title: '' })}>
                     <ListItemButton>
                         <ListItemText>Profile</ListItemText>
                     </ListItemButton>

@@ -26,6 +26,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import MainMenu from "./MainMenu";
+import { FirebaseApp } from "firebase/app";
+import { getAuth } from 'firebase/auth';
 
 const getFirstLetter = (user: any) => {
     const userInfo = user;
@@ -38,6 +40,7 @@ const getFirstLetter = (user: any) => {
     }
     return undefined;
 }
+
 
 const Profile  = (props: any) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -89,6 +92,15 @@ const Profile  = (props: any) => {
         }
 
         return '9';
+    }
+
+    const getName = () => {
+        if (props.user) {
+            return `${props.user.name || '' } ${props.user.lastname || '' }`.trim();
+        }
+        else {
+            return '';
+        }
     }
 
     const renderCommonMenu = (<>
@@ -184,9 +196,9 @@ const Profile  = (props: any) => {
         >
             <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                    <Avatar><AccountBoxOutlined /></Avatar>
+                    <Avatar>{getUserName()}</Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="9 Asset" secondary="admin@9asset.com"></ListItemText>
+                <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
             </ListItem>
             { renderCommonMenu }
             <Divider variant="middle" />
@@ -305,6 +317,7 @@ interface IRecipeProps {
     mainLink?: string;
     menubar: any;
     menu: any[];
+    app?: FirebaseApp;
     onAppChange?: (event: any) => void;
     onLangChanged?:  (event: any) => void;
     onMobileFilterClick:  (event: any) => void;
@@ -409,7 +422,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     }
    
     async componentDidMount () {
-        const token = localStorage.getItem('9asset_token');
+        const token = await this.getToken();
         // console.log('component did mount: ', token.split(':'));
         if(!token) {
             this.setState({
@@ -447,6 +460,10 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                 }
             }
         }
+    }
+
+    async getToken () {
+        return await getAuth(this.props.app).currentUser?.getIdToken();
     }
 
     renderMenu () {

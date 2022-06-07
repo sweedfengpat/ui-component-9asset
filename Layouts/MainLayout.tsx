@@ -11,6 +11,7 @@ import MainMenu, { MenuSection } from "./MainMenu";
 import { HotMenu } from "./HotMenu";
 import Logo from '../assets/images/9asset-logo.png';
 import { LayoutAppBar } from './MainLayoutAppBar';
+import { FirebaseApp } from "firebase/app";
 
 
 export interface MenuItem {
@@ -149,6 +150,7 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     onLanguageChanged: (lang: string) => void;
     type?: 'seller' | 'buyer' | 'none' | undefined;
     onProfileMenuItemClick?: (e: any) => void;
+    app?: FirebaseApp;
 }
 
 
@@ -237,6 +239,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     useExternalLinkComponent={false}
                                     menubar={this.menubar}
                                     menu={menu}
+                                    app={this.props.app}
                                     onAppChange={(event)=> { console.log('onAppChange'); return {}}}
                                     onLangChanged={this.onLangChanged.bind(this)}
                                     onMobileFilterClick={(event)=> console.log('onMobileFilterClick')}
