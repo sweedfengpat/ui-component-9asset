@@ -6,7 +6,7 @@ import { Route, RouteComponentProps, RouteProps } from "react-router-dom";
 import styled from "styled-components";
 
 import { ProfileCard } from '../components/ProfileCard';
-import MainMenu, { MenuSection } from "./MainMenu";
+import MainMenu, { IMenuItem, MenuSection } from "./MainMenu";
 
 import { HotMenu } from "./HotMenu";
 import Logo from '../assets/images/9asset-logo.png';
@@ -146,7 +146,8 @@ const ElevationScroll = (props: ElevationScrollProps) => {
 // }
 
 export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
-    menu: MenuSection[];
+    profilemenu: MenuSection[];
+    mainmenu: IMenuItem[];
     onLanguageChanged: (lang: string) => void;
     type?: 'seller' | 'buyer' | 'none' | undefined;
     onProfileMenuItemClick?: (e: any) => void;
@@ -221,7 +222,8 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     }
 
     render() {
-        const menu = this.props.menu;
+        const mainmenu = this.props.mainmenu;
+        const profilemenu = this.props.profilemenu;
         const user = JSON.parse(localStorage.getItem(`9_asets.userinfo`) || '{}');
         const lang = this.props.i18n.language;
         const t = this.props.t;
@@ -238,7 +240,8 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     userServiceUrl={`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`}
                                     useExternalLinkComponent={false}
                                     menubar={this.menubar}
-                                    menu={menu}
+                                    mainmenu={mainmenu}
+                                    profilemenu={profilemenu}
                                     app={this.props.app}
                                     onAppChange={(event)=> { console.log('onAppChange'); return {}}}
                                     onLangChanged={this.onLangChanged.bind(this)}
@@ -264,7 +267,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                 <ProfileCard user={user}></ProfileCard>
                               
                                 <Divider variant="middle"></Divider>
-                                <MainMenu menu={menu} ></MainMenu>
+                                <MainMenu menu={mainmenu} history={[]} location={this.props.location} />
                             </CustomDrawer>
                             <MainContainer>
                                 <Box sx={{ minHeight: '100%', pt: 0 }} style={{ background: '#f4f6f8', width: '100%' }}>

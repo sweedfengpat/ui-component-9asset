@@ -25,7 +25,8 @@ import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detec
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
-import MainMenu from "./MainMenu";
+
+import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
 
@@ -103,17 +104,25 @@ const Profile  = (props: any) => {
         }
     }
 
-    const renderCommonMenu = (<>
+    const renderProfileMenu = (
         <ListItem component="div" disablePadding
             // onClick={(e: any) => onChangeMenuRequested('language')}
         >
-              <ListItemText style={{
-                  paddingLeft: '16px',
-                  paddingRight: '16px',
-                  paddingTop: '8px',
-                  paddingBottom: '8px'
-                }}>Profile</ListItemText>
+            <ListItemButton>
+                <ListItemText style={{
+                    paddingLeft: '0px',
+                    paddingRight: '16px',
+                    paddingTop: '8px',
+                    paddingBottom: '0px'
+                }}>
+                    Profile
+                </ListItemText>
+            </ListItemButton>
         </ListItem>
+    );
+
+    const renderCommonMenu = (<>
+    
         <Divider variant="middle" />
         <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('language')}>
             <ListItemButton>
@@ -131,9 +140,11 @@ const Profile  = (props: any) => {
 
     const renderMainMenu = () => {
         return (
-            <MainMenu menu={props.menu} skipCommon={true} history={props.history}
+            <ProfileMenu
+                menu={props.menu}
+                history={props.history}
                 location={props.location}
-            ></MainMenu>
+            />
         );
     }
 
@@ -180,6 +191,7 @@ const Profile  = (props: any) => {
                     />
                 </ListItemButton>
             </ListItem>
+            { props.user ? renderProfileMenu : null }
             { renderCommonMenu }
         </List>
     );
@@ -316,7 +328,8 @@ interface IRecipeProps {
     useExternalLinkComponent: boolean;
     mainLink?: string;
     menubar: any;
-    menu: any[];
+    mainmenu: any[];
+    profilemenu: any[];
     app?: FirebaseApp;
     onAppChange?: (event: any) => void;
     onLangChanged?:  (event: any) => void;
@@ -423,6 +436,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
    
     async componentDidMount () {
         const token = await this.getToken();
+        
         // console.log('component did mount: ', token.split(':'));
         if(!token) {
             this.setState({
@@ -539,7 +553,15 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     }
 
     render() {
-
+        let user = this.state.user;
+        let isAuth = this.state.isAuth;
+        if (!user) {
+            user = JSON.parse(localStorage.getItem(`9_asets.userinfo`) || 'null');
+        }
+        if (user) {
+            isAuth = 'true';
+        }
+        
         return (
             <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
                 <Toolbar>
@@ -606,7 +628,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         </Badge>
                     </IconButton> */}
                     <div style={{ display: 'flex' }}>
-                        <Profile {...this.props} isAuth={this.state.isAuth} user={this.state.user} 
+                        <Profile {...this.props} isAuth={isAuth} user={user} 
                             onProfileMenuItemClick={this.props.onProfileMenuItemClick}
                         />
                     </div>

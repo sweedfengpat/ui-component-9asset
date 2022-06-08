@@ -1,44 +1,28 @@
-import { Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, MenuItem, styled, Menu } from "@mui/material";
+import { Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, styled, Menu } from "@mui/material";
 import { ExpandLess, ExpandMore, KeyboardArrowDown } from "@mui/icons-material";
 import React from "react";
-import { getAuth } from "firebase/auth";
+import { MenuSection, IMenuItem } from "./MainMenu";
 
 const ActiveListItem = styled(ListItem)({
 
 });
 
-export interface MenuSection {
-    key: string;
-    title: string;
-    items: IMenuItem[];
-    link?: string;
-}
-
-export interface IMenuItem {
-    key: string;
-    title: string;
-    icon?: any;
-    link?: string;
-  
-    items?: IMenuItem[];
-}
-
-export interface MainMenuProps  {
-    menu: IMenuItem[]; 
+export interface ProfileMenuProps  {
+    menu: MenuSection[]; 
     history: any;
     location: any;
 }
 
-export interface MainenuState {
+export interface ProfileMenState {
     expanded: string[];
     popupMenu: 'language' | 'currency' | '';
 
     anchorEl: HTMLElement | null;
 }
 
-export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
+export class ProfileMenu extends React.Component<ProfileMenuProps, ProfileMenState> {
 
-    constructor(props: Readonly<MainMenuProps> | MainMenuProps) {
+    constructor(props: Readonly<ProfileMenuProps> | ProfileMenuProps) {
         super(props);
         this.state = {
             expanded: [],
@@ -54,16 +38,40 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
     }
 
     render () {
-        const menu = this.props.menu || [];
+        const section = this.props.menu || [];
         return (
         <>
             <List>
                 {
-                    menu.map((i) => this.renderMenu(i, 0))
+                    section.map((i, j) => this.renderSection(i, j))
                 }
             </List>
+            { this.renderPopupMenu() }
         </>
         );
+    }
+
+    renderPopupMenu = () => {
+        const items = 
+            (this.state.popupMenu === 'language' ? 
+                ['English', 'Chinese', 'ภาษาไทย'] : 
+                    (this.state.popupMenu === 'currency' ? 
+                        ['THB', 'USD', 'CNY'] : []))
+            .map(i => {
+                return (<MenuItem disableRipple onClick={() => { this.setState({ popupMenu: '', anchorEl: null }) }}>{i}</MenuItem>);
+            })
+        
+        return (<>
+        <Menu 
+            open={this.state.popupMenu !== ''}
+            anchorEl={this.state.anchorEl} 
+            onClose={() => { this.setState({ popupMenu: '', anchorEl: null }) }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right'}}
+            sx={{ minWidth: 180 }}
+        >
+            { items }
+        </Menu>
+        </>)
     }
 
     handleCommonMenuClick = (event: React.MouseEvent<HTMLButtonElement>, type: 'language' | 'currency' | '') => {
@@ -128,43 +136,26 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
         {
             open && item.items.map(i => this.renderMenu(i, 0))
         }
-        { index < this.props.menu.length - 1 ? <Divider variant="middle" /> : <></> }
+        {   
+            index < this.props.menu.length - 1 ? <Divider variant="middle" /> : <></> 
+        }
         </>)
     }
 
     private renderMenu = (item: IMenuItem, indent: number): any => {
-        const expanded = this.isExpanded(item.key);
         const isActive = this.props.location.pathname === item.link;
-        if (item.items && item.items.length > 0) {
-            return (<>
-                <ListItem selected={ isActive || false } button key={item.key} onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
-                    <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon>
-                    <ListItemText primary={item.title} primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }} ></ListItemText>
-                    {expanded ? <ExpandLess onClick={(e: any) => this.handleClick(e as any, item)} /> : <ExpandMore onClick={(e: any) => this.handleClick(e as any, item)} />}
-                </ListItem>
-                <Collapse in={expanded} unmountOnExit>
-                    <List component="div" disablePadding>
-                        {
-                            item.items.map(i => this.renderMenu(i, indent+1))
-                        }
-                    </List>
-                </Collapse>
-            </>);
-        } else {
-            return (<>
-                <ListItemButton key={item.key} selected={ isActive || false } onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
-                    <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon>
-                    <ListItemText
-                        primary={item.title}
-                        primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }}
-                    />
-                </ListItemButton>
-                {/* {
-                    item && (item.items || []).map(i => this.renderMenu(i, indent+1))
-                } */}
-            </>);
-        }
-
+        return (<>
+            <ListItemButton key={item.key} selected={ isActive || false } sx={{ py: 0 }} onClick={(e: any) => this.onMenuClick(e as any, item)}>
+                <ListItemText
+                    sx={{ paddingLeft: `${indent*15}px`}}
+                    primary={item.title}
+                    primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
+                />
+            </ListItemButton>
+            {
+                item && (item.items || []).map(i => this.renderMenu(i, indent+1))
+            }
+        </>);
     }
 }
-export default MainMenu;
+export default ProfileMenu;
