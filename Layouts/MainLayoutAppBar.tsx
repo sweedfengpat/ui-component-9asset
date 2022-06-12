@@ -454,7 +454,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
             if(this.props.userServiceUrl) {
                 try {
                     const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
-                    localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+                    localStorage && localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
                     // this.setState({ user: user });
 
                     console.log('Success get user', user);
@@ -464,7 +464,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         user: user
                     })
                 } catch (error) {
-                    localStorage.clear();
+                    localStorage && localStorage.clear();
                     this.setState({ user: null, isAuth: 'false' });
 
                     if(!this.props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
@@ -556,7 +556,9 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         let user = this.state.user;
         let isAuth = this.state.isAuth;
         if (!user) {
-            user = JSON.parse(localStorage.getItem(`9_asets.userinfo`) || 'null');
+            if (typeof window !== "undefined") {
+                user = window.localStorage && JSON.parse(window.localStorage.getItem(`9_asets.userinfo`) || 'null');
+            }
         }
         if (user) {
             isAuth = 'true';
