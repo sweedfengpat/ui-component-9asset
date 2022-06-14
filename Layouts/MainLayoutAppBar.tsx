@@ -435,6 +435,9 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     }
    
     async componentDidMount () {
+
+        const token = await this.getToken();
+        
         console.log('component did mount token: ', token);
         if(!token) {
             this.setState({
