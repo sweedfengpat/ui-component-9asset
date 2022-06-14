@@ -28,7 +28,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const getFirstLetter = (user: any) => {
     const userInfo = user;
@@ -435,9 +435,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     }
    
     async componentDidMount () {
-        const token = await this.getToken();
-        
-        // console.log('component did mount: ', token.split(':'));
+        console.log('component did mount token: ', token);
         if(!token) {
             this.setState({
                 ...this.state,
@@ -450,6 +448,8 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                 window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
             }
         } else {
+
+            console.log('has token');
             // const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
             if(this.props.userServiceUrl) {
                 try {
@@ -477,6 +477,8 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     }
 
     async getToken () {
+        console.log('app: ', this.props.app);
+
         return await getAuth(this.props.app).currentUser?.getIdToken();
     }
 
