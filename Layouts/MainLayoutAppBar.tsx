@@ -439,50 +439,98 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         const token = await this.getToken();
         
         console.log('component did mount token: ', token);
-        if(!token) {
-            this.setState({
-                ...this.state,
-                isAuth: 'false'
-            })
+        // if(!token) {
+        //     this.setState({
+        //         ...this.state,
+        //         isAuth: 'false'
+        //     })
 
-            if(this.props.allowNoLoginAccessSite !== true 
-                && process.env.REACT_APP_NODE_ENV === 'production') {
-                const currentUrl = encodeURIComponent(window.location.href);
-                window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
-            }
-        } else {
+        //     if(this.props.allowNoLoginAccessSite !== true 
+        //         && process.env.REACT_APP_NODE_ENV === 'production') {
+        //         const currentUrl = encodeURIComponent(window.location.href);
+        //         window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
+        //     }
+        // } else {
 
-            console.log('has token');
-            // const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
-            if(this.props.userServiceUrl) {
-                try {
-                    const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
-                    localStorage && localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
-                    // this.setState({ user: user });
+        //     console.log('has token');
+        //     // const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
+        //     if(this.props.userServiceUrl) {
+        //         try {
+        //             const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
+        //             localStorage && localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+        //             // this.setState({ user: user });
 
-                    console.log('Success get user', user);
-                    this.setState({
-                        ...this.state,
-                        isAuth: 'true',
-                        user: user
-                    })
-                } catch (error) {
-                    localStorage && localStorage.clear();
-                    this.setState({ user: null, isAuth: 'false' });
+        //             console.log('Success get user', user);
+        //             this.setState({
+        //                 ...this.state,
+        //                 isAuth: 'true',
+        //                 user: user
+        //             })
+        //         } catch (error) {
+        //             localStorage && localStorage.clear();
+        //             this.setState({ user: null, isAuth: 'false' });
 
-                    if(!this.props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
-                        const currentUrl = encodeURIComponent(window.location.href);
-                        window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
-                    }
-                }
-            }
-        }
+        //             if(!this.props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
+        //                 const currentUrl = encodeURIComponent(window.location.href);
+        //                 window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     async getToken () {
         console.log('app: ', this.props.app);
+        const auth = await getAuth(this.props.app);
 
-        return await getAuth(this.props.app).currentUser?.getIdToken();
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+              // User is signed in, see docs for a list of available properties
+              // https://firebase.google.com/docs/reference/js/firebase.User
+                const uid = user.uid;
+                const token = user.getIdToken();
+                
+                console.log('my token: ', token);
+                if(this.props.userServiceUrl) {
+                    try {
+
+                        const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
+                        localStorage && localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+                        // this.setState({ user: user });
+
+                        console.log('Success get user', user);
+                        this.setState({
+                            ...this.state,
+                            isAuth: 'true',
+                            user: user
+                        })
+                    } catch (error) {
+                        localStorage && localStorage.clear();
+                        this.setState({ user: null, isAuth: 'false' });
+
+                        if(!this.props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
+                            const currentUrl = encodeURIComponent(window.location.href);
+                            window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
+                        }
+                    }
+                }
+            } else {
+                // User is signed out
+                // ...
+                this.setState({
+                    ...this.state,
+                    isAuth: 'false'
+                })
+                
+                if(this.props.allowNoLoginAccessSite !== true 
+                    && process.env.REACT_APP_NODE_ENV === 'production') {
+                    const currentUrl = encodeURIComponent(window.location.href);
+                    window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
+                }
+            }
+        });
+          
+        return auth.currentUser?.getIdToken();
     }
 
     renderMenu () {
