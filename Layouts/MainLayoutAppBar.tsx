@@ -297,8 +297,8 @@ const Profile  = (props: any) => {
                     )
             }
             
-            {/* {
-                props.isAuth === 'true' ?            
+            {
+                props.isAuth === 'true' && menuType === 'default' ?            
                 [
                   <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
                   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
@@ -306,7 +306,7 @@ const Profile  = (props: any) => {
                 ]
               : undefined
                 // <MenuItem onClick={handleLogin}>Login</MenuItem>
-            } */}
+            }
         </Popover>
     );
 
@@ -319,15 +319,6 @@ const Profile  = (props: any) => {
         onClick={handleProfileMenuOpen}
     >{ userName }</Avatar>
     {renderMenu}
-    {
-        props.isAuth === 'true' ?            
-        [
-            // <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
-            // <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        ]
-        : undefined
-    }
     </>
     );
 }
@@ -493,6 +484,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         const auth = await getAuth(this.props.app);
 
         onAuthStateChanged(auth, async (user) => {
+            console.log('onAuthStateChanged');
             if (user) {
               // User is signed in, see docs for a list of available properties
               // https://firebase.google.com/docs/reference/js/firebase.User
