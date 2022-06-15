@@ -297,16 +297,16 @@ const Profile  = (props: any) => {
                     )
             }
             
-            {/*   {
-            //     props.isAuth === 'true' ?            
-            //     [
-            //       <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
-            //       <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
-            //       <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            //     ]
-            //   :
-            //     <MenuItem onClick={handleLogin}>Login</MenuItem>
-            //   } */}
+            {
+                props.isAuth === 'true' ?            
+                [
+                  <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
+                  <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                ]
+              : undefined
+                // <MenuItem onClick={handleLogin}>Login</MenuItem>
+            }
         </Popover>
     );
 
