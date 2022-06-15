@@ -488,8 +488,8 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
               // User is signed in, see docs for a list of available properties
               // https://firebase.google.com/docs/reference/js/firebase.User
                 const uid = user.uid;
-                const token = user.getIdToken();
-                
+                const token = await user.getIdToken();
+
                 console.log('my token: ', token);
                 if(this.props.userServiceUrl) {
                     try {
