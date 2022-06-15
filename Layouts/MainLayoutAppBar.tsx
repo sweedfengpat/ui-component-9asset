@@ -435,7 +435,6 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         const auth = await getAuth(this.props.app);
 
         onAuthStateChanged(auth, async (user) => {
-            console.log('onAuthStateChanged', this.state);
             if (user) {
               // User is signed in, see docs for a list of available properties
               // https://firebase.google.com/docs/reference/js/firebase.User
@@ -481,6 +480,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
                 }
             }
+            console.log('onAuthStateChanged', this.state);
         });
           
         return auth.currentUser?.getIdToken();
