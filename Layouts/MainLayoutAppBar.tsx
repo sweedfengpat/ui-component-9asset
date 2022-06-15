@@ -393,26 +393,7 @@ export const AdvanceSearch = (props: any) => {
 }
 
 export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
-    // menubar = [
-    //     { text: 'คอนโด', items: [
-    //         { text: 'คอนโดโครงการ', link: '/โครงการ/คอนโด' },
-    //         { text: 'ขายคอนโด', link: '/ขาย/คอนโด' },
-    //         { text: 'เช่าคอนโด', link: '/เช่า/คอนโด' },
-    //         { text: 'เซ้งคอนโด', link: '/เซ้ง/คอนโด' }
-    //     ] },
-    //     { text: 'บ้านเดี่ยว', items: [
-    //         { text: 'คอนโดบ้านเดี่ยว', link: '/โครงการ/บ้านเดี่ยว' },
-    //         { text: 'ขายบ้านเดี่ยว', link: '/ขาย/บ้านเดี่ยว' },
-    //         { text: 'เช่าบ้านเดี่ยว', link: '/เช่า/บ้านเดี่ยว' },
-    //         { text: 'เซ้งบ้านเดี่ยว', link: '/เซ้ง/บ้านเดี่ยว' }
-    //     ] },
-    //     { text: 'ทาวน์เฮาส์-โฮม', items: [] },
-    //     { text: 'อาคารพาณิชย์', items: [] },
-    //     { text: 'โฮมออฟฟิส', items: [] },
-    //     { text: 'บ้านแฝด', items: [] },
-    //     { text: 'อพาร์ทเมนท์', items: [] },
-    //     { text: 'ที่ดิน', items: [] }
-    // ];
+   
     menubar: any[] = [];
     menu: any[] = [];
 
@@ -439,14 +420,14 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
 
         const token = await this.getToken();
         
-        console.log('component did mount token: ', token);
-        if(!token) {
-            this.setState({
-                ...this.state,
-                isAuth: 'false',
-                user: null
-            })
-        }
+        // console.log('component did mount token: ', token);
+        // if(!token) {
+        //     this.setState({
+        //         ...this.state,
+        //         isAuth: 'false',
+        //         user: null
+        //     })
+        // }
     }
 
     async getToken () {
@@ -454,7 +435,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         const auth = await getAuth(this.props.app);
 
         onAuthStateChanged(auth, async (user) => {
-            console.log('onAuthStateChanged', this.state.isAuth );
+            console.log('onAuthStateChanged', this.state);
             if (user) {
               // User is signed in, see docs for a list of available properties
               // https://firebase.google.com/docs/reference/js/firebase.User
@@ -655,7 +636,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         </Badge>
                     </IconButton> */}
                     <div style={{ display: 'flex' }}>
-                        <Profile {...this.props} isAuth={() => this.state.isAuth} user={user} 
+                        <Profile {...this.props} isAuth={this.state.isAuth} user={user} 
                             onProfileMenuItemClick={this.props.onProfileMenuItemClick}
                         />
                     </div>
