@@ -297,7 +297,7 @@ const Profile  = (props: any) => {
                     )
             }
             
-            {
+            {/* {
                 props.isAuth === 'true' ?            
                 [
                   <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
@@ -306,7 +306,7 @@ const Profile  = (props: any) => {
                 ]
               : undefined
                 // <MenuItem onClick={handleLogin}>Login</MenuItem>
-            }
+            } */}
         </Popover>
     );
 
@@ -319,6 +319,15 @@ const Profile  = (props: any) => {
         onClick={handleProfileMenuOpen}
     >{ userName }</Avatar>
     {renderMenu}
+    {
+        props.isAuth === 'true' ?            
+        [
+            // <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
+            // <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        ]
+        : undefined
+    }
     </>
     );
 }
