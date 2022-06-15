@@ -439,11 +439,12 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         const token = await this.getToken();
         
         console.log('component did mount token: ', token);
-        // if(!token) {
-        //     this.setState({
-        //         ...this.state,
-        //         isAuth: 'false'
-        //     })
+        if(!token) {
+            this.setState({
+                ...this.state,
+                isAuth: 'false'
+            })
+        }
 
         //     if(this.props.allowNoLoginAccessSite !== true 
         //         && process.env.REACT_APP_NODE_ENV === 'production') {
@@ -517,10 +518,11 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                 }
             } else {
                 // User is signed out
-                // ...
+                console.log('User is signed out')
                 this.setState({
                     ...this.state,
-                    isAuth: 'false'
+                    isAuth: 'false',
+                    user: null
                 })
                 
                 if(this.props.allowNoLoginAccessSite !== true 
