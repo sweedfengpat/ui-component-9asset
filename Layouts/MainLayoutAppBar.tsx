@@ -30,6 +30,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { IMenuItem } from "./MainMenu";
 
 const getFirstLetter = (user: any) => {
     const userInfo = user;
@@ -339,6 +340,7 @@ interface IRecipeProps {
     onMenuClick?: (id: number) => void;
     onSubMenuItemClick?: (id: number) => void;
     onProfileMenuItemClick?: (id: number) => void;
+    onMainMenuClick?: (e: MouseEvent, item: IMenuItem) => void;
     logoPath?: string;
     allowNoLoginAccessSite?: boolean | undefined;
 }

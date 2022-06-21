@@ -151,8 +151,10 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     onLanguageChanged: (lang: string) => void;
     type?: 'seller' | 'buyer' | 'none' | undefined;
     onProfileMenuItemClick?: (e: any) => void;
+
+    onMainMenuClick?: (e: MouseEvent, item: IMenuItem) => void;
+    
     app?: FirebaseApp;
-    onMenuItemClick?: (item: any) => void;
 }
 
 
@@ -198,6 +200,10 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     onLangChanged = (event: any) => {
         this.props.i18n.changeLanguage(event.target.value);
         this.props.onLanguageChanged(event.target.value);
+    }
+
+    onMainMenuClicked = (e: MouseEvent, item: IMenuItem) => {
+        this.props.onMainMenuClick && this.props.onMainMenuClick(e, item);
     }
 
     renderSellerBuyerButtons () {
@@ -268,8 +274,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                 <ProfileCard user={user}></ProfileCard>
                               
                                 <Divider variant="middle"></Divider>
-                                <MainMenu menu={mainmenu} history={[]} location={this.props.location} 
-                                    onMenuItemClick={this.props.onMenuItemClick} />
+                                <MainMenu menu={mainmenu} location={this.props.location} onMenuItemClick={this.onMainMenuClicked} />
                             </CustomDrawer>
                             <MainContainer>
                                 <Box sx={{ minHeight: '100%', pt: 0 }} style={{ background: '#f4f6f8', width: '100%' }}>

@@ -1,5 +1,5 @@
 import { Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, MenuItem, styled, Menu } from "@mui/material";
-import { ExpandLess, ExpandMore, KeyboardArrowDown } from "@mui/icons-material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React from "react";
 import { getAuth } from "firebase/auth";
 
@@ -24,10 +24,9 @@ export interface IMenuItem {
 }
 
 export interface MainMenuProps  {
-    menu: IMenuItem[]; 
-    history: any;
+    menu: IMenuItem[];
     location: any;
-    onMenuItemClick?: (e: any) => void;
+    onMenuItemClick?: (e: MouseEvent, item: IMenuItem) => void;
 }
 
 export interface MainenuState {
@@ -86,13 +85,13 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
     };
 
     onMenuClick = (e: MouseEvent, item: IMenuItem) => {
-        console.log('onProfileMenuItemClick: ', item, e, this.props.history) 
+        console.log('onProfileMenuItemClick: ', item, e);
         e.preventDefault();
         if (item.link !== undefined) {
-            this.props.history.push(item.link || '');
+    
 
             if(this.props.onMenuItemClick) {
-                this.props.onMenuItemClick(item);
+                this.props.onMenuItemClick(e, item);
             }
         } else {
             const key = item.key;
@@ -145,7 +144,7 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
                 <ListItem selected={ isActive || false } button key={item.key} onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
                     <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon>
                     <ListItemText primary={item.title} primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }} ></ListItemText>
-                    {expanded ? <ExpandLess onClick={(e: any) => this.handleClick(e as any, item)} /> : <ExpandMore onClick={(e: any) => this.handleClick(e as any, item)} />}
+                    { expanded ? <ExpandLess onClick={(e: any) => this.handleClick(e as any, item)} /> : <ExpandMore onClick={(e: any) => this.handleClick(e as any, item)} /> }
                 </ListItem>
                 <Collapse in={expanded} unmountOnExit>
                     <List component="div" disablePadding>
@@ -164,9 +163,6 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
                         primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }}
                     />
                 </ListItemButton>
-                {/* {
-                    item && (item.items || []).map(i => this.renderMenu(i, indent+1))
-                } */}
             </>);
         }
 
