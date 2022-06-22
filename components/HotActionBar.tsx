@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 const MainContainer = styled.div({
     display: 'flex',
+    marginTop: '15px',
     width: '100%'
 });
 
@@ -50,15 +51,15 @@ class HotActionBar extends React.Component<HotActionBarProps> {
     render () {
         return (
         <MainContainer>
-            { this.props.type === 'buyer' ? (
-                <>
-                    <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: '#ff5e5e' }} onClick={this.onCreateNewRequirement}>Create Requirement</Button>
-                    <Button variant="contained" color="secondary" onClick={this.onSellProperty}>Sell property/service</Button>
-                </>)  : (
+            {/* { this.props.type === 'buyer' ? (
+                <> */}
+                    <Button variant="contained" color="success" style={{ marginRight: 5 }} onClick={this.onCreateNewRequirement}>Create Requirement</Button>
+                    <Button variant="contained" color="warning" onClick={this.onCreateNewProject}>Add Listing</Button>
+                {/* </>)  : (
                 <>
                     <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: '#ff5e5e' }} onClick={this.onCreateNewProperty}>Create Property</Button>
                     <Button variant="contained" color="secondary" onClick={this.onCreateNewProject}>Create Project</Button>
-                </>) }
+                </>) } */}
         </MainContainer>);
     }
 }
