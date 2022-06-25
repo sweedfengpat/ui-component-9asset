@@ -152,6 +152,7 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     type?: 'seller' | 'buyer' | 'none' | undefined;
     onProfileMenuItemClick?: (e: any) => void;
     app?: FirebaseApp;
+    onMenuItemClick?: (item: any) => void;
 }
 
 
@@ -267,7 +268,8 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                 <ProfileCard user={user}></ProfileCard>
                               
                                 <Divider variant="middle"></Divider>
-                                <MainMenu menu={mainmenu} history={[]} location={this.props.location} />
+                                <MainMenu menu={mainmenu} history={[]} location={this.props.location} 
+                                    onMenuItemClick={this.props.onMenuItemClick} />
                             </CustomDrawer>
                             <MainContainer>
                                 <Box sx={{ minHeight: '100%', pt: 0 }} style={{ background: '#f4f6f8', width: '100%' }}>

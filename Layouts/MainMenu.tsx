@@ -27,6 +27,7 @@ export interface MainMenuProps  {
     menu: IMenuItem[]; 
     history: any;
     location: any;
+    onMenuItemClick?: (e: any) => void;
 }
 
 export interface MainenuState {
@@ -85,10 +86,14 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
     };
 
     onMenuClick = (e: MouseEvent, item: IMenuItem) => {
-       
+        console.log('onProfileMenuItemClick: ', item, e, this.props.history) 
         e.preventDefault();
         if (item.link !== undefined) {
             this.props.history.push(item.link || '');
+
+            if(this.props.onMenuItemClick) {
+                this.props.onMenuItemClick(item);
+            }
         } else {
             const key = item.key;
             if (this.state.expanded.includes(key)) {
