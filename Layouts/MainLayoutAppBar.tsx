@@ -143,81 +143,56 @@ const Profile  = (props: any) => {
     const renderMainMenu = () => {
         return (
             <ProfileMenu
-                menu={props.menu}
+                menu={props.profilemenu}
                 history={props.history}
                 location={props.location}
             />
         );
     }
 
-    const renderNonAuthMenu = (
-        <List
-            sx={{
-                width: '100%',
-                minWidth: 300,
-                maxWidth: 360,
-                bgcolor: 'background.paper'
-            }}
-            subheader={<ListSubheader sx={{ lineHeight: '30px', marginTop: '10px' }}>My Account</ListSubheader>}
-        >
-            <ListItem component="div" disablePadding>
-                <ListItemButton 
-                    sx={{ textAlign: 'center' }}
-                    onClick={handleLogin}
-                    component="a" 
-                    // href="/login"
-                    // style={{backgroundColor: '#f4762a'}}
-                    >
-                    <ListItemText
-                        primary="Sign in"
-                        primaryTypographyProps={{
-                            color: '#f4762a',
-                            fontWeight: 'medium',
-                            variant: 'body1',
-                        }}
-                    />
-                </ListItemButton>
-                or
-                <ListItemButton component="a" 
-                    href="https://my.9asset.com/login/register" 
-                    sx={{ textAlign: 'center' }}
-                    // style={{backgroundColor: 'rgb(108, 172, 25)'}}
-                    >
-                    <ListItemText
-                        primary="Sign up"
-                        primaryTypographyProps={{
-                            color: '#f4762a',
-                            fontWeight: 'medium',
-                            variant: 'body1',
-                        }}
-                    />
-                </ListItemButton>
-            </ListItem>
-            { props.user ? renderProfileMenu : null }
-            { renderCommonMenu }
-        </List>
+    const nonAuthMenu = (
+        <ListItem component="div" disablePadding>
+            <ListItemButton 
+                sx={{ textAlign: 'center' }}
+                onClick={handleLogin}
+                component="a" 
+                // href="/login"
+                // style={{backgroundColor: '#f4762a'}}
+                >
+                <ListItemText
+                    primary="Sign in"
+                    primaryTypographyProps={{
+                        color: '#f4762a',
+                        fontWeight: 'medium',
+                        variant: 'body1',
+                    }}
+                />
+            </ListItemButton>
+            or
+            <ListItemButton component="a" 
+                href="https://my.9asset.com/login/register" 
+                sx={{ textAlign: 'center' }}
+                // style={{backgroundColor: 'rgb(108, 172, 25)'}}
+                >
+                <ListItemText
+                    primary="Sign up"
+                    primaryTypographyProps={{
+                        color: '#f4762a',
+                        fontWeight: 'medium',
+                        variant: 'body1',
+                    }}
+                />
+            </ListItemButton>
+        </ListItem>
     );
 
-    const renderAuthMenu = (
-        <List
-            sx={{
-                width: '100%',
-                minWidth: 300,
-                maxWidth: 360,
-                bgcolor: 'background.paper'
-            }}
-            subheader={<ListSubheader sx={{ lineHeight: '30px', marginTop: '10px' }}>My Account</ListSubheader>}
-        >
-            <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                    <Avatar>{getUserName()}</Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
-            </ListItem>
-            { renderCommonMenu }
-            <Divider variant="middle" />
-            { renderMainMenu() }
-        </List>
+    const authMenu = (
+        <ListItem alignItems="flex-start">
+            <ListItemAvatar>
+                <Avatar>{getUserName()}</Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
+        </ListItem>
     );
 
     const renderLangMenu = (
@@ -282,6 +257,24 @@ const Profile  = (props: any) => {
         </List>
     );
 
+    const profileMenu = (
+        <List
+            sx={{
+                width: '100%',
+                minWidth: 300,
+                maxWidth: 360,
+                bgcolor: 'background.paper'
+            }}
+            subheader={<ListSubheader sx={{ lineHeight: '30px', marginTop: '10px' }}>My Account</ListSubheader>}
+        >
+            { props.isAuth === 'true' ? authMenu : nonAuthMenu }
+            <Divider variant="middle" />
+            { renderCommonMenu }
+            <Divider variant="middle" />
+            { renderMainMenu() }
+        </List>
+    );
+
     const renderMenu = (
         
         <Popover
@@ -292,12 +285,18 @@ const Profile  = (props: any) => {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             onClose={handleMenuClose}
         >
-            { 
+            {
+                menuType === 'default' ? profileMenu : (
+                    menuType === 'language' ? (renderLangMenu) :
+                    ( menuType === 'currency' ? (renderCurrencyMenu) : profileMenu )
+                )
+            }
+            {/* { 
                 menuType === 'default' ? (props.isAuth === 'true' ? renderAuthMenu : renderNonAuthMenu) : 
                     ( menuType === 'language' ? (renderLangMenu) :
                         ( menuType === 'currency' ? (renderCurrencyMenu) : renderNonAuthMenu ) 
                     )
-            }
+            } */}
             
             {
                 props.isAuth === 'true' && menuType === 'default' ?            
