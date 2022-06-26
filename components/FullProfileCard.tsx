@@ -4,7 +4,7 @@ import React from "react"
 const CustomPaper = styled(Paper)({
     minHeight: '10px',
     marginTop: '15px',
-    marginBottom: '40px',
+    marginBottom: '20px',
     padding: '20px 20px',
 });
 

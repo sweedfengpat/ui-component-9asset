@@ -24,7 +24,7 @@ export class PropertySelector extends React.Component<PropertySelectorProps, any
         // const { t } = this.props;
         // const validationFailed = this.state.validated.find(item => item.key === 'property');
         return (
-            <FormControl variant="outlined" style={{ maxWidth: '300px' }} size="small" fullWidth>
+            <FormControl variant="outlined" style={{ maxWidth: '400px' }} size="small" fullWidth>
                 <InputLabel id="property-type-label">Property</InputLabel>
                 <Select
                     labelId="property-type-label"

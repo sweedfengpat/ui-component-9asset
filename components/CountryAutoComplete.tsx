@@ -266,6 +266,7 @@ export interface CountryAutoCompleteProps {
     value?: CountryType | undefined;
     sx?: SxProps<Theme>;
     defaultCountry?: string | undefined;
+    fullWidth?: boolean;
 
     renderInput?: (params: AutocompleteRenderInputParams) => React.ReactNode;
 
