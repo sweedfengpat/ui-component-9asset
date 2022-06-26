@@ -234,6 +234,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         const user = JSON.parse(localStorage.getItem(`9_asets.userinfo`) || '{}');
         const lang = this.props.i18n.language;
         const t = this.props.t;
+        debugger;
         return (
             <Route render={(props: RouteComponentProps) => {
                 if (this.props.component) {
@@ -258,6 +259,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     onSubMenuItemClick={(id) => console.log('onSubMenuItemClick:', id)}
                                     onProfileMenuItemClick={this.onProfileMenuItemClick.bind(this)}
                                     allowNoLoginAccessSite={false}
+                                    location={this.props.location}
                                 />
                             </ElevationScroll>
                             <CustomDrawer

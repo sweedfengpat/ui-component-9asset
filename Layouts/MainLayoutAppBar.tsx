@@ -342,6 +342,7 @@ interface IRecipeProps {
     onMainMenuClick?: (e: MouseEvent, item: IMenuItem) => void;
     logoPath?: string;
     allowNoLoginAccessSite?: boolean | undefined;
+    location?: any;
 }
 
 interface IRecipeState {
