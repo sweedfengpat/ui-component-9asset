@@ -234,7 +234,6 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         const user = JSON.parse(localStorage.getItem(`9_asets.userinfo`) || '{}');
         const lang = this.props.i18n.language;
         const t = this.props.t;
-        debugger;
         return (
             <Route render={(props: RouteComponentProps) => {
                 if (this.props.component) {

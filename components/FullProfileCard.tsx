@@ -39,6 +39,9 @@ export const FullProfileCard: React.FC<FullProfileCardProps> = (props: FullProfi
     const getDisplayName = () => {
         const userInfo = props.user;
         if (userInfo) {
+            if (userInfo.name && userInfo.lastname) {
+                return `${userInfo.name} ${userInfo.lastname}`;
+            }
             if (userInfo.displayName) {
                 return userInfo.displayName;
             }
