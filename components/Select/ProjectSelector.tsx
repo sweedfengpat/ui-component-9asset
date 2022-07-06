@@ -21,6 +21,10 @@ export interface ProjectSelectorProps {
         reason: AutocompleteChangeReason,
         details?: AutocompleteChangeDetails
     ) => void;
+    onInputChange?: (
+        event: React.ChangeEvent<{}>,
+        value: any,
+    ) => void;
 }
 
 export interface ProjectSelectorState {
@@ -78,6 +82,7 @@ interface PopperComponentProps {
     disablePortal?: boolean;
 
     open: boolean;
+    defaultValue?: any;
 }
 
 const PopperComponent = (props: PopperComponentProps) => {
@@ -167,6 +172,13 @@ export class ProjectSelector extends React.Component<ProjectSelectorProps, Proje
         this.setState({ selected: Array.isArray(value) ? value : [value] });
         if (this.props.onChange) {
             this.props.onChange(event, value, reason, detail);
+        }
+    }
+
+    handleInputChange = (event: React.ChangeEvent<{}>, value: string | string[] | object | object[] | null) => {
+    
+        if (this.props.onInputChange) {
+            this.props.onInputChange(event, value);
         }
     }
 
@@ -370,6 +382,7 @@ export class ProjectSelector extends React.Component<ProjectSelectorProps, Proje
                     getOptionLabel={ (option: any) => `${option.project.name.TH}` }
                     PaperComponent={({children}) => <Paper elevation={0} >{children}</Paper>}
                     disableCloseOnSelect={ this.props.multiple || false }
+                    onInputChange={(e, v) => this.handleInputChange(e, v)}
                     onChange={this.handleChange}
                     onClose={this.handleClose}
                     multiple={this.props.multiple}
