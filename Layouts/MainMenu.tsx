@@ -142,7 +142,7 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
         if (item.items && item.items.length > 0) {
             return (<>
                 <ListItem selected={ isActive || false } button key={item.key} onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
-                    <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon>
+                    { item.icon ? <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon> : <></> }
                     <ListItemText primary={item.title} primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }} ></ListItemText>
                     { expanded ? <ExpandLess onClick={(e: any) => this.handleClick(e as any, item)} /> : <ExpandMore onClick={(e: any) => this.handleClick(e as any, item)} /> }
                 </ListItem>
@@ -157,7 +157,7 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
         } else {
             return (<>
                 <ListItemButton key={item.key} selected={ isActive || false } onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
-                    <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon>
+                { item.icon ? <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon> : <></> }
                     <ListItemText
                         primary={item.title}
                         primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }}
