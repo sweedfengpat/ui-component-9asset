@@ -371,7 +371,7 @@ export class ProjectSelector extends React.Component<ProjectSelectorProps, Proje
                         }
                         subheader = `${subheader} ${option.amphur.name.TH}, ${option.district.name.TH}, ${option.province.name.TH}`
                         return (
-                        <ListItem {...props} key={`${option.project.id}-${option.property.id}`} selected={state.selected} >
+                        <ListItem {...props} key={`${option.project.id}`} selected={state.selected} >
                             <ListItemText 
                                 primary={option.project.name.TH || option.project.name.EN} 
                                 secondary={subheader} />
