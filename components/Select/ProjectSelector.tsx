@@ -149,7 +149,7 @@ export class ProjectSelector extends React.Component<ProjectSelectorProps, Proje
     }
 
     getSelectedOption () {
-        return ((this.state.selected as any[]) || []).map(item => item.project.name.TH || item.project.name.EN).join();
+        return ((this.state.selected as any[]) || []).filter(item => item.project).map(item => item.project.name.TH || item.project.name.EN).join();
     }
 
     setAnchorEl = (anchorEl: (EventTarget & Element) | null) => {
