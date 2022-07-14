@@ -8,6 +8,8 @@ export interface ProjectSelectorProps {
     disabled: boolean;
     multiple: boolean;
 
+    defaultValue?: any;
+
     options: ProjectInfo[];
 
     renderInput?: (params: any) => React.ReactNode;
@@ -111,6 +113,12 @@ export class ProjectSelector extends React.Component<ProjectSelectorProps, Proje
             inputAnchorEl: null,
 
             selected: undefined
+        }
+    }
+
+    componentDidMount () {
+        if (this.props.defaultValue) {
+            this.setState({ selected: [this.props.defaultValue] });
         }
     }
 
@@ -386,6 +394,7 @@ export class ProjectSelector extends React.Component<ProjectSelectorProps, Proje
                     onChange={this.handleChange}
                     onClose={this.handleClose}
                     multiple={this.props.multiple}
+
                 />
                 <div style={{ borderTop: '1px solid #e1e4e8', textAlign: 'center', padding: '15px 10px 5px'}}>
                     { 'Not in the list?' }
