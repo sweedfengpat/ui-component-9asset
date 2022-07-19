@@ -2,13 +2,16 @@ import { ArrowDropUp, CalendarTodayOutlined, CloseOutlined } from "@mui/icons-ma
 import { Autocomplete, InputAdornment, TextField } from "@mui/material";
 import React from "react";
 
-export interface YearPickerProps {
+export interface YearPickerProps  {
     label: string;
+    name: string;
+    value: { value?: string, label?: string };
+    onChange?: (value: { value?: string, label?: string } | null) => void;
 }
 
 export interface YearPickerState {
     open: boolean;
-    value: { label: string, value: string } | null;
+    value: { label?: string, value?: string } | null;
 }
 
 export class YearPicker extends React.Component<YearPickerProps, YearPickerState> {
@@ -20,7 +23,7 @@ export class YearPicker extends React.Component<YearPickerProps, YearPickerState
         this.createOptions();
         this.state = {
             open: false,
-            value: null
+            value: this.props.value || null,
         }
     }
 
@@ -32,12 +35,20 @@ export class YearPicker extends React.Component<YearPickerProps, YearPickerState
         }
     }
 
+    onSelectChanged = (value: { value?: string, label?: string } | null) => {
+        this.setState({ value: value as   { label: string, value: string } | null });
+        if (this.props.onChange) {
+            this.props.onChange(value);
+        }
+    }
+
     render(): React.ReactNode {
         return (
         <Autocomplete
             renderInput={(params: any) => 
                 <TextField
                     {...params}
+                    name={this.props.name}
                     label={this.props.label}
                     variant="outlined"
                     size="small"
@@ -53,13 +64,15 @@ export class YearPicker extends React.Component<YearPickerProps, YearPickerState
                     // }}
                 />
             }
+            fullWidth
             disablePortal
             options={this.options}
-            sx={{ display: 'inline-block', width: '300px'}}
+            sx={{ display: 'inline-block' }}
             onOpen={() => this.setState({ open: true })}
             onClose={() => this.setState({ open: false })}
-            value={this.state.value}
-            onChange={(e, v) => this.setState({ value: v as   { label: string, value: string } | null })}
+            // value={this.state.value}
+            inputValue={this.state.value?.label}
+            onChange={(e, v) => this.onSelectChanged(v)}
         />
         );
     }

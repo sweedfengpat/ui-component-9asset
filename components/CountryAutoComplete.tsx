@@ -295,6 +295,7 @@ export const CountryAutoComplete = (props: CountryAutoCompleteProps) => {
         options={countries as CountryType[]}
         size="small"
         autoHighlight
+        readOnly
         getOptionLabel={(option) => option.label}
         renderOption={(props, option) => (
             <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
