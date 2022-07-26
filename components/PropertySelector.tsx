@@ -3,6 +3,7 @@ import { FormControl, MenuItem, InputLabel, Select } from '@mui/material';
 import { Category } from '../types/Category.interface';
 
 export interface PropertySelectorProps {
+    disabled?: boolean;
     selected: number | undefined;
     items: Category[];
     onPropertyChanged?: (event: React.ChangeEvent<{ value: unknown }>) => void;
@@ -32,6 +33,7 @@ export class PropertySelector extends React.Component<PropertySelectorProps, any
                     onChange={(e) => this.onPropertyChanged(e as any)}
                     id="property-type"
                     label={'Property'}
+                    disabled={this.props.disabled || false}
                     // error={ validationFailed !== undefined}
                 >
                     { options }
