@@ -64,6 +64,16 @@ const Profile  = (props: any) => {
         props.onProfileMenuItemClick && props.onProfileMenuItemClick('/myprofile');
     }
 
+    const handleCompanyProfileClicked = () => {
+      setAnchorEl(null);
+      props.onProfileMenuItemClick && props.onProfileMenuItemClick('/company-profile');
+    }
+
+    const handleAffiliateAgentClicked = () => {
+      setAnchorEl(null);
+      props.onProfileMenuItemClick && props.onProfileMenuItemClick('/affiliate-agent');
+    }
+
     const handleChangePassword = () => {
         // history.push('/changepassword');
         setAnchorEl(null);
@@ -299,10 +309,12 @@ const Profile  = (props: any) => {
             } */}
             
             {
-                props.isAuth === 'true' && menuType === 'default' ?            
+                props.isAuth === 'true' && menuType === 'default' ? 
                 [
                   <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
                   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
+                  <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
+                  <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 ]
               : undefined
