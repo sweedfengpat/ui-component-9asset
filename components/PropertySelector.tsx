@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, MenuItem, InputLabel, Select } from '@mui/material';
+import { FormControl, MenuItem, InputLabel, Select, FormHelperText } from '@mui/material';
 import { Category } from '../types/Category.interface';
 
 export interface PropertySelectorProps {
@@ -7,6 +7,7 @@ export interface PropertySelectorProps {
     selected: number | undefined;
     items: Category[];
     onPropertyChanged?: (event: React.ChangeEvent<{ value: unknown }>) => void;
+    error?: string;
 }
 
 export class PropertySelector extends React.Component<PropertySelectorProps, any> {
@@ -25,7 +26,7 @@ export class PropertySelector extends React.Component<PropertySelectorProps, any
         // const { t } = this.props;
         // const validationFailed = this.state.validated.find(item => item.key === 'property');
         return (
-            <FormControl variant="outlined" style={{ maxWidth: '400px' }} size="small" fullWidth>
+            <FormControl variant="outlined" style={{ maxWidth: '400px' }} size="small" fullWidth error={this.props.error !== undefined}>
                 <InputLabel id="property-type-label">Property</InputLabel>
                 <Select
                     labelId="property-type-label"
@@ -34,12 +35,13 @@ export class PropertySelector extends React.Component<PropertySelectorProps, any
                     id="property-type"
                     label={'Property'}
                     disabled={this.props.disabled || false}
+
                     // error={ validationFailed !== undefined}
                 >
                     { options }
                 </Select>
                 {
-                    /* { validationFailed ? (<FormHelperText error>{validationFailed.text}</FormHelperText>) : (<></>) } */
+                    this.props.error ? (<FormHelperText>{ this.props.error }</FormHelperText>) : (<></>)
                 }
             </FormControl>
         );
