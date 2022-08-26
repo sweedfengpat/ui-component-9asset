@@ -44,10 +44,23 @@ const getFirstLetter = (user: any) => {
     return undefined;
 }
 
+enum Language {
+    th = 'th',
+    en = 'en',
+    cn = 'cn'
+}
 
 const Profile  = (props: any) => {
+    
+    const DisplayLanguage = {
+        'en': 'English',
+        'th': 'ภาษาไทย',
+        'cn': 'Chinese' 
+    }
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [menuType, setMenuType] = React.useState<string>('default');
+    const [currentLanguage, setCurrentLanguage]  = useState(DisplayLanguage[Language.en]);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -98,6 +111,14 @@ const Profile  = (props: any) => {
         setMenuType(val);
     }
 
+    const onChangeLanguage = (lang: Language) => {
+        console.log('onChangeLanguage: ', lang, props.onLangChanged);
+        setCurrentLanguage(DisplayLanguage[lang])
+        props.onLangChanged && props.onLangChanged(lang); 
+        
+        onChangeMenuRequested('default')
+    }
+
     const getUserName = () => {
         const username = getFirstLetter(props.user);
         if(username){
@@ -139,15 +160,15 @@ const Profile  = (props: any) => {
         <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('language')}>
             <ListItemButton>
                 <ListItemText>Launguage</ListItemText>
-                <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>EN</ListItemIcon>
+                <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>{currentLanguage}</ListItemIcon>
             </ListItemButton>
         </ListItem>
-        <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('currency')}>
+        {/* <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('currency')}>
             <ListItemButton>
                 <ListItemText>Price Display</ListItemText>
                 <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>THB</ListItemIcon>
             </ListItemButton>
-        </ListItem>
+        </ListItem> */}
     </>);
 
     const renderMainMenu = () => {
@@ -225,13 +246,19 @@ const Profile  = (props: any) => {
                 </ListItemButton>
             </ListItem>
             <ListItem component="div" disablePadding>
-                <ListItemButton><ListItemText>English</ListItemText></ListItemButton>
+                <ListItemButton
+                    onClick={() => onChangeLanguage(Language.en)} 
+                ><ListItemText>{DisplayLanguage[Language.en]}</ListItemText></ListItemButton>
             </ListItem>
             <ListItem component="div" disablePadding>
-                <ListItemButton><ListItemText>Chinese</ListItemText></ListItemButton>
+                <ListItemButton
+                    onClick={() => onChangeLanguage(Language.cn)} 
+                ><ListItemText>{DisplayLanguage[Language.cn]}</ListItemText></ListItemButton>
             </ListItem>
             <ListItem component="div" disablePadding>
-                <ListItemButton><ListItemText>ภาษาไทย</ListItemText></ListItemButton>
+                <ListItemButton
+                    onClick={() => onChangeLanguage(Language.th)} 
+                ><ListItemText>{DisplayLanguage[Language.th]}</ListItemText></ListItemButton>
             </ListItem>
         </List>
     );

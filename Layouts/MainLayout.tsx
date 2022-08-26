@@ -197,9 +197,10 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     //     }
     // }
 
-    onLangChanged = (event: any) => {
-        this.props.i18n.changeLanguage(event.target.value);
-        this.props.onLanguageChanged(event.target.value);
+    onLangChanged = (lang: any) => {
+        console.log('OnLangChanged: ', lang);
+        this.props.i18n.changeLanguage(lang);
+        this.props.onLanguageChanged(lang);
     }
 
     onMainMenuClicked = (e: MouseEvent, item: IMenuItem) => {
