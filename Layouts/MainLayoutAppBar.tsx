@@ -60,7 +60,7 @@ const Profile  = (props: any) => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [menuType, setMenuType] = React.useState<string>('default');
-    const [currentLanguage, setCurrentLanguage]  = useState(DisplayLanguage[Language.en]);
+    const [currentLanguage, setCurrentLanguage]  = useState(DisplayLanguage[Language.th]);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
