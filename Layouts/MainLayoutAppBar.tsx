@@ -338,11 +338,16 @@ const Profile  = (props: any) => {
             {
                 props.isAuth === 'true' && menuType === 'default' ? 
                 [
-                  <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
-                  <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
-                  <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
-                  <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
+                //   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
+                //   <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
+                //   <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
+                    <Divider variant="middle" />,
+                    <MenuItem onClick={() => props.openApp('home')}>Home</MenuItem>,
+                    <MenuItem onClick={() => props.openApp('buyer')}>Buyer</MenuItem>,
+                    <MenuItem onClick={() => props.openApp('seller')}>Seller</MenuItem>,
+                    <Divider variant="middle" />,
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 ]
               : undefined
                 // <MenuItem onClick={handleLogin}>Login</MenuItem>
@@ -666,11 +671,11 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         <MenuItem value={'th'}>TH</MenuItem>
                         <MenuItem value={'cn'}>CN</MenuItem>
                     </Select> */}
-                    <IconButton color="inherit" onClick={this.handelMenuApps.bind(this)} >
+                    {/* <IconButton color="inherit" onClick={this.handelMenuApps.bind(this)} >
                         <Badge badgeContent={0} color="error">
                             <Apps />
                         </Badge>
-                    </IconButton>
+                    </IconButton> */}
                     {/* <IconButton aria-label="show 17 new notifications" color="inherit">
                         <Badge badgeContent={17} color="error">
                             <Notifications />
@@ -678,6 +683,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     </IconButton> */}
                     <div style={{ display: 'flex' }}>
                         <Profile {...this.props} isAuth={this.state.isAuth} user={user} 
+                            openApp = {this.openApp.bind(this) }
                             onProfileMenuItemClick={this.props.onProfileMenuItemClick}
                         />
                     </div>
