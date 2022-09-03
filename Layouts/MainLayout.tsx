@@ -10,7 +10,7 @@ import MainMenu, { IMenuItem, MenuSection } from "./MainMenu";
 
 import { HotMenu } from "./HotMenu";
 import Logo from '../assets/images/9asset-logo.png';
-import { LayoutAppBar } from './MainLayoutAppBar';
+import { LayoutAppBar, MainMenuLanguage } from './MainLayoutAppBar';
 import { FirebaseApp } from "firebase/app";
 
 
@@ -154,7 +154,8 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
 
     onMainMenuClick?: (e: MouseEvent, item: IMenuItem) => void;
     
-    app?: FirebaseApp;
+    app: FirebaseApp;
+    language: MainMenuLanguage;
 }
 
 
@@ -260,6 +261,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     onProfileMenuItemClick={this.onProfileMenuItemClick.bind(this)}
                                     allowNoLoginAccessSite={false}
                                     location={this.props.location}
+                                    language={this.props.language}
                                 />
                             </ElevationScroll>
                             <CustomDrawer

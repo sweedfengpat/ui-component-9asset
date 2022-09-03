@@ -31,6 +31,7 @@ import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { IMenuItem } from "./MainMenu";
+import { useTranslation } from "react-i18next";
 
 const getFirstLetter = (user: any) => {
     const userInfo = user;
@@ -44,15 +45,16 @@ const getFirstLetter = (user: any) => {
     return undefined;
 }
 
-enum Language {
+export enum MainMenuLanguage {
     th = 'th',
     en = 'en',
     cn = 'cn'
 }
 
 const Profile  = (props: any) => {
-    
-    const DisplayLanguage = {
+    const { t } = useTranslation();
+
+    const DisplayLanguage: { [index in MainMenuLanguage]: string} = {
         'en': 'English',
         'th': 'ภาษาไทย',
         'cn': 'Chinese' 
@@ -60,7 +62,7 @@ const Profile  = (props: any) => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [menuType, setMenuType] = React.useState<string>('default');
-    const [currentLanguage, setCurrentLanguage]  = useState(DisplayLanguage[Language.th]);
+    const [currentLanguage, setCurrentLanguage]  = useState(DisplayLanguage[MainMenuLanguage.th]);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -111,7 +113,7 @@ const Profile  = (props: any) => {
         setMenuType(val);
     }
 
-    const onChangeLanguage = (lang: Language) => {
+    const onChangeLanguage = (lang: MainMenuLanguage) => {
         console.log('onChangeLanguage: ', lang, props.onLangChanged);
         setCurrentLanguage(DisplayLanguage[lang])
         props.onLangChanged && props.onLangChanged(lang); 
@@ -247,18 +249,18 @@ const Profile  = (props: any) => {
             </ListItem>
             <ListItem component="div" disablePadding>
                 <ListItemButton
-                    onClick={() => onChangeLanguage(Language.en)} 
-                ><ListItemText>{DisplayLanguage[Language.en]}</ListItemText></ListItemButton>
+                    onClick={() => onChangeLanguage(MainMenuLanguage.en)} 
+                ><ListItemText>{DisplayLanguage[MainMenuLanguage.en]}</ListItemText></ListItemButton>
             </ListItem>
             <ListItem component="div" disablePadding>
                 <ListItemButton
-                    onClick={() => onChangeLanguage(Language.cn)} 
-                ><ListItemText>{DisplayLanguage[Language.cn]}</ListItemText></ListItemButton>
+                    onClick={() => onChangeLanguage(MainMenuLanguage.cn)} 
+                ><ListItemText>{DisplayLanguage[MainMenuLanguage.cn]}</ListItemText></ListItemButton>
             </ListItem>
             <ListItem component="div" disablePadding>
                 <ListItemButton
-                    onClick={() => onChangeLanguage(Language.th)} 
-                ><ListItemText>{DisplayLanguage[Language.th]}</ListItemText></ListItemButton>
+                    onClick={() => onChangeLanguage(MainMenuLanguage.th)} 
+                ><ListItemText>{DisplayLanguage[MainMenuLanguage.th]}</ListItemText></ListItemButton>
             </ListItem>
         </List>
     );
@@ -338,7 +340,7 @@ const Profile  = (props: any) => {
             {
                 props.isAuth === 'true' && menuType === 'default' ? 
                 [
-                    <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>,
+                    <MenuItem onClick={handleProfileClicked}>{t('Profile')}</MenuItem>,
                 //   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
                 //   <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
                 //   <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
@@ -347,7 +349,7 @@ const Profile  = (props: any) => {
                     <MenuItem onClick={() => props.openApp('buyer')}>Buyer</MenuItem>,
                     <MenuItem onClick={() => props.openApp('seller')}>Seller</MenuItem>,
                     <Divider variant="middle" />,
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
                 ]
               : undefined
                 // <MenuItem onClick={handleLogin}>Login</MenuItem>
@@ -375,7 +377,7 @@ interface IRecipeProps {
     menubar: any;
     mainmenu: any[];
     profilemenu: any[];
-    app?: FirebaseApp;
+    app: FirebaseApp;
     onAppChange?: (event: any) => void;
     onLangChanged?:  (event: any) => void;
     onMobileFilterClick:  (event: any) => void;
@@ -387,6 +389,7 @@ interface IRecipeProps {
     logoPath?: string;
     allowNoLoginAccessSite?: boolean | undefined;
     location?: any;
+    language: MainMenuLanguage;
 }
 
 interface IRecipeState {
