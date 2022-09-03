@@ -31,7 +31,8 @@ import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { IMenuItem } from "./MainMenu";
-import { useTranslation } from "react-i18next";
+// import { TFunction as ReactI18NextTFunction } from "react-i18next";
+// import { TFunction } from "next-i18next";
 
 const getFirstLetter = (user: any) => {
     const userInfo = user;
@@ -52,7 +53,8 @@ export enum MainMenuLanguage {
 }
 
 const Profile  = (props: any) => {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
+    const t = props.t;
 
     const DisplayLanguage: { [index in MainMenuLanguage]: string} = {
         'en': 'English',
@@ -161,7 +163,7 @@ const Profile  = (props: any) => {
         <Divider variant="middle" />
         <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('language')}>
             <ListItemButton>
-                <ListItemText>Launguage</ListItemText>
+                <ListItemText>{t('Launguage')}</ListItemText>
                 <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>{currentLanguage}</ListItemIcon>
             </ListItemButton>
         </ListItem>
@@ -304,7 +306,7 @@ const Profile  = (props: any) => {
                 maxWidth: 360,
                 bgcolor: 'background.paper'
             }}
-            subheader={<ListSubheader sx={{ lineHeight: '30px', marginTop: '10px' }}>My Account</ListSubheader>}
+            subheader={<ListSubheader sx={{ lineHeight: '30px', marginTop: '10px' }}>{t('My Account')}</ListSubheader>}
         >
             { props.isAuth === 'true' ? authMenu : nonAuthMenu }
             <Divider variant="middle" />
@@ -390,6 +392,7 @@ interface IRecipeProps {
     allowNoLoginAccessSite?: boolean | undefined;
     location?: any;
     language: MainMenuLanguage;
+    t: any; // To support next-i18next and react-i18next without project install both frameworks
 }
 
 interface IRecipeState {
