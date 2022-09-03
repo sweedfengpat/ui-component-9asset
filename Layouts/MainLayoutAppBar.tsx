@@ -246,7 +246,7 @@ const Profile  = (props: any) => {
                     <ListItemText primaryTypographyProps={{
                         color: 'default',
                         variant: 'subtitle2',
-                    }}>Launguage</ListItemText>
+                    }}>{t('Launguage')}</ListItemText>
                 </ListItemButton>
             </ListItem>
             <ListItem component="div" disablePadding>

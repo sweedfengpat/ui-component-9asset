@@ -156,6 +156,7 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     
     app: FirebaseApp;
     language: MainMenuLanguage;
+    t: any;
 }
 
 
@@ -262,6 +263,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     allowNoLoginAccessSite={false}
                                     location={this.props.location}
                                     language={this.props.language}
+                                    t={this.props.t}
                                 />
                             </ElevationScroll>
                             <CustomDrawer
