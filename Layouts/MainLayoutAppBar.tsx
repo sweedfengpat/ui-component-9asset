@@ -195,7 +195,7 @@ const Profile  = (props: any) => {
                 // style={{backgroundColor: '#f4762a'}}
                 >
                 <ListItemText
-                    primary="Sign in"
+                    primary={t('Sign in')}
                     primaryTypographyProps={{
                         color: '#f4762a',
                         fontWeight: 'medium',
@@ -210,7 +210,7 @@ const Profile  = (props: any) => {
                 // style={{backgroundColor: 'rgb(108, 172, 25)'}}
                 >
                 <ListItemText
-                    primary="Sign up"
+                    primary={t('Sign up')}
                     primaryTypographyProps={{
                         color: '#f4762a',
                         fontWeight: 'medium',
@@ -246,7 +246,7 @@ const Profile  = (props: any) => {
                     <ListItemText primaryTypographyProps={{
                         color: 'default',
                         variant: 'subtitle2',
-                    }}>{t('Launguage')}</ListItemText>
+                    }}>{t('Language')}</ListItemText>
                 </ListItemButton>
             </ListItem>
             <ListItem component="div" disablePadding>
