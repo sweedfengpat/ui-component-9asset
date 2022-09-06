@@ -280,7 +280,14 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                 <ProfileCard user={user}></ProfileCard>
                               
                                 <Divider variant="middle"></Divider>
-                                <MainMenu menu={mainmenu} location={this.props.location} onMenuItemClick={this.onMainMenuClicked} />
+                                <MainMenu
+                                    menu={mainmenu}
+                                    location={this.props.location}
+                                    onMenuItemClick={this.onMainMenuClicked}
+                                    t={this.props.t}
+                                    tReady={this.props.tReady}
+                                    i18n={this.props.i18n}
+                                />
                             </CustomDrawer>
                             <MainContainer>
                                 <Box sx={{ minHeight: '100%', pt: 0 }} style={{ background: '#f4f6f8', width: '100%' }}>
@@ -304,5 +311,5 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     }
 }
 
-export default withTranslation('common')(MainLayoutRoute);
+export default MainLayoutRoute;
 // export default MainLayoutRoute;

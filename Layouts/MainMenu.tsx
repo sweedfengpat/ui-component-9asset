@@ -2,6 +2,7 @@ import { Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListIt
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React from "react";
 import { getAuth } from "firebase/auth";
+import { WithTranslation } from "react-i18next";
 
 const ActiveListItem = styled(ListItem)({
 
@@ -23,7 +24,7 @@ export interface IMenuItem {
     items?: IMenuItem[];
 }
 
-export interface MainMenuProps  {
+export interface MainMenuProps extends WithTranslation {
     menu: IMenuItem[];
     location: any;
     onMenuItemClick?: (e: MouseEvent, item: IMenuItem) => void;
@@ -139,11 +140,13 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
     private renderMenu = (item: IMenuItem, indent: number): any => {
         const expanded = this.isExpanded(item.key);
         const isActive = this.props.location.pathname === item.link;
+        const t = this.props.t;
+        console.log(t);
         if (item.items && item.items.length > 0) {
             return (<>
                 <ListItem selected={ isActive || false } button key={item.key} onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
                     { item.icon ? <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon> : <></> }
-                    <ListItemText primary={item.title} primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }} ></ListItemText>
+                    <ListItemText primary={t(`menu.${item.title}`)} primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }} ></ListItemText>
                     { expanded ? <ExpandLess onClick={(e: any) => this.handleClick(e as any, item)} /> : <ExpandMore onClick={(e: any) => this.handleClick(e as any, item)} /> }
                 </ListItem>
                 <Collapse in={expanded} unmountOnExit>
@@ -159,7 +162,7 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
                 <ListItemButton key={item.key} selected={ isActive || false } onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
                 { item.icon ? <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon> : <></> }
                     <ListItemText
-                        primary={item.title}
+                        primary={t(`menu.${item.title}`)}
                         primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }}
                     />
                 </ListItemButton>
