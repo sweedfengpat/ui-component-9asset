@@ -163,7 +163,7 @@ const Profile  = (props: any) => {
         <Divider variant="middle" />
         <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('language')}>
             <ListItemButton>
-                <ListItemText>{t('Launguage')}</ListItemText>
+                <ListItemText>{t('Language')}</ListItemText>
                 <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>{currentLanguage}</ListItemIcon>
             </ListItemButton>
         </ListItem>
