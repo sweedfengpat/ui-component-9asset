@@ -148,7 +148,7 @@ const Profile  = (props: any) => {
                     paddingTop: '8px',
                     paddingBottom: '0px'
                 }}>
-                    Profile
+                    {t('Profile')}
                 </ListItemText>
             </ListItemButton>
         </ListItem>
@@ -199,7 +199,7 @@ const Profile  = (props: any) => {
                     }}
                 />
             </ListItemButton>
-            or
+            {t('or')}
             <ListItemButton component="a" 
                 href="https://my.9asset.com/login/register" 
                 sx={{ textAlign: 'center' }}
@@ -341,11 +341,10 @@ const Profile  = (props: any) => {
                 //   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
                 //   <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
                 //   <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
-                    // <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
+                    <Divider variant="middle" />,
+                    <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
                     // <MenuItem onClick={() => props.openApp('buyer')}>{t('Buyer')}</MenuItem>,
                     <MenuItem onClick={() => props.openApp('seller')}>{t('Seller')}</MenuItem>,
-                    // <Divider variant="middle" />,
-                    <MenuItem onClick={handleProfileClicked}>{t('Profile')}</MenuItem>,
                     <Divider variant="middle" />,
                     <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
                 ]
