@@ -8,6 +8,8 @@ export interface PropertySelectorProps {
     items: Category[];
     onPropertyChanged?: (event: React.ChangeEvent<{ value: unknown }>) => void;
     error?: string;
+    label?: string;
+    language?: string;
 }
 
 export class PropertySelector extends React.Component<PropertySelectorProps, any> {
@@ -20,20 +22,21 @@ export class PropertySelector extends React.Component<PropertySelectorProps, any
 
     render () {
         
+        const lng = (this.props?.language?.toUpperCase()  || 'TH') as string;
         const categories = this.props.items;
         const options = categories.sort((a, b) => a.category_Sort = b.category_Sort)
-                                  .map(cate => <MenuItem key={cate.category_ID} selected={cate.category_ID === this.props.selected} value={cate.category_ID}>{cate.category_Name_EN}</MenuItem>);
+                                  .map(cate => <MenuItem key={cate.category_ID} selected={cate.category_ID === this.props.selected} value={cate.category_ID}>{ (cate as any)[`category_Name_${lng}`]}</MenuItem>);
         // const { t } = this.props;
         // const validationFailed = this.state.validated.find(item => item.key === 'property');
         return (
             <FormControl variant="outlined" style={{ maxWidth: '400px' }} size="small" fullWidth error={this.props.error !== undefined}>
-                <InputLabel id="property-type-label">Property</InputLabel>
+                <InputLabel id="property-type-label">{this.props.label || 'Property'}</InputLabel>
                 <Select
                     labelId="property-type-label"
                     value={this.props.selected || ''}
                     onChange={(e) => this.onPropertyChanged(e as any)}
                     id="property-type"
-                    label={'Property'}
+                    label={this.props.label || 'Property'}
                     disabled={this.props.disabled || false}
 
                     // error={ validationFailed !== undefined}

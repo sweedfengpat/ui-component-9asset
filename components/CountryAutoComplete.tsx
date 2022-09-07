@@ -1,5 +1,6 @@
 import React from 'react';
 import { Autocomplete, TextField, Box, Theme, SxProps, AutocompleteRenderInputParams, AutocompleteChangeReason, AutocompleteChangeDetails } from "@mui/material";
+import { property } from 'lodash';
 
 const countries = [
     { code: 'AD', label: 'Andorra', phone: '376' },
@@ -267,6 +268,7 @@ export interface CountryAutoCompleteProps {
     sx?: SxProps<Theme>;
     defaultCountry?: string | undefined;
     fullWidth?: boolean;
+    label?: string;
 
     renderInput?: (params: AutocompleteRenderInputParams) => React.ReactNode;
 
@@ -309,7 +311,7 @@ export const CountryAutoComplete = (props: CountryAutoCompleteProps) => {
             : (
                 <TextField
                     {...params}
-                    label='Country'
+                    label={props.label || 'Country'}
                     variant="outlined"
                     inputProps={{
                         ...params.inputProps,
