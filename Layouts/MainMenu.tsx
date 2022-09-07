@@ -140,7 +140,7 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
     private renderMenu = (item: IMenuItem, indent: number): any => {
         const expanded = this.isExpanded(item.key);
         const isActive = this.props.location.pathname === item.link;
-        const t = this.props.t;
+        const t = this.props.t as any;
         console.log(t);
         if (item.items && item.items.length > 0) {
             return (<>

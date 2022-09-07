@@ -1,6 +1,5 @@
 import React from 'react';
 import { Autocomplete, TextField, Box, Theme, SxProps, AutocompleteRenderInputParams, AutocompleteChangeReason, AutocompleteChangeDetails } from "@mui/material";
-import { property } from 'lodash';
 
 const countries = [
     { code: 'AD', label: 'Andorra', phone: '376' },
