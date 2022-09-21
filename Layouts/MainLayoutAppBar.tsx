@@ -1,17 +1,11 @@
 import {
-    AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, 
-    Container, Grid, Button, Menu, MenuItem, Avatar, IconButton, Select, Badge,
-    Paper, Autocomplete, TextField, Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar
+    AppBar, Toolbar, Divider, Box, 
+    Grid, Button, Menu, MenuItem, Avatar, IconButton,
+    Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar
 } from "@mui/material";
-import { KeyboardArrowDown, 
-    Notifications,
-    Apps,
+import {
     Home as HomeIcon,
-    ThreeSixty,
-    StarBorder,
     ChevronLeft,
-    AccountBoxOutlined,
-    SignalCellularNullSharp
  } from "@mui/icons-material";
 
 import { 
@@ -22,9 +16,6 @@ import {
 import React, {useEffect, useRef, useState} from "react";
 import { HotMenu } from "./HotMenu";
 import axios from 'axios';
-import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 
 import ProfileMenu from "./ProfileMenu";
@@ -437,7 +428,10 @@ export const AdvanceSearch = (props: any) => {
     
     return (
         <div style={{width: '100%', zIndex: 10, position: 'relative'}}>
-            <iframe ref={iframeEl} src={`https://my.9asset.com/search-component/${props.lang || 'th'}/`}
+            <iframe
+                title="search-component"
+                ref={iframeEl}
+                src={`https://my.9asset.com/search-component/${props.lang || 'th'}/`}
                 style={frameStyle} 
                 height={iframeHeight} />
         </div>
@@ -470,7 +464,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
    
     async componentDidMount () {
 
-        const token = await this.getToken();
+        // const token = await this.getToken();
         
         // console.log('component did mount token: ', token);
         // if(!token) {
@@ -490,7 +484,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
             if (user) {
               // User is signed in, see docs for a list of available properties
               // https://firebase.google.com/docs/reference/js/firebase.User
-                const uid = user.uid;
+
                 const token = await user.getIdToken();
 
                 console.log('my token: ', token);
@@ -612,21 +606,21 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
 
     render() {
         let user = this.state.user;
-        let isAuth = this.state.isAuth;
+        // let isAuth = this.state.isAuth;
         if (!user) {
             if (typeof window !== "undefined") {
                 user = window.localStorage && JSON.parse(window.localStorage.getItem(`9_asets.userinfo`) || 'null');
             }
         }
-        if (user) {
-            isAuth = 'true';
-        }
+        // if (user) {
+        //     isAuth = 'true';
+        // }
         
         return (
             <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
                 <Toolbar>
                     <a href ={this.props.mainLink || '/' }>
-                        <img src={this.logoPath} style={{ height: '40px' }} />
+                        <img src={this.logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
                     </a>
                     
                     {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

@@ -1,6 +1,4 @@
 import { Avatar, Box, Typography } from "@mui/material";
-import { FirebaseApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import React from "react";
 
 import './ProfileCard.less';

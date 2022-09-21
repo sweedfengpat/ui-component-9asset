@@ -1,5 +1,4 @@
-import { ArrowDropUp, CalendarTodayOutlined, CloseOutlined } from "@mui/icons-material";
-import { Autocomplete, InputAdornment, TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import React from "react";
 
 export interface YearPickerProps  {
