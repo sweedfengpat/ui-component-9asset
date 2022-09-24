@@ -45,7 +45,7 @@ export enum MainMenuLanguage {
 
 const Profile  = (props: any) => {
     // const { t } = useTranslation();
-    const t = props.t;
+    const { t, language } = props;
 
     const DisplayLanguage: { [index in MainMenuLanguage]: string} = {
         'en': 'English',
@@ -53,9 +53,13 @@ const Profile  = (props: any) => {
         'cn': 'Chinese' 
     }
 
+    const startLanguage: MainMenuLanguage = language? 
+        language as MainMenuLanguage: MainMenuLanguage.th;
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [menuType, setMenuType] = React.useState<string>('default');
-    const [currentLanguage, setCurrentLanguage]  = useState(DisplayLanguage[MainMenuLanguage.th]);
+    const [currentLanguage, setCurrentLanguage]  = useState(
+        DisplayLanguage[startLanguage]);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -112,6 +116,7 @@ const Profile  = (props: any) => {
         props.onLangChanged && props.onLangChanged(lang); 
         
         onChangeMenuRequested('default')
+        setAnchorEl(null);
     }
 
     const getUserName = () => {
@@ -456,10 +461,12 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         this.state = {
             appMenuEl: null,
             isAppMenuOpen: false,
-            selectLang: 'th',
+            selectLang: props.language ?? 'th',
             isAuth: 'false',
             user: null
         }
+
+        console.log('layoutAppBar: ', this.state)
     }
    
     async componentDidMount () {
