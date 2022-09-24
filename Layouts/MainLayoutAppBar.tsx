@@ -338,9 +338,9 @@ const Profile  = (props: any) => {
                 //   <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
                 //   <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
                     <Divider variant="middle" />,
-                    <MenuItem onClick={() => props.openApp('home')}>Home</MenuItem>,
-                    <MenuItem onClick={() => props.openApp('buyer')}>Buyer</MenuItem>,
-                    <MenuItem onClick={() => props.openApp('seller')}>Seller</MenuItem>,
+                    <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
+                    // <MenuItem onClick={() => props.openApp('buyer')}>{t('Buyer')}</MenuItem>,
+                    <MenuItem onClick={() => props.openApp('seller')}>{t('Seller')}</MenuItem>,
                     <Divider variant="middle" />,
                     <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
                 ]
@@ -464,7 +464,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
    
     async componentDidMount () {
 
-        // const token = await this.getToken();
+        const token = await this.getToken();
         
         // console.log('component did mount token: ', token);
         // if(!token) {
@@ -502,7 +502,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                             user: user
                         })
                     } catch (error) {
-                        localStorage && localStorage.clear();
+                        // localStorage && localStorage.clear();
                         this.setState({ user: null, isAuth: 'false' });
 
                         if(!this.props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
