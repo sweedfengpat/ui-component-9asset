@@ -49,7 +49,7 @@ const Profile  = (props: any) => {
 
     const DisplayLanguage: { [index in MainMenuLanguage]: string} = {
         'en': 'English',
-        'th': 'ภาษาไทย',
+        'th': 'ไทย',
         'cn': 'Chinese' 
     }
 
@@ -338,14 +338,14 @@ const Profile  = (props: any) => {
             {
                 props.isAuth === 'true' && menuType === 'default' ? 
                 [
-                    <MenuItem onClick={handleProfileClicked}>{t('Profile')}</MenuItem>,
                 //   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
                 //   <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
                 //   <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
-                    <Divider variant="middle" />,
-                    <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
+                    // <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
                     // <MenuItem onClick={() => props.openApp('buyer')}>{t('Buyer')}</MenuItem>,
                     <MenuItem onClick={() => props.openApp('seller')}>{t('Seller')}</MenuItem>,
+                    // <Divider variant="middle" />,
+                    <MenuItem onClick={handleProfileClicked}>{t('Profile')}</MenuItem>,
                     <Divider variant="middle" />,
                     <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
                 ]
