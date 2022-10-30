@@ -645,23 +645,23 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                             style={{ color: '#5e5e5e'}}
                             onClick={()=> this.onMenuClick(0)}
                         >
-                            โครงการ
+                            {`${this.props.t('project')}`}
                         </Button>
                         <Button
                             color="primary"
                             style={{ color: '#5e5e5e' }}
                             onClick={()=> this.onMenuClick(1)}
                         >
-                            ขาย
+                            {`${this.props.t('sell')}`}
                         </Button>
                         <Button
                             color="primary"
                             style={{ color: '#5e5e5e' }}
                             onClick={()=> this.onMenuClick(2)}
                         >
-                            เช่า
+                            {`${this.props.t('rent')}`}
                         </Button>
-                        <div style={{position: 'absolute', left: '250px', width: '450px'}}>
+                        <div style={{position: 'absolute', left: '275px', width: '450px'}}>
                             <AdvanceSearch />
                         </div>
                     </Box>
