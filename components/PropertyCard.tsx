@@ -1,7 +1,7 @@
 import React from "react";
-import { Grid, Paper, Box, IconButton, Button, styled, MenuProps, Menu, MenuItem, alpha, ImageListItem, PaperProps, Card, CardContent, CardActions, Chip, Typography, Dialog, Slide, DialogTitle, DialogContent, DialogActions, TextField, InputAdornment, Checkbox, List, ListItem, ListItemButton, ListItemIcon, ListItemText, DialogContentText } from "@mui/material";
+import { Grid, Paper, Box, IconButton, Button, styled, MenuProps, Menu, MenuItem, alpha, ImageListItem, PaperProps, Card, CardContent, CardActions, Chip, Dialog, Slide, DialogTitle, DialogContent, DialogActions, DialogContentText } from "@mui/material";
 import { WithTranslationProps } from "react-i18next";
-import { AutoGraph, Ballot, CalendarTodayOutlined, DeleteForeverOutlined, Edit, EditOutlined, Face, HighlightOffOutlined, KeyboardArrowDown, LocalOfferOutlined, PriceChangeOutlined, RocketLaunch, Tag, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
+import { AutoGraph, Ballot, CalendarTodayOutlined, DeleteForeverOutlined, Edit, HighlightOffOutlined, KeyboardArrowDown, LocalOfferOutlined, RocketLaunch, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 import { TransitionProps } from "@mui/material/transitions";
 import defaultImage from "../assets/images/no_image.jpeg";
 // import { PostStatus, Status } from "../../consts";

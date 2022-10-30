@@ -1,17 +1,11 @@
 import {
-    AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, 
-    Container, Grid, Button, Menu, MenuItem, Avatar, IconButton, Select, Badge,
-    Paper, Autocomplete, TextField, Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar
+    AppBar, Toolbar, Divider, Box, 
+    Grid, Button, Menu, MenuItem, Avatar, IconButton,
+    Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar
 } from "@mui/material";
-import { KeyboardArrowDown, 
-    Notifications,
-    Apps,
+import {
     Home as HomeIcon,
-    ThreeSixty,
-    StarBorder,
     ChevronLeft,
-    AccountBoxOutlined,
-    SignalCellularNullSharp
  } from "@mui/icons-material";
 
 import { 
@@ -22,9 +16,6 @@ import {
 import React, {useEffect, useRef, useState} from "react";
 import { HotMenu } from "./HotMenu";
 import axios from 'axios';
-import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 
 import ProfileMenu from "./ProfileMenu";
@@ -54,17 +45,21 @@ export enum MainMenuLanguage {
 
 const Profile  = (props: any) => {
     // const { t } = useTranslation();
-    const t = props.t;
+    const { t, language } = props;
 
     const DisplayLanguage: { [index in MainMenuLanguage]: string} = {
         'en': 'English',
-        'th': 'ภาษาไทย',
+        'th': 'ไทย',
         'cn': 'Chinese' 
     }
 
+    const startLanguage: MainMenuLanguage = language? 
+        language as MainMenuLanguage: MainMenuLanguage.th;
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [menuType, setMenuType] = React.useState<string>('default');
-    const [currentLanguage, setCurrentLanguage]  = useState(DisplayLanguage[MainMenuLanguage.th]);
+    const [currentLanguage, setCurrentLanguage]  = useState(
+        DisplayLanguage[startLanguage]);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -121,6 +116,7 @@ const Profile  = (props: any) => {
         props.onLangChanged && props.onLangChanged(lang); 
         
         onChangeMenuRequested('default')
+        setAnchorEl(null);
     }
 
     const getUserName = () => {
@@ -152,7 +148,7 @@ const Profile  = (props: any) => {
                     paddingTop: '8px',
                     paddingBottom: '0px'
                 }}>
-                    Profile
+                    {t('Profile')}
                 </ListItemText>
             </ListItemButton>
         </ListItem>
@@ -203,7 +199,7 @@ const Profile  = (props: any) => {
                     }}
                 />
             </ListItemButton>
-            or
+            {t('or')}
             <ListItemButton component="a" 
                 href="https://my.9asset.com/login/register" 
                 sx={{ textAlign: 'center' }}
@@ -342,14 +338,13 @@ const Profile  = (props: any) => {
             {
                 props.isAuth === 'true' && menuType === 'default' ? 
                 [
-                    <MenuItem onClick={handleProfileClicked}>{t('Profile')}</MenuItem>,
                 //   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
                 //   <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
                 //   <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
                     <Divider variant="middle" />,
-                    <MenuItem onClick={() => props.openApp('home')}>Home</MenuItem>,
-                    <MenuItem onClick={() => props.openApp('buyer')}>Buyer</MenuItem>,
-                    <MenuItem onClick={() => props.openApp('seller')}>Seller</MenuItem>,
+                    <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
+                    // <MenuItem onClick={() => props.openApp('buyer')}>{t('Buyer')}</MenuItem>,
+                    <MenuItem onClick={() => props.openApp('seller')}>{t('Seller')}</MenuItem>,
                     <Divider variant="middle" />,
                     <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
                 ]
@@ -437,7 +432,10 @@ export const AdvanceSearch = (props: any) => {
     
     return (
         <div style={{width: '100%', zIndex: 10, position: 'relative'}}>
-            <iframe ref={iframeEl} src={`https://my.9asset.com/search-component/${props.lang || 'th'}/`}
+            <iframe
+                title="search-component"
+                ref={iframeEl}
+                src={`https://my.9asset.com/search-component/${props.lang || 'th'}/`}
                 style={frameStyle} 
                 height={iframeHeight} />
         </div>
@@ -462,10 +460,12 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         this.state = {
             appMenuEl: null,
             isAppMenuOpen: false,
-            selectLang: 'th',
+            selectLang: props.language ?? 'th',
             isAuth: 'false',
             user: null
         }
+
+        console.log('layoutAppBar: ', this.state)
     }
    
     async componentDidMount () {
@@ -490,7 +490,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
             if (user) {
               // User is signed in, see docs for a list of available properties
               // https://firebase.google.com/docs/reference/js/firebase.User
-                const uid = user.uid;
+
                 const token = await user.getIdToken();
 
                 console.log('my token: ', token);
@@ -508,7 +508,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                             user: user
                         })
                     } catch (error) {
-                        localStorage && localStorage.clear();
+                        // localStorage && localStorage.clear();
                         this.setState({ user: null, isAuth: 'false' });
 
                         if(!this.props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
@@ -612,21 +612,21 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
 
     render() {
         let user = this.state.user;
-        let isAuth = this.state.isAuth;
+        // let isAuth = this.state.isAuth;
         if (!user) {
             if (typeof window !== "undefined") {
                 user = window.localStorage && JSON.parse(window.localStorage.getItem(`9_asets.userinfo`) || 'null');
             }
         }
-        if (user) {
-            isAuth = 'true';
-        }
+        // if (user) {
+        //     isAuth = 'true';
+        // }
         
         return (
             <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
                 <Toolbar>
                     <a href ={this.props.mainLink || '/' }>
-                        <img src={this.logoPath} style={{ height: '40px' }} />
+                        <img src={this.logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
                     </a>
                     
                     {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

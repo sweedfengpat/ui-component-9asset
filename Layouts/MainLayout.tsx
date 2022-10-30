@@ -1,7 +1,6 @@
-import { AppBar, Drawer, Toolbar, useScrollTrigger, Divider, Box, Container, Grid, Button, Menu, MenuItem, Avatar, IconButton, Select, Badge } from "@mui/material";
-import axios from "axios";
+import { Drawer, Toolbar, useScrollTrigger, Divider, Box, Container, Grid, Button } from "@mui/material";
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { WithTranslation } from "react-i18next";
 import { Route, RouteComponentProps, RouteProps } from "react-router-dom";
 import styled from "styled-components";
 
@@ -12,16 +11,6 @@ import { HotMenu } from "./HotMenu";
 import Logo from '../assets/images/9asset-logo.png';
 import { LayoutAppBar, MainMenuLanguage } from './MainLayoutAppBar';
 import { FirebaseApp } from "firebase/app";
-
-
-export interface MenuItem {
-    key: string;
-    title: string;
-    icon: any;
-    link?: string;
-  
-    items?: MenuItem[];
-}
 
 const MainLayoutRoot = styled.div({
     display: 'flex',
@@ -235,8 +224,6 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         const mainmenu = this.props.mainmenu;
         const profilemenu = this.props.profilemenu;
         const user = JSON.parse(localStorage.getItem(`9_asets.userinfo`) || '{}');
-        const lang = this.props.i18n.language;
-        const t = this.props.t;
         return (
             <Route render={(props: RouteComponentProps) => {
                 if (this.props.component) {

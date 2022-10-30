@@ -1,11 +1,7 @@
-import { Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, styled, Menu } from "@mui/material";
-import { ExpandLess, ExpandMore, KeyboardArrowDown } from "@mui/icons-material";
+import { Divider, List, ListItemButton, ListItemText, MenuItem, Menu } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React from "react";
 import { MenuSection, IMenuItem } from "./MainMenu";
-
-const ActiveListItem = styled(ListItem)({
-
-});
 
 export interface ProfileMenuProps  {
     menu: MenuSection[]; 

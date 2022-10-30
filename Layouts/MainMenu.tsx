@@ -1,12 +1,7 @@
-import { Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuList, MenuItem, styled, Menu } from "@mui/material";
+import { Collapse, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React from "react";
-import { getAuth } from "firebase/auth";
 import { WithTranslation } from "react-i18next";
-
-const ActiveListItem = styled(ListItem)({
-
-});
 
 export interface MenuSection {
     key: string;
