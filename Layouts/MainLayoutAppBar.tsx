@@ -341,7 +341,7 @@ const Profile  = (props: any) => {
                 //   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
                 //   <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
                 //   <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
-                    <Divider variant="middle" />,
+                    // <Divider variant="middle" />,
                     <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
                     // <MenuItem onClick={() => props.openApp('buyer')}>{t('Buyer')}</MenuItem>,
                     <MenuItem onClick={() => props.openApp('seller')}>{t('Seller')}</MenuItem>,
@@ -388,6 +388,7 @@ interface IRecipeProps {
     location?: any;
     language: MainMenuLanguage;
     t: any; // To support next-i18next and react-i18next without project install both frameworks
+    onMenuHeaderClick?: any;
 }
 
 interface IRecipeState {
@@ -538,16 +539,22 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         return auth.currentUser?.getIdToken();
     }
 
+    onMenuHeaderClick() {
+
+    }
+
     renderMenu () {
-        const menu = this.menubar.map((t, i) => <HotMenu text={t.text} items={t.items} 
+        const menu = this.menubar.map((t, i) => <HotMenu text={t.text} items={t.items} link={t.link} 
             useExternalLinkComponent={this.props.useExternalLinkComponent}
             onMenuItemClick={this.props.onSubMenuItemClick}
+            onMenuHeaderClick={this.props.onMenuHeaderClick}
         />);
         
-        menu.push( <HotMenu text={'...'} items={[]} 
-            useExternalLinkComponent={this.props.useExternalLinkComponent} 
-            onMenuItemClick={this.props.onSubMenuItemClick}
-        /> );
+        // menu.push( <HotMenu text={'...'} items={[]}   
+        //     useExternalLinkComponent={this.props.useExternalLinkComponent} 
+        //     onMenuItemClick={this.props.onSubMenuItemClick}
+        //     onMenuHeaderClick={this.props.onMenuHeaderClick}
+        // /> );
         return menu;
     }
 

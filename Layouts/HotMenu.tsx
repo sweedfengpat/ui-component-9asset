@@ -54,6 +54,8 @@ export interface HotMenuProps {
     items: Item[];
     useExternalLinkComponent?: boolean;
     onMenuItemClick?: any;
+    onMenuHeaderClick?: any;
+    link?: any;
 }
 
 export interface HotMenuState {
@@ -73,7 +75,11 @@ export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
     }
 
     handleMouseOver  = (event: React.MouseEvent<HTMLElement>) => {
-        this.setState({ open: true, anchorEl: event.currentTarget });
+        if(this.props.onMenuHeaderClick) {
+          this.props.onMenuHeaderClick(this.props);
+        } else { 
+          this.setState({ open: true, anchorEl: event.currentTarget });
+        }
     }
 
     handleClose = () => {
