@@ -486,6 +486,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     async getToken () {
         console.log('app: ', this.props.app);
         const auth = getAuth(this.props.app);
+        
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
