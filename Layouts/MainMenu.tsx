@@ -55,7 +55,7 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
         <>
             <List>
                 {
-                    menu.map((i) => this.renderMenu(i, 0))
+                    menu.map((i, ind) => this.renderMenu(i, ind, 0))
                 }
             </List>
         </>
@@ -126,20 +126,21 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
             { item.items.length > 0 ? (open ? <ExpandLess /> : <ExpandMore />) : (<></>)} 
         </ListItemButton>
         {
-            open && item.items.map(i => this.renderMenu(i, 0))
+            open && item.items.map((item, index) => this.renderMenu(item, index, 0))
         }
         { index < this.props.menu.length - 1 ? <Divider variant="middle" /> : <></> }
         </>)
     }
 
-    private renderMenu = (item: IMenuItem, indent: number): any => {
+    private renderMenu = (item: IMenuItem, index: number, indent: number): any => {
         const expanded = this.isExpanded(item.key);
         const isActive = this.props.location.pathname === item.link;
         const t = this.props.t as any;
-        console.log(t);
+
         if (item.items && item.items.length > 0) {
-            return (<>
-                <ListItem selected={ isActive || false } button key={item.key} onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
+            return (
+            <React.Fragment key={item.key}>
+                <ListItem selected={ isActive || false } button onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
                     { item.icon ? <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon> : <></> }
                     <ListItemText primary={t(`menu.${item.title}`)} primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }} ></ListItemText>
                     { expanded ? <ExpandLess onClick={(e: any) => this.handleClick(e as any, item)} /> : <ExpandMore onClick={(e: any) => this.handleClick(e as any, item)} /> }
@@ -147,21 +148,18 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
                 <Collapse in={expanded} unmountOnExit>
                     <List component="div" disablePadding>
                         {
-                            item.items.map(i => this.renderMenu(i, indent+1))
+                            item.items.map((i, index) => this.renderMenu(i, index, indent+1))
                         }
                     </List>
                 </Collapse>
-            </>);
+            </React.Fragment>);
         } else {
-            return (<>
+            return (
                 <ListItemButton key={item.key} selected={ isActive || false } onClick={(e: any) => this.onMenuClick(e as any, item)} sx={{ paddingLeft: `${(indent*15)+8}px` }}>
-                { item.icon ? <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon> : <></> }
-                    <ListItemText
-                        primary={t(`menu.${item.title}`)}
-                        primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }}
-                    />
+                    { item.icon ? <ListItemIcon sx={{ minWidth: '32px' }}>{<item.icon />}</ListItemIcon> : <></> }
+                    <ListItemText primary={t(`menu.${item.title}`)} primaryTypographyProps={{ fontSize: 16, fontWeight: 'medium' }} />
                 </ListItemButton>
-            </>);
+                );
         }
 
     }

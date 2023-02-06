@@ -107,13 +107,13 @@ export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
             onClose={this.handleClose}
         >
         {
-            this.props.items.map(item => {
+            this.props.items.map((item, index) => {
               if(this.props.useExternalLinkComponent) {
-                return <MenuItem onClick={() => {
+                return <MenuItem key={index} onClick={() => {
                   this.props.onMenuItemClick && this.props.onMenuItemClick(item);
                 }}>{item.text}</MenuItem> 
               } else {
-                return <MenuItem component={Link} to={item.link}>{item.text}</MenuItem>
+                return <MenuItem component={Link} key={index} to={item.link}>{item.text}</MenuItem>
               }
             })
         }

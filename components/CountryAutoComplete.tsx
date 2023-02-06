@@ -303,6 +303,7 @@ export const CountryAutoComplete = (props: CountryAutoCompleteProps) => {
                 <span>{`${countryToFlag(option.code)}  - ${option.label}`}</span>
             </Box>
         )}
+        isOptionEqualToValue={(option, value)  => option.code === value.code}
         defaultValue={{ label: "Thailand", code: 'TH', phone: '66'}}
         renderInput={(params) => {
             return props && props.renderInput 

@@ -545,7 +545,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     }
 
     renderMenu () {
-        const menu = this.menubar.map((t, i) => <HotMenu text={t.text} items={t.items} link={t.link} 
+        const menu = this.menubar.map((t, i) => <HotMenu text={t.text} items={t.items} link={t.link}  key={i}
             useExternalLinkComponent={this.props.useExternalLinkComponent}
             onMenuItemClick={this.props.onSubMenuItemClick}
             onMenuHeaderClick={this.props.onMenuHeaderClick}
@@ -740,23 +740,20 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         <Grid item xs={12}>
                             <Grid container >
                                 <Grid key= {1} item style={{margin: '10px'}}>
-                                    <IconButton aria-label="Home" >
-                                        <HomeIcon fontSize="large" style={{ color: green[500] }}  
-                                            onClick={ () => this.openApp('home') }/>
+                                    <IconButton aria-label="Home" onClick={ () => this.openApp('home') } >
+                                        <HomeIcon fontSize="large" style={{ color: green[500] }} />
                                     </IconButton>
                                     <div style={{textAlign: 'center'}}>Home</div>
                                 </Grid>
                                 <Grid key= {2} item style={{margin: '10px'}}>
-                                    <IconButton aria-label="buyer" >
-                                        <HomeIcon fontSize="large" style={{ color: red[500] }}  
-                                            onClick={ () => this.openApp('buyer') }/>
+                                    <IconButton aria-label="buyer" onClick={ () => this.openApp('buyer') }>
+                                        <HomeIcon fontSize="large" style={{ color: red[500] }} />
                                     </IconButton>
                                     <div style={{textAlign: 'center'}}>Buyer</div>
                                 </Grid>
                                 <Grid key= {3} item style={{margin: '10px'}}>
-                                    <IconButton aria-label="seller" >
-                                        <HomeIcon fontSize="large" style={{ color: blue[500] }} 
-                                            onClick={ () => this.openApp('seller') } />
+                                    <IconButton aria-label="seller" onClick={ () => this.openApp('seller') } >
+                                        <HomeIcon fontSize="large" style={{ color: blue[500] }} />
                                     </IconButton>
                                     <div style={{textAlign: 'center'}}>Seller</div>
                                 </Grid>
