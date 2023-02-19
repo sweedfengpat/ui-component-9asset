@@ -21,7 +21,7 @@ export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
             style: { textAlign: 'right' },
         }}
         InputProps={{
-            endAdornment: props.unit ? <InputAdornment position="end">THB</InputAdornment> : undefined
+            endAdornment: props.unit ? <InputAdornment position="end">{ props.unit || 'THB' }</InputAdornment> : undefined
         }}
         sx={props.sx}
         thousandSeparator={true}

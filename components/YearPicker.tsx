@@ -14,6 +14,8 @@ export interface YearPickerProps  {
 export interface YearPickerState {
     open: boolean;
     value: { label?: string, value?: string } | null;
+
+    onChange?: ( value: { label?: string, value?: string } | null) => void;
 }
 
 export class YearPicker extends React.Component<YearPickerProps, YearPickerState> {
@@ -74,8 +76,8 @@ export class YearPicker extends React.Component<YearPickerProps, YearPickerState
             sx={{ display: 'inline-block' }}
             onOpen={() => this.setState({ open: true })}
             onClose={() => this.setState({ open: false })}
-            // value={this.state.value}
-            inputValue={this.state.value?.label}
+            // value={this.state.value?.value || ''}
+            inputValue={this.state.value?.value || ''}
             onChange={(e, v) => this.onSelectChanged(v)}
         />
         );
