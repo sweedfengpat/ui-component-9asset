@@ -146,32 +146,47 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     app: FirebaseApp;
     language: MainMenuLanguage;
     t: any;
+    menubar?: any[];
 }
 
 
 
 export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
 
+    // menubar = [
+    //     { text: 'คอนโด', items: [
+    //         { text: 'คอนโดโครงการ', link: '/โครงการ/คอนโด' },
+    //         { text: 'ขายคอนโด', link: '/ขาย/คอนโด' },
+    //         { text: 'เช่าคอนโด', link: '/เช่า/คอนโด' },
+    //         { text: 'เซ้งคอนโด', link: '/เซ้ง/คอนโด' }
+    //     ] },
+    //     { text: 'บ้านเดี่ยว', items: [
+    //         { text: 'คอนโดบ้านเดี่ยว', link: '/โครงการ/บ้านเดี่ยว' },
+    //         { text: 'ขายบ้านเดี่ยว', link: '/ขาย/บ้านเดี่ยว' },
+    //         { text: 'เช่าบ้านเดี่ยว', link: '/เช่า/บ้านเดี่ยว' },
+    //         { text: 'เซ้งบ้านเดี่ยว', link: '/เซ้ง/บ้านเดี่ยว' }
+    //     ] },
+    //     { text: 'ทาวน์เฮาส์-โฮม', items: [] },
+    //     { text: 'อาคารพาณิชย์', items: [] },
+    //     { text: 'โฮมออฟฟิส', items: [] },
+    //     { text: 'บ้านแฝด', items: [] },
+    //     { text: 'อพาร์ทเมนท์', items: [] },
+    //     { text: 'ที่ดิน', items: [] }
+    // ];
+
     menubar = [
-        { text: 'คอนโด', items: [
-            { text: 'คอนโดโครงการ', link: '/โครงการ/คอนโด' },
-            { text: 'ขายคอนโด', link: '/ขาย/คอนโด' },
-            { text: 'เช่าคอนโด', link: '/เช่า/คอนโด' },
-            { text: 'เซ้งคอนโด', link: '/เซ้ง/คอนโด' }
-        ] },
-        { text: 'บ้านเดี่ยว', items: [
-            { text: 'คอนโดบ้านเดี่ยว', link: '/โครงการ/บ้านเดี่ยว' },
-            { text: 'ขายบ้านเดี่ยว', link: '/ขาย/บ้านเดี่ยว' },
-            { text: 'เช่าบ้านเดี่ยว', link: '/เช่า/บ้านเดี่ยว' },
-            { text: 'เซ้งบ้านเดี่ยว', link: '/เซ้ง/บ้านเดี่ยว' }
-        ] },
-        { text: 'ทาวน์เฮาส์-โฮม', items: [] },
-        { text: 'อาคารพาณิชย์', items: [] },
-        { text: 'โฮมออฟฟิส', items: [] },
-        { text: 'บ้านแฝด', items: [] },
-        { text: 'อพาร์ทเมนท์', items: [] },
-        { text: 'ที่ดิน', items: [] }
-    ];
+        { text: this.props.t('condo'), items: [
+        ], link: `/${this.props.t('all')}/${this.props.t('condo')}`},
+        { text: this.props.t('house'), items: [
+        ], link: `/${this.props.t('all')}/${this.props.t('house')}`},
+        { text: this.props.t('townhouse'), items: [],  link: `/${this.props.t('all')}/${this.props.t('townhouse')}` },
+        { text: this.props.t('commercial'), items: [],  link: `/${this.props.t('all')}/${this.props.t('commercial')}` },
+        { text: this.props.t('homeoffice'), items: [], link: `/${this.props.t('all')}/${this.props.t('homeoffice')}` },
+        { text: this.props.t('twinhome'), items: [],  link: `/${this.props.t('all')}/${this.props.t('twinhome')}` },
+        { text: this.props.t('apartment'), items: [], link: `/${this.props.t('all')}/${this.props.t('apartment')}` },
+        { text: this.props.t('land'), items: [], link: `/${this.props.t('all')}/${this.props.t('land')}` }
+      ];
+      
 
     handleMouseOver (event: React.MouseEvent<HTMLElement>) {
         
