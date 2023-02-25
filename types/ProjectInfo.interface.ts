@@ -4,45 +4,62 @@ export type I18N = {
     CN: string;
 }
 
+export interface Position {
+    lat?: string | number;
+    lng?: string | number;
+    zoom?: number;
+}
+
+export interface Location {
+    name?: I18N;
+
+    no?: string;
+    addressText?: I18N;
+    alley?: I18N;
+    road?: I18N;
+
+    district?: {
+        id: number;
+        name: I18N;
+    };
+    subdistrict?: {
+        id: number;
+        name: I18N;
+    };
+
+    province?: {
+        id: number;
+        code?: string;
+        name: I18N;
+        lat?: string | number;
+        lng?: string | number;
+    };
+    
+    position?: {
+        lat?: string | number;
+        lng?: string | number;
+        zoom?: number;
+    }
+}
+  
 export interface ProjectInfo {
 
     id?: number;
     name: I18N;
-    location?: {
-        name?: I18N;
+    location?: Location;
 
-        no?: string;
-        alley?: I18N;
-        road?: I18N;
-
-        district?: {
-            id: number;
-            name: I18N;
-        };
-        subdistrict?: {
-            id: number;
-            name: I18N;
-        };
-
-        province?: {
-            id: number;
-            code?: string;
-            name: I18N;
-            lat?: string | number;
-            lng?: string | number;
-        };
-        
-        position?: {
-            lat?: string | number;
-            lng?: string | number;
-        }
-    }
+    facilities?: { id: number }[];
+    provisions?: { id: number }[];
 
     type: number;
     category?: {
         id: number;
         name: I18N;
     };
+    features?: {
+       th?: string,
+       en?: string
+    },
     image?: string;
     developer?: I18N;
     status?: number;
