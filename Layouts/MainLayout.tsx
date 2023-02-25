@@ -251,7 +251,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     logoPath = {Logo}
                                     userServiceUrl={`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`}
                                     useExternalLinkComponent={false}
-                                    menubar={this.menubar}
+                                    menubar={this.props.menubar ? this.props.menubar: this.menubar}
                                     mainmenu={mainmenu}
                                     profilemenu={profilemenu}
                                     app={this.props.app}

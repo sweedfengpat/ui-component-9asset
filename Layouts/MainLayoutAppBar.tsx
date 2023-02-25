@@ -400,6 +400,7 @@ interface IRecipeState {
     sellerUrl?: string;
     homeUrl?: string;
     user?: any;
+    menubar?: any;
 }
 
 export const AdvanceSearch = (props: any) => {
@@ -463,7 +464,8 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
             isAppMenuOpen: false,
             selectLang: props.language ?? 'th',
             isAuth: 'false',
-            user: null
+            user: null,
+            menubar: [...this.props.menubar]
         }
 
         console.log('layoutAppBar: ', this.state)
@@ -545,7 +547,15 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     }
 
     renderMenu () {
-        const menu = this.menubar.map((t, i) => <HotMenu text={t.text} items={t.items} link={t.link}  key={i}
+        if(this.props.menubar) {
+            return this.props.menubar.map((t: any, i: any) => <HotMenu text={t.text} items={t.items} link={t.link}  key={i}
+                useExternalLinkComponent={this.props.useExternalLinkComponent}
+                onMenuItemClick={this.props.onSubMenuItemClick}
+                onMenuHeaderClick={this.props.onMenuHeaderClick}
+            />);
+        } 
+
+        return this.menubar.map((t: any, i: any) => <HotMenu text={t.text} items={t.items} link={t.link}  key={i}
             useExternalLinkComponent={this.props.useExternalLinkComponent}
             onMenuItemClick={this.props.onSubMenuItemClick}
             onMenuHeaderClick={this.props.onMenuHeaderClick}
@@ -556,7 +566,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         //     onMenuItemClick={this.props.onSubMenuItemClick}
         //     onMenuHeaderClick={this.props.onMenuHeaderClick}
         // /> );
-        return menu;
+        // return menu;
     }
 
     handelMenuApps(event: any) {
