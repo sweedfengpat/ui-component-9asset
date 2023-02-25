@@ -58,6 +58,9 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
                     menu.map((i, ind) => this.renderMenu(i, ind, 0))
                 }
             </List>
+            <div style={{ fontSize: '12px', bottom: '20px', position: 'absolute', right: '20px'}}>
+                {`v${process.env.REACT_APP_BUILD_NUMBER || '0.0.1'}` }
+            </div>
         </>
         );
     }
