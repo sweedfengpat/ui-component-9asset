@@ -147,6 +147,7 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     language: MainMenuLanguage;
     t: any;
     menubar?: any[];
+    onMenuHeaderClick?: (item: any) => void;
 }
 
 
@@ -185,7 +186,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         { text: this.props.t('twinhome'), items: [],  link: `/${this.props.t('all')}/${this.props.t('twinhome')}` },
         { text: this.props.t('apartment'), items: [], link: `/${this.props.t('all')}/${this.props.t('apartment')}` },
         { text: this.props.t('land'), items: [], link: `/${this.props.t('all')}/${this.props.t('land')}` }
-      ];
+    ];
       
 
     handleMouseOver (event: React.MouseEvent<HTMLElement>) {
@@ -207,6 +208,19 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         console.log('OnLangChanged: ', lang);
         this.props.i18n.changeLanguage(lang);
         this.props.onLanguageChanged(lang);
+
+        this.menubar = [
+            { text: this.props.t('condo'), items: [
+            ], link: `/${this.props.t('all')}/${this.props.t('condo')}`},
+            { text: this.props.t('house'), items: [
+            ], link: `/${this.props.t('all')}/${this.props.t('house')}`},
+            { text: this.props.t('townhouse'), items: [],  link: `/${this.props.t('all')}/${this.props.t('townhouse')}` },
+            { text: this.props.t('commercial'), items: [],  link: `/${this.props.t('all')}/${this.props.t('commercial')}` },
+            { text: this.props.t('homeoffice'), items: [], link: `/${this.props.t('all')}/${this.props.t('homeoffice')}` },
+            { text: this.props.t('twinhome'), items: [],  link: `/${this.props.t('all')}/${this.props.t('twinhome')}` },
+            { text: this.props.t('apartment'), items: [], link: `/${this.props.t('all')}/${this.props.t('apartment')}` },
+            { text: this.props.t('land'), items: [], link: `/${this.props.t('all')}/${this.props.t('land')}` }
+        ];
     }
 
     onMainMenuClicked = (e: MouseEvent, item: IMenuItem) => {
@@ -235,6 +249,12 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         }
     }
 
+    onMenuHeaderClick(id: any) {
+        if(this.props.onMenuHeaderClick) {
+            this.props.onMenuHeaderClick(id)
+        }
+    }
+
     render() {
         const mainmenu = this.props.mainmenu;
         const profilemenu = this.props.profilemenu;
@@ -260,7 +280,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     onMobileFilterClick={(event)=> console.log('onMobileFilterClick')}
                                     onMobileSearchClick={(event)=> console.log('onMobileSearchClick')}
                                     onMenuClick={(id)=> console.log('onMenuClick')}
-                                    onSubMenuItemClick={(id) => console.log('onSubMenuItemClick:', id)}
+                                    onMenuHeaderClick={this.onMenuHeaderClick.bind(this)}
                                     onProfileMenuItemClick={this.onProfileMenuItemClick.bind(this)}
                                     allowNoLoginAccessSite={false}
                                     location={this.props.location}
