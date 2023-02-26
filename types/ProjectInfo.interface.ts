@@ -5,8 +5,8 @@ export type I18N = {
 }
 
 export interface Position {
-    lat?: string | number;
-    lng?: string | number;
+    lat?: number;
+    lng?: number;
     zoom?: number;
 }
 
@@ -19,42 +19,38 @@ export interface Location {
     road?: I18N;
 
     district?: {
-        id: number;
-        name: I18N;
+        id?: number;
+        name?: I18N;
     };
     subdistrict?: {
-        id: number;
-        name: I18N;
+        id?: number;
+        name?: I18N;
     };
 
     province?: {
-        id: number;
+        id?: number;
         code?: string;
-        name: I18N;
-        lat?: string | number;
-        lng?: string | number;
+        name?: I18N;
+        lat?: number;
+        lng?: number;
     };
     
-    position?: {
-        lat?: string | number;
-        lng?: string | number;
-        zoom?: number;
-    }
+    position?: Position;
 }
   
 export interface ProjectInfo {
 
     id?: number;
-    name: I18N;
+    name?: I18N;
     location?: Location;
 
     facilities?: { id: number }[];
     provisions?: { id: number }[];
 
-    type: number;
+    type?: number;
     category?: {
         id: number;
-        name: I18N;
+        name?: I18N;
     };
     features?: {
        th?: string,
