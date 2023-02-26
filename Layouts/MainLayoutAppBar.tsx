@@ -502,7 +502,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     try {
 
                         const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
-                        localStorage && localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+                        localStorage && localStorage.setItem(`9asset.userinfo`, JSON.stringify(user));
                         // this.setState({ user: user });
 
                         console.log('Success get user', user);
@@ -633,7 +633,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         // let isAuth = this.state.isAuth;
         if (!user) {
             if (typeof window !== "undefined") {
-                user = window.localStorage && JSON.parse(window.localStorage.getItem(`9_asets.userinfo`) || 'null');
+                user = window.localStorage && JSON.parse(window.localStorage.getItem(`9asset.userinfo`) || 'null');
             }
         }
         // if (user) {

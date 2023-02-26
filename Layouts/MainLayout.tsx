@@ -197,7 +197,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     //     try {
     //         const token = localStorage.getItem('9asset_token');
     //         const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
-    //         localStorage.setItem(`9_asets.userinfo`, JSON.stringify(user));
+    //         localStorage.setItem(`9asset.userinfo`, JSON.stringify(user));
     //     } catch {
     //         console.log('error to load 9asset_token');
     //         // localStorage.clear();
@@ -258,7 +258,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     render() {
         const mainmenu = this.props.mainmenu;
         const profilemenu = this.props.profilemenu;
-        const user = JSON.parse(localStorage.getItem(`9_asets.userinfo`) || '{}');
+        const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || '{}');
         return (
             <Route render={(props: RouteComponentProps) => {
                 if (this.props.component) {
