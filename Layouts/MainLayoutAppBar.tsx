@@ -130,7 +130,13 @@ const Profile  = (props: any) => {
 
     const getName = () => {
         if (props.user) {
-            return `${props.user.name || '' } ${props.user.lastname || '' }`.trim();
+            if(currentLanguage === DisplayLanguage['en']) {
+                return `${props.user.nameEn || '' } ${props.user.lastnameEn || '' }`.trim();
+            } else if(currentLanguage === DisplayLanguage['cn']) {
+                return `${props.user.nameCn || '' } ${props.user.lastnameCn || '' }`.trim();
+            } else {
+                return `${props.user.nameTh || '' } ${props.user.lastnameTh || '' }`.trim();
+            }
         }
         else {
             return '';
@@ -624,8 +630,19 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     }
 
     getUserDisplayName() {
-        return this.state.user 
-            && this.state.user.displayName ? this.state.user.displayName : '' ;
+        if(this.state.selectLang.toLowerCase() === 'en') {
+            return this.state.user 
+                && this.state.user.nameEn ? this.state.user.lastnameEn : '' ;
+        } else if(this.state.selectLang.toLowerCase() === 'cn') {
+            return this.state.user 
+                && this.state.user.nameCn ? this.state.user.lastnameCn : '' ;
+        } else if(this.state.selectLang.toLowerCase() === 'th') {
+            return this.state.user 
+                && this.state.user.nameTh ? this.state.user.lastnameTh : '' ;
+        } else {
+            return this.state.user 
+                && this.state.user.displayName ? this.state.user.displayName : '' ;
+        }
     }
 
     render() {
