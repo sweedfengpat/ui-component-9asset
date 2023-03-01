@@ -66,6 +66,10 @@ const Profile  = (props: any) => {
     };
     const isMenuOpen = Boolean(anchorEl);
 
+    const loginBasePath = process.env.REACT_APP_DOMAIN
+        || process.env.NEXT_PUBLIC_DOMAIN
+        || 'https://my.9asset.com';
+
     const handleMenuClose = (e: any) => {
         setAnchorEl(null);
     }
@@ -94,7 +98,7 @@ const Profile  = (props: any) => {
 
     const handleLogout = () => {
         // history.push('/logout');
-        window.open('https://my.9asset.com/login/logout', '_self');
+        window.open(`${loginBasePath}/login/logout`, '_self');
         setAnchorEl(null);
     }
 
@@ -103,7 +107,7 @@ const Profile  = (props: any) => {
         props.handleLogin && props.handleLogin();
         setAnchorEl(null);
         const currentUrl = encodeURIComponent(window.location.href);
-        window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
+        window.location.href = `${loginBasePath}/login?redirect=${currentUrl}`;
     }
 
     const onChangeMenuRequested = (val: string) => {
@@ -207,7 +211,7 @@ const Profile  = (props: any) => {
             </ListItemButton>
             {t('or')}
             <ListItemButton component="a" 
-                href="https://my.9asset.com/login/register" 
+                href= {`${loginBasePath}/login/register`}
                 sx={{ textAlign: 'center' }}
                 // style={{backgroundColor: 'rgb(108, 172, 25)'}}
                 >
@@ -402,6 +406,7 @@ interface IRecipeState {
     isAppMenuOpen: boolean;
     selectLang: string;
     isAuth: string;
+    loginBasePath: string;
     buyerUrl?: string;
     sellerUrl?: string;
     homeUrl?: string;
@@ -471,7 +476,10 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
             selectLang: props.language ?? 'th',
             isAuth: 'false',
             user: null,
-            menubar: [...this.props.menubar]
+            menubar: [...this.props.menubar],
+            loginBasePath: process.env.REACT_APP_DOMAIN 
+                || process.env.NEXT_PUBLIC_DOMAIN
+                || 'https://my.9asset.com'
         }
 
         console.log('layoutAppBar: ', this.state)
@@ -523,7 +531,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
 
                         if(!this.props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
                             const currentUrl = encodeURIComponent(window.location.href);
-                            window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
+                            window.location.href = `${this.state.loginBasePath}/login?redirect=${currentUrl}`;
                         }
                     }
                 }
@@ -539,7 +547,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                 if(this.props.allowNoLoginAccessSite !== true 
                     && process.env.REACT_APP_NODE_ENV === 'production') {
                     const currentUrl = encodeURIComponent(window.location.href);
-                    window.location.href = `https://my.9asset.com/login?redirect=${currentUrl}`;
+                    window.location.href = `${this.state.loginBasePath}/login?redirect=${currentUrl}`;
                 }
             }
             console.log('onAuthStateChanged', this.state);
@@ -615,11 +623,11 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
 
     openApp(app: string) {
         if(app === 'home') {
-            window.open(this.state.sellerUrl ? this.state.homeUrl: 'https://my.9asset.com/', '_blank');
+            window.open(this.state.sellerUrl ? this.state.homeUrl: `${this.state.loginBasePath}`, '_blank');
         } else if(app === 'seller') {
-            window.open(this.state.sellerUrl ? this.state.sellerUrl: 'https://my.9asset.com/seller/', '_blank');
+            window.open(this.state.sellerUrl ? this.state.sellerUrl: `${this.state.loginBasePath}/seller/`, '_blank');
         } else if(app === 'buyer') {
-            window.open(this.state.sellerUrl ? this.state.buyerUrl: 'https://my.9asset.com/buyer/', '_blank')
+            window.open(this.state.sellerUrl ? this.state.buyerUrl: `${this.state.loginBasePath}/buyer/`, '_blank')
         }
         this.handleAppMenuClose();
     }
