@@ -315,7 +315,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                 <Box sx={{ minHeight: '100%', pt: 0 }} style={{ background: '#f4f6f8', width: '100%' }}>
                                     <Toolbar />
                                     <Grid container style={{ height: '42px' }}></Grid>
-                                    <Container maxWidth={false} style={{ paddingTop: 5 }}>
+                                    <Container maxWidth={false} sx={{ paddingTop: '10px', paddingX: '5px' }}>
                                         {component}
                                     </Container>
                                 </Box>
