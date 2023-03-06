@@ -27,7 +27,7 @@ export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
         }}
         sx={props.sx}
         thousandSeparator={true}
-        value={props.value as any || undefined}
+        value={props.value as any || ''}
         onChange={props.onChange}
     />
     );
