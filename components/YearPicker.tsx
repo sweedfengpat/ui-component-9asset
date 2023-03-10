@@ -5,6 +5,7 @@ export interface YearPickerProps  {
     label: string;
     name: string;
     value: { value: string, label: string };
+    required?: boolean;
     onChange?: (value: { value?: string, label?: string } | null) => void;
     
     error?: boolean | undefined;
@@ -67,6 +68,7 @@ export class YearPicker extends React.Component<YearPickerProps, YearPickerState
                     fullWidth
                     error={this.props.error}
                     helperText={this.props.helperText}
+                    required={this.props.required}
                 />)
             }}
             options={this.options}
