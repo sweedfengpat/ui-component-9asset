@@ -19,14 +19,16 @@ export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
         size="small"
         inputProps={{
             style: { textAlign: 'right' },
-            inputMode: 'numeric',
-            pattern: '[0-9]*'
+            // inputMode: 'numeric',
+            // pattern: '[0-9]*'
         }}
         InputProps={{
             endAdornment: props.unit ? <InputAdornment position="end">{ props.unit || 'THB' }</InputAdornment> : undefined
         }}
         sx={props.sx}
         thousandSeparator={true}
+        allowNegative={false}
+        decimalScale={0}
         value={props.value as any || ''}
         onChange={props.onChange}
     />
