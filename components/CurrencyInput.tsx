@@ -3,6 +3,7 @@ import NumberFormat from "react-number-format";
 
 export interface CurrencyInputProps extends BaseTextFieldProps {
     unit?: string;
+    dataValidateKey?: string;
 }
 
 export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
@@ -19,6 +20,7 @@ export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
         size="small"
         inputProps={{
             style: { textAlign: 'right' },
+            'data-validate-key': props.dataValidateKey
             // inputMode: 'numeric',
             // pattern: '[0-9]*'
         }}
@@ -28,6 +30,7 @@ export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
         sx={props.sx}
         thousandSeparator={true}
         allowNegative={false}
+        allowLeadingZeros={false}
         decimalScale={0}
         value={props.value as any || ''}
         onChange={props.onChange}

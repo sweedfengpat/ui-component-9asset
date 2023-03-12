@@ -1,4 +1,4 @@
-import { Autocomplete, AutocompleteRenderInputParams, TextField } from "@mui/material";
+import { Autocomplete, AutocompleteRenderInputParams, InputBaseComponentProps, TextField } from "@mui/material";
 import React from "react";
 
 export interface YearPickerProps  {
@@ -9,7 +9,9 @@ export interface YearPickerProps  {
     onChange?: (value: { value?: string, label?: string } | null) => void;
     
     error?: boolean | undefined;
-    helperText?: React.ReactNode
+    helperText?: React.ReactNode;
+
+    inputProps?: InputBaseComponentProps | undefined;
 }
 
 export interface YearPickerState {
@@ -69,6 +71,8 @@ export class YearPicker extends React.Component<YearPickerProps, YearPickerState
                     error={this.props.error}
                     helperText={this.props.helperText}
                     required={this.props.required}
+
+                    inputProps={this.props.inputProps}
                 />)
             }}
             options={this.options}
