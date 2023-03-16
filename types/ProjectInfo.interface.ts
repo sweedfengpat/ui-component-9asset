@@ -20,10 +20,12 @@ export interface Location {
 
     district?: {
         id?: number;
+        code?: string;
         name?: I18N;
     };
     subdistrict?: {
         id?: number;
+        code?: string;
         name?: I18N;
     };
 
