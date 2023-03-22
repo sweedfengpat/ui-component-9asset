@@ -149,10 +149,12 @@ export class MainMenu extends React.Component<MainMenuProps, MainenuState> {
                     { expanded ? <ExpandLess onClick={(e: any) => this.handleClick(e as any, item)} /> : <ExpandMore onClick={(e: any) => this.handleClick(e as any, item)} /> }
                 </ListItem>
                 <Collapse in={expanded} unmountOnExit>
-                    <List component="div" disablePadding>
+                    <List component="div" disablePadding >
+                       <div style={{paddingLeft: '1rem'}}>
                         {
                             item.items.map((i, index) => this.renderMenu(i, index, indent+1))
                         }
+                        </div>
                     </List>
                 </Collapse>
             </React.Fragment>);
