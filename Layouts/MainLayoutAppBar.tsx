@@ -1,7 +1,7 @@
 import {
     AppBar, Toolbar, Divider, Box, 
     Grid, Button, Menu, MenuItem, Avatar, IconButton,
-    Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar
+    Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar, MenuList, styled
 } from "@mui/material";
 import {
     Home as HomeIcon,
@@ -22,6 +22,7 @@ import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { IMenuItem } from "./MainMenu";
+import { fontSize } from "@mui/system";
 // import { TFunction as ReactI18NextTFunction } from "react-i18next";
 // import { TFunction } from "next-i18next";
 
@@ -347,17 +348,52 @@ const Profile  = (props: any) => {
             
             {
                 props.isAuth === 'true' && menuType === 'default' ? 
-                [
+                // [
                 //   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
                 //   <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
                 //   <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
-                    // <Divider variant="middle" />,
-                    <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
-                    // <MenuItem onClick={() => props.openApp('buyer')}>{t('Buyer')}</MenuItem>,
-                    <MenuItem onClick={() => props.openApp('seller')}>{t('Seller')}</MenuItem>,
-                    <Divider variant="middle" />,
+                //   <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
+
+                //  <MenuItem onClick={() => props.openApp('seller')}>{t('Seller')}</MenuItem>,
+                //     <MenuItem onClick={() => {}}>{ t('menu.buyerRequirement') }</MenuItem>,
+                //     <MenuItem onClick={() => props.openApp('seller', 'listing', false)}>{ t('menu.listing') }</MenuItem>,
+
+                //     <Divider variant="middle" />,
+                //     <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
+                // ]
+                <MenuList sx={{ pt: 0 }}>
+                    <NMenuItem onClick={() => {}} disabled>{ t('menu.buyerRequirement') }</NMenuItem>
+                    <NMenuItem onClick={() => props.openApp('seller', 'listing', false)}>{ t('menu.listing') }</NMenuItem>
+                    <NMenuItem onClick={() => {}} disabled>{ t('menu.project') }</NMenuItem>
+
+                    <NMenuItem onClick={() => {}} sx={{ paddingBottom: '0px' }}>{ t('menu.prospectActivity') }</NMenuItem>
+                    <NMenuSubItem onClick={() => {}} sx={{ paddingY: '0px' }}>
+                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.prospectInterest') }</ListItemText>
+                    </NMenuSubItem>
+                    <NMenuSubItem onClick={() => {}} sx={{ paddingY: '0px' }}>
+                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.prospectInquiry') }</ListItemText>
+                    </NMenuSubItem>
+                    <NMenuSubItem onClick={() => {}} sx={{ paddingT: '0px' }}>
+                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.prospectAppointment') }</ListItemText>
+                    </NMenuSubItem>
+                   
+                    <NMenuItem onClick={() => {}} disabled>{ t('menu.package') }</NMenuItem>
+                    <NMenuItem onClick={() => {}} disabled>{ t('menu.buyerCenter') }</NMenuItem>
+
+                    <NMenuItem onClick={() => {}} sx={{ paddingBottom: '0px' }}>{ t('menu.myAccount') }</NMenuItem>
+                    <NMenuSubItem onClick={() => {}} sx={{ paddingY: '0px' }}>
+                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.profile') }</ListItemText>
+                    </NMenuSubItem>
+                    <NMenuSubItem onClick={() => {}} sx={{ paddingY: '0px' }}>
+                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.companyProfile') }</ListItemText>
+                    </NMenuSubItem>
+                    <NMenuSubItem onClick={() => {}} sx={{ paddingT: '0px' }}>
+                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.affiliateAgent') }</ListItemText>
+                    </NMenuSubItem>
+
+                    <Divider variant="middle" />
                     <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
-                ]
+                </MenuList>
               : undefined
                 // <MenuItem onClick={handleLogin}>Login</MenuItem>
             }
@@ -376,6 +412,14 @@ const Profile  = (props: any) => {
     </>
     );
 }
+
+const NMenuItem = styled(MenuItem)(() => ({
+    fontSize: '0.9em',
+    paddingY: '10px'
+}));
+const NMenuSubItem = styled(MenuItem)(() => ({
+    fontSize: '0.9em',
+}));
 
 interface IRecipeProps {
     userServiceUrl: string;
@@ -621,15 +665,16 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         }
     }
 
-    openApp(app: string) {
-        if(app === 'home') {
-            window.open(this.state.sellerUrl ? this.state.homeUrl: `${this.state.loginBasePath}`, '_blank');
-        } else if(app === 'seller') {
-            window.open(this.state.sellerUrl ? this.state.sellerUrl: `${this.state.loginBasePath}/seller/`, '_blank');
-        } else if(app === 'buyer') {
-            window.open(this.state.sellerUrl ? this.state.buyerUrl: `${this.state.loginBasePath}/buyer/`, '_blank')
-        }
+    openApp(app: string, path = '', newTab = true) {
         this.handleAppMenuClose();
+        if(app === 'home') {
+            window.open(this.state.sellerUrl ? this.state.homeUrl: `${this.state.loginBasePath}`, newTab ? '_blank' : '_self');
+        } else if(app === 'seller') {
+            window.open(this.state.sellerUrl ? this.state.sellerUrl: `${this.state.loginBasePath}/seller/${path || ''}`, newTab ? '_blank' : '_self');
+        } else if(app === 'buyer') {
+            window.open(this.state.sellerUrl ? this.state.buyerUrl: `${this.state.loginBasePath}/buyer/`, newTab ? '_blank' : '_self')
+        }
+        
     }
 
     onMenuClick(id: number) {
@@ -731,7 +776,9 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         </Badge>
                     </IconButton> */}
                     <div style={{ display: 'flex' }}>
-                        <Profile {...this.props} isAuth={this.state.isAuth} user={user} 
+                        <Profile {...this.props}
+                            isAuth={this.state.isAuth}
+                            user={user} 
                             openApp = {this.openApp.bind(this) }
                             onProfileMenuItemClick={this.props.onProfileMenuItemClick}
                         />

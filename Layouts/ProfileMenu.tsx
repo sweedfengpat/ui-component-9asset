@@ -37,11 +37,13 @@ export class ProfileMenu extends React.Component<ProfileMenuProps, ProfileMenSta
         const section = this.props.menu || [];
         return (
         <>
-            <List>
+            { section && section.length > 0 &&
+            (<List>
                 {
                     section.map((i, j) => this.renderSection(i, j))
                 }
-            </List>
+            </List>)
+            }
             { this.renderPopupMenu() }
         </>
         );
@@ -117,6 +119,7 @@ export class ProfileMenu extends React.Component<ProfileMenuProps, ProfileMenSta
         <ListItemButton
             alignItems="flex-start"
             onClick={(e: any) => this.onMenuClick(e as any, item)}
+            key={index}
         >
             <ListItemText
                 primary={item.title}
