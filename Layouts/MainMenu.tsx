@@ -189,6 +189,7 @@ export class MainMenu extends React.Component<
             onClick={(e: any) => this.onMenuClick(e as any, item)}
             sx={{ paddingLeft: `${indent * 15 + 8}px` }}
           >
+            {/* Icon */}
             {item.icon ? (
               <ListItemIcon sx={{ minWidth: '32px' }}>
                 {<item.icon />}
@@ -196,13 +197,16 @@ export class MainMenu extends React.Component<
             ) : (
               <></>
             )}
+
+            {/* Title */}
             <ListItemText
               primary={t(`menu.${item.title}`)}
               primaryTypographyProps={{
                 fontSize: 16,
                 fontWeight: 'medium',
               }}
-            ></ListItemText>
+            />
+
             {expanded ? (
               <ExpandLess
                 onClick={(e: any) => this.handleClick(e as any, item)}
@@ -230,6 +234,7 @@ export class MainMenu extends React.Component<
           onClick={(e: any) => this.onMenuClick(e as any, item)}
           sx={{ paddingLeft: `${indent * 15 + 8}px` }}
         >
+          {/* Icon */}
           {item.icon ? (
             <ListItemIcon sx={{ minWidth: '32px' }}>
               {<item.icon />}
@@ -237,6 +242,8 @@ export class MainMenu extends React.Component<
           ) : (
             <></>
           )}
+
+          {/* Text */}
           <ListItemText
             primary={t(`menu.${item.title}`)}
             primaryTypographyProps={{
