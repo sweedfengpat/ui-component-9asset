@@ -202,8 +202,9 @@ export class MainMenu extends React.Component<
             <ListItemText
               primary={t(`menu.${item.title}`)}
               primaryTypographyProps={{
+                fontFamily: 'Noto Sans Thai',
                 fontSize: 16,
-                fontWeight: 'medium',
+                fontWeight: 'bold',
               }}
             />
 
@@ -247,8 +248,9 @@ export class MainMenu extends React.Component<
           <ListItemText
             primary={t(`menu.${item.title}`)}
             primaryTypographyProps={{
-              fontSize: 16,
-              fontWeight: 'medium',
+              fontFamily: 'Noto Sans Thai',
+              fontSize: indent === 0 ? 16 : 12,
+              fontWeight: indent === 0 ? 'bold' : 'normal',
             }}
           />
         </ListItemButton>
