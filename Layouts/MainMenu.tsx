@@ -215,11 +215,9 @@ export class MainMenu extends React.Component<
           </ListItem>
           <Collapse in={expanded} unmountOnExit>
             <List component="div" disablePadding>
-              <div style={{ paddingLeft: '1rem' }}>
-                {item.items.map((i, index) =>
-                  this.renderMenu(i, index, indent + 1),
-                )}
-              </div>
+              {item.items.map((i, index) =>
+                this.renderMenu(i, index, indent + 3),
+              )}
             </List>
           </Collapse>
         </React.Fragment>
