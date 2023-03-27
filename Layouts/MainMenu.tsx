@@ -249,7 +249,7 @@ export class MainMenu extends React.Component<
             primary={t(`menu.${item.title}`)}
             primaryTypographyProps={{
               fontFamily: 'Noto Sans Thai',
-              fontSize: indent === 0 ? 16 : 12,
+              fontSize: indent === 0 ? 16 : 15,
               fontWeight: indent === 0 ? 'bold' : 'normal',
             }}
           />
