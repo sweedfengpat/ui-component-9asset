@@ -538,15 +538,6 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
     async componentDidMount () {
 
         const token = await this.getToken();
-        
-        // console.log('component did mount token: ', token);
-        // if(!token) {
-        //     this.setState({
-        //         ...this.state,
-        //         isAuth: 'false',
-        //         user: null
-        //     })
-        // }
     }
 
     async getToken () {
@@ -624,13 +615,6 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
             onMenuItemClick={this.props.onSubMenuItemClick}
             onMenuHeaderClick={this.props.onMenuHeaderClick}
         />);
-        
-        // menu.push( <HotMenu text={'...'} items={[]}   
-        //     useExternalLinkComponent={this.props.useExternalLinkComponent} 
-        //     onMenuItemClick={this.props.onSubMenuItemClick}
-        //     onMenuHeaderClick={this.props.onMenuHeaderClick}
-        // /> );
-        // return menu;
     }
 
     handelMenuApps(event: any) {
@@ -706,15 +690,11 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
 
     render() {
         let user = this.state.user;
-        // let isAuth = this.state.isAuth;
         if (!user) {
             if (typeof window !== "undefined") {
                 user = window.localStorage && JSON.parse(window.localStorage.getItem(`9asset.userinfo`) || 'null');
             }
         }
-        // if (user) {
-        //     isAuth = 'true';
-        // }
         
         return (
             <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
@@ -723,16 +703,6 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         <img src={this.logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
                     </a>
                     
-                    {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                    
-                    </Box> */}
-                    {/* <Button
-                        color="primary"
-                        style={{ color: '#f4762a', marginLeft: '10px', textTransform: 'none' }}
-                        endIcon={<KeyboardArrowDown />}
-                    >
-                        Thailand
-                    </Button> */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
                         <Button
                             color="info"
@@ -764,23 +734,6 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     <div style={{marginRight: '10px'}}>
                         {  this.getUserDisplayName() }
                     </div>
-                    {/* <Select variant="outlined" size="small" 
-                        inputProps={{ margin: 'dense' }} value={this.state.selectLang} 
-                        onChange={this.onLangChange.bind(this)} >
-                        <MenuItem value={'en'}>EN</MenuItem>
-                        <MenuItem value={'th'}>TH</MenuItem>
-                        <MenuItem value={'cn'}>CN</MenuItem>
-                    </Select> */}
-                    {/* <IconButton color="inherit" onClick={this.handelMenuApps.bind(this)} >
-                        <Badge badgeContent={0} color="error">
-                            <Apps />
-                        </Badge>
-                    </IconButton> */}
-                    {/* <IconButton aria-label="show 17 new notifications" color="inherit">
-                        <Badge badgeContent={17} color="error">
-                            <Notifications />
-                        </Badge>
-                    </IconButton> */}
                     <div style={{ display: 'flex' }}>
                         <Profile {...this.props}
                             isAuth={this.state.isAuth}
