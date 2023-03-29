@@ -3,6 +3,7 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React from "react";
 import { MenuSection, IMenuItem } from "./MainMenu";
 
+
 export interface ProfileMenuProps  {
     menu: MenuSection[]; 
     history: any;
@@ -16,7 +17,7 @@ export interface ProfileMenState {
     anchorEl: HTMLElement | null;
 }
 
-export class ProfileMenu extends React.Component<ProfileMenuProps, ProfileMenState> {
+export class ProfileMenuItem extends React.Component<ProfileMenuProps, ProfileMenState> {
 
     constructor(props: Readonly<ProfileMenuProps> | ProfileMenuProps) {
         super(props);
@@ -157,4 +158,4 @@ export class ProfileMenu extends React.Component<ProfileMenuProps, ProfileMenSta
         </>);
     }
 }
-export default ProfileMenu;
+export default ProfileMenuItem;
