@@ -205,7 +205,7 @@ export class MainMenu extends React.Component<
                 color: '#333333',
                 fontFamily: 'Noto Sans Thai',
                 fontSize: 16,
-                fontWeight: 'bold',
+                fontWeight: '500',
               }}
             />
 
@@ -252,7 +252,7 @@ export class MainMenu extends React.Component<
               color: '#333333',
               fontFamily: 'Noto Sans Thai',
               fontSize: indent === 0 ? 16 : 15,
-              fontWeight: indent === 0 ? 'bold' : 'normal',
+              fontWeight: indent === 0 ? '500' : 'normal',
             }}
           />
         </ListItemButton>
