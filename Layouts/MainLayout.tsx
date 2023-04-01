@@ -284,7 +284,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     onProfileMenuItemClick={this.onProfileMenuItemClick.bind(this)}
                                     allowNoLoginAccessSite={false}
                                     location={this.props.location}
-                                    language={this.props.language}
+                                    language={this.props.i18n.language as MainMenuLanguage}
                                     t={this.props.t}
                                 />
                             </ElevationScroll>
