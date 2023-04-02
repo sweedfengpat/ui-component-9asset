@@ -258,6 +258,16 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         }
     }
 
+    handelMenuClicked = (appName: string) => {
+        const index = appName.indexOf(':');
+        if (index >= 1) {
+            const [ app, path ] = appName.split(':', 2);
+            this.openApp(app, path, false);
+        } else {
+            this.openApp(appName);
+        }
+    }
+
     openApp(app: string, path = '', newTab = true) {
         this.handleAppMenuClose();
         if(app === 'home') {
@@ -344,13 +354,8 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                             language={this.props.language}
                             isAuth={this.state.isAuth === 'true'}
                             onLangChanged={(ln: MainMenuLanguage) => { this.props.onLangChanged && this.props.onLangChanged(ln); }}
+                            onMenuClicked={this.handelMenuClicked}
                         />
-                        {/* <Profile {...this.props}
-                            isAuth={this.state.isAuth}
-                            user={user} 
-                            openApp = {this.openApp.bind(this) }
-                            onProfileMenuItemClick={this.props.onProfileMenuItemClick}
-                        /> */}
                     </div>
                 </Toolbar>
                 <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} 

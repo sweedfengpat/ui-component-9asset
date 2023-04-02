@@ -51,6 +51,7 @@ export interface HeaderMenuProps {
     onMenuClose: () => void;
     onLoginRequest?: () => void;
     onLangChanged?: (lang: MainMenuLanguage) => void;
+    onMenuClicked?: (appName: string) => void;
 }
 
 export const HeaderMenu = (props: HeaderMenuProps) => {
@@ -236,15 +237,26 @@ export const HeaderMenu = (props: HeaderMenuProps) => {
         return (<></>);
     };
 
+    const handleItemClick = (item: ProfileMenuItem) => {
+        if (!item.items || item.items.length === 0) {
+            props.onMenuClicked && props.onMenuClicked(item.appName || item.text);
+        }
+    }
+
     const renderDialogMenuItems = () => {
         return (<>
         {
             props.items.map((item, index) => (<React.Fragment key={index}>
-                <NMenuItem disabled={ item.disabled || false }>{ t(item.text) }</NMenuItem>
+                <NMenuItem
+                    disabled={ item.disabled || false }
+                    onClick={() => handleItemClick(item)}
+                >
+                    { t(item.text) }
+                </NMenuItem>
                 { item.items && item.items.length > 0 ? 
                     (
                         item.items.map((s, j) => (
-                        <NMenuSubItem key={`${index}-${j}`}>
+                        <NMenuSubItem key={`${index}-${j}`} onClick={() => handleItemClick(s)}>
                             <ListItemText inset>{ t(s.text) }</ListItemText>
                         </NMenuSubItem>
                         ))

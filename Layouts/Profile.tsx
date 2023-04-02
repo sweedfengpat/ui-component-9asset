@@ -8,14 +8,14 @@ import { MainMenuLanguage } from "./MainLayoutAppBar";
 const MenuList = new Map<string, ProfileMenuItem[]>([
     ['seller', [
         { text: 'menu.buyerRequirement', disabled: true },
-        { text: 'menu.listing', appName: 'seller/listing' },
+        { text: 'menu.listing', appName: 'seller:listing' },
         { text: 'menu.project', disabled: true },
         {
             text: 'menu.prospectActivity',
             items: [
-                { text: 'menu.prospectInterest', appName: 'prospect/interest' },
-                { text: 'menu.prospectInquiry', appName: 'prospect/inquiry' },
-                { text: 'menu.prospectAppointment', appName: 'prospect/appointment' }
+                { text: 'menu.prospectInterest', appName: 'prospect:interest' },
+                { text: 'menu.prospectInquiry', appName: 'prospect:inquiry' },
+                { text: 'menu.prospectAppointment', appName: 'prospect:appointment' }
             ]
         },
         { text: 'menu.package', disabled: true },
@@ -23,9 +23,9 @@ const MenuList = new Map<string, ProfileMenuItem[]>([
         {
             text: 'menu.myAccount',
             items: [
-                { text: 'menu.profile', appName: 'user/profile' },
-                { text: 'menu.companyProfile', appName: 'user/company-profile' },
-                { text: 'menu.affiliateAgent', appName: 'user/affiliate-agent' }
+                { text: 'menu.profile', appName: 'seller:myprofile' },
+                { text: 'menu.companyProfile', appName: 'seller:company-profile' },
+                { text: 'menu.affiliateAgent', appName: 'seller:affiliate-agent' }
             ]
         }
     ]]
@@ -59,6 +59,7 @@ export interface ProfileProps {
     isAuth: boolean;
 
     onLangChanged?: (lng: MainMenuLanguage) => void;
+    onMenuClicked?: (menuKey: string) => void;
 }
 
 export const Profile = (props: ProfileProps) => {
@@ -74,11 +75,17 @@ export const Profile = (props: ProfileProps) => {
         user={props.user}
         isAuth={props.isAuth}
         isOpen={isMenuOpen}
+        items={ MenuList.get('seller') || [] }
         
         onLoginRequest={() => { setIsMenuOpen(false); }}
         onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
         onMenuClose={() => { setIsMenuOpen(false); }}
-        items={ MenuList.get('seller') || [] }
+        onMenuClicked={
+            (appName) => {
+                setIsMenuOpen(false);
+                props.onMenuClicked && props.onMenuClicked(appName);
+            }
+        }
     />
     </>);
 
