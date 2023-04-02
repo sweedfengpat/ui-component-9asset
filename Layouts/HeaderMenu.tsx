@@ -256,7 +256,7 @@ export const HeaderMenu = (props: HeaderMenuProps) => {
                 { item.items && item.items.length > 0 ? 
                     (
                         item.items.map((s, j) => (
-                        <NMenuSubItem key={`${index}-${j}`} onClick={() => handleItemClick(s)}>
+                        <NMenuSubItem key={`${index}-${j}`} disabled={ item.disabled || false } onClick={() => handleItemClick(s)}>
                             <ListItemText inset>{ t(s.text) }</ListItemText>
                         </NMenuSubItem>
                         ))

@@ -12,10 +12,11 @@ const MenuList = new Map<string, ProfileMenuItem[]>([
         { text: 'menu.project', disabled: true },
         {
             text: 'menu.prospectActivity',
+            disabled: true,
             items: [
-                { text: 'menu.prospectInterest', appName: 'prospect:interest' },
-                { text: 'menu.prospectInquiry', appName: 'prospect:inquiry' },
-                { text: 'menu.prospectAppointment', appName: 'prospect:appointment' }
+                { text: 'menu.prospectInterest', appName: 'seller:', disabled: true },
+                { text: 'menu.prospectInquiry', appName: 'prospect:inquiry', disabled: true },
+                { text: 'menu.prospectAppointment', appName: 'prospect:appointment', disabled: true }
             ]
         },
         { text: 'menu.package', disabled: true },
