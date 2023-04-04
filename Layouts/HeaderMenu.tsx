@@ -27,13 +27,27 @@ const MenuDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
-const NMenuItem = styled(MenuItem)(() => ({
-    fontSize: '0.9em',
-    paddingY: '10px'
+const NMenuItem = styled(MenuItem)(({ theme }) => ({
+    paddingY: '10px',
+
+    '.MuiListItemText-primary': {
+        fontSize: '1em',
+
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '1.1em',
+        }
+    }
+    
 }));
 
-const NMenuSubItem = styled(MenuItem)(() => ({
-    fontSize: '0.9em',
+const NMenuSubItem = styled(MenuItem)(({ theme }) => ({
+    '.MuiListItemText-primary': {
+        fontSize: '1em',
+
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '1.1em',
+        }
+    }
 
 }));
 
@@ -130,23 +144,24 @@ export const HeaderMenu = (props: HeaderMenuProps) => {
                         <ListItemText primaryTypographyProps={{
                             color: 'default',
                             variant: 'subtitle2',
+                            fontSize: '1.1em'
                         }}>{t('Language')}</ListItemText>
                     </ListItemButton>
                 </ListItem>
-                <ListItem component="div" disablePadding>
-                    <ListItemButton
-                        onClick={() => handleChangeLanguage('en')} 
-                    ><ListItemText>{DisplayLanguage['en']}</ListItemText></ListItemButton>
+                <ListItem component="div" dense sx={{ py: 0 }}>
+                    <ListItemButton onClick={() => handleChangeLanguage('en')} >
+                        <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['en']}</ListItemText>
+                    </ListItemButton>
                 </ListItem>
-                <ListItem component="div" disablePadding>
-                    <ListItemButton
-                        onClick={() => handleChangeLanguage('cn')} 
-                    ><ListItemText>{DisplayLanguage['cn']}</ListItemText></ListItemButton>
+                <ListItem component="div" dense sx={{ py: 0 }}>
+                    <ListItemButton onClick={() => handleChangeLanguage('cn')} >
+                        <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['cn']}</ListItemText>
+                    </ListItemButton>
                 </ListItem>
-                <ListItem component="div" disablePadding>
-                    <ListItemButton
-                        onClick={() => handleChangeLanguage('th')} 
-                    ><ListItemText>{DisplayLanguage['th']}</ListItemText></ListItemButton>
+                <ListItem component="div" dense sx={{ py: 0 }}>
+                    <ListItemButton onClick={() => handleChangeLanguage('th')} >
+                        <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['th']}</ListItemText>
+                    </ListItemButton>
                 </ListItem>
             </List>
         );
@@ -199,17 +214,17 @@ export const HeaderMenu = (props: HeaderMenuProps) => {
 
         const commonMenu = (<>
         <Divider variant="middle" sx={{ mb: '8px' }} />
-        <MenuItem onClick={(e: any) => handleChangeMenuRequested('language')}>
+        <NMenuItem onClick={(e: any) => handleChangeMenuRequested('language')}>
             <ListItemText>{t('Language')}</ListItemText>
             <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>{currentLanguage}</ListItemIcon>
-        </MenuItem>
+        </NMenuItem>
         </>);
 
         const logoutMenu = (<>
         <Divider variant="middle" />
-        <MenuItem onClick={handleLogout}>
+        <NMenuItem onClick={handleLogout}>
             <ListItemText>{t('Logout')}</ListItemText>
-        </MenuItem>
+        </NMenuItem>
         </>);
 
         if (menuType === 'default') {
@@ -251,7 +266,7 @@ export const HeaderMenu = (props: HeaderMenuProps) => {
                     disabled={ item.disabled || false }
                     onClick={() => handleItemClick(item)}
                 >
-                    { t(item.text) }
+                    <ListItemText>{ t(item.text) }</ListItemText>
                 </NMenuItem>
                 { item.items && item.items.length > 0 ? 
                     (
@@ -270,43 +285,45 @@ export const HeaderMenu = (props: HeaderMenuProps) => {
         const currentLanguage = (props.language || 'th').toUpperCase();
 
         const commonMenu = (
-        <MenuItem onClick={(e: any) => handleChangeMenuRequested('language')}>
+        <NMenuItem onClick={(e: any) => handleChangeMenuRequested('language')}>
             <ListItemText>{t('Language')}</ListItemText>
             <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>{currentLanguage}</ListItemIcon>
-        </MenuItem>);
+        </NMenuItem>);
 
         const logoutMenu = (
-        <MenuItem onClick={handleLogout}>
+        <NMenuItem onClick={handleLogout}>
             <ListItemText>{t('Logout')}</ListItemText>
-        </MenuItem>
+        </NMenuItem>
         );
 
         const langMenu = (
         <MenuList>
             <MenuItem sx={{ px: 0 }} onClick={(e: any) => handleChangeMenuRequested('default')}>
                 <ListItemButton sx={{ pl: 1 }}>
-                    <ListItemIcon sx={{ }}><ChevronLeft /></ListItemIcon>
+                    <ListItemIcon><ChevronLeft /></ListItemIcon>
                     <ListItemText primaryTypographyProps={{
                         color: 'default',
-                        variant: 'subtitle1',
+                        variant: 'inherit',
+                        fontWeight: 'bold',
+                        fontSize: '1.1em'
                     }}>{t('Language')}</ListItemText>
                 </ListItemButton>
             </MenuItem>
-            <MenuItem sx={{ py: 0 }}>
+            <NMenuItem sx={{ py: 0 }} dense >
                 <ListItemButton sx={{ py: 0 }}
-                    onClick={() => handleChangeLanguage('en')} 
+                    onClick={() => handleChangeLanguage('en')}
                 ><ListItemText>{DisplayLanguage['en']}</ListItemText></ListItemButton>
-            </MenuItem>
-            <MenuItem sx={{ py: 0 }}>
+            </NMenuItem>
+            <NMenuItem sx={{ py: 0 }} dense>
                 <ListItemButton
                     onClick={() => handleChangeLanguage('cn')} 
                 ><ListItemText>{DisplayLanguage['cn']}</ListItemText></ListItemButton>
-            </MenuItem>
-            <MenuItem sx={{ py: 0 }}>
+            </NMenuItem>
+            <NMenuItem sx={{ py: 0 }} dense>
                 <ListItemButton
                     onClick={() => handleChangeLanguage('th')} 
                 ><ListItemText>{DisplayLanguage['th']}</ListItemText></ListItemButton>
-            </MenuItem>
+            </NMenuItem>
         </MenuList>);
 
         if (menuType === 'default') {
