@@ -492,7 +492,9 @@ export const AdvanceSearch = (props: any) => {
             <iframe
                 title="search-component"
                 ref={iframeEl}
-                src={`https://my.9asset.com/search-component/${props.lang || 'th'}/`}
+                src={`${ process.env.REACT_APP_DOMAIN
+                    || process.env.NEXT_PUBLIC_DOMAIN
+                    || 'https://my.9asset.com' }/search-component/${props.lang || 'th'}/`}
                 style={frameStyle} 
                 height={iframeHeight} />
         </div>
