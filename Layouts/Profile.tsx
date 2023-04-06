@@ -7,20 +7,20 @@ import { MainMenuLanguage } from "./MainLayoutAppBar";
 
 const MenuList = new Map<string, ProfileMenuItem[]>([
     ['seller', [
-        { text: 'menu.buyerRequirement', disabled: true },
+        // { text: 'menu.buyerRequirement', disabled: true },
         { text: 'menu.listing', appName: 'seller:listing' },
-        { text: 'menu.project', disabled: true },
-        {
-            text: 'menu.prospectActivity',
-            disabled: true,
-            items: [
-                { text: 'menu.prospectInterest', appName: 'seller:', disabled: true },
-                { text: 'menu.prospectInquiry', appName: 'prospect:inquiry', disabled: true },
-                { text: 'menu.prospectAppointment', appName: 'prospect:appointment', disabled: true }
-            ]
-        },
-        { text: 'menu.package', disabled: true },
-        { text: 'menu.buyerCenter', disabled: true },
+        // { text: 'menu.project', disabled: true },
+        // {
+        //     text: 'menu.prospectActivity',
+        //     disabled: true,
+        //     items: [
+        //         { text: 'menu.prospectInterest', appName: 'seller:', disabled: true },
+        //         { text: 'menu.prospectInquiry', appName: 'prospect:inquiry', disabled: true },
+        //         { text: 'menu.prospectAppointment', appName: 'prospect:appointment', disabled: true }
+        //     ]
+        // },
+        // { text: 'menu.package', disabled: true },
+        // { text: 'menu.buyerCenter', disabled: true },
         {
             text: 'menu.myAccount',
             items: [
