@@ -402,13 +402,17 @@ const Profile  = (props: any) => {
 
     const userName = getUserName();
 
+    const forceRenderMenuWhenLanguageChange = () => {
+        return renderMenu;
+    }
+
     return (<>
     <Avatar
         alt="9 Asset"
         style={{ height: '30px', width: '30px', margin: '12px' }}
         onClick={handleProfileMenuOpen}
     >{ userName }</Avatar>
-    {renderMenu}
+    {forceRenderMenuWhenLanguageChange()}
     </>
     );
 }
