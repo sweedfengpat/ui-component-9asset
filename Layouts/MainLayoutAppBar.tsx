@@ -14,39 +14,40 @@ import {
     blue
 } from '@mui/material/colors';
 import React, {useEffect, useRef, useState} from "react";
-import { HotMenu } from "./HotMenu";
+import { MenuBarItem } from "./MenuBarItem";
 import axios from 'axios';
 import SearchIcon from '@mui/icons-material/Search';
 
 // import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { IMenuItem } from "./MainMenu";
+import { IMenuItem } from "./DrawerMenu";
 import { Profile } from "./Profile";
 // import { TFunction as ReactI18NextTFunction } from "react-i18next";
 // import { TFunction } from "next-i18next";
 
 export type MainMenuLanguage = 'th' | 'en' | 'cn';
 
+export type MenuBar = { text: string, link: string, items?: MenuBar }[];
+
 interface IRecipeProps {
     userServiceUrl: string;
-    useExternalLinkComponent: boolean;
-    mainLink?: string;
-    menubar: any;
-    mainmenu: any[];
-    profilemenu: any[];
+    useExternalLinkComponent?: boolean;
+    homeUrl?: string;
+    menubar: MenuBar;
+
     app: FirebaseApp;
-    onAppChange?: (event: any) => void;
+    
+    // onAppChange?: (event: any) => void;
     onLangChanged?:  (event: any) => void;
     onMobileFilterClick:  (event: any) => void;
     onMobileSearchClick:  (event: any) => void;
-    onMenuClick?: (id: number) => void;
+    onMenuClick?: (type: 'project' | 'sell' | 'rent') => void;
     onSubMenuItemClick?: (id: number) => void;
-    onProfileMenuItemClick?: (id: number) => void;
-    onMainMenuClick?: (e: MouseEvent, item: IMenuItem) => void;
+
     logoPath?: string;
     allowNoLoginAccessSite?: boolean | undefined;
-    location?: any;
+
     language: MainMenuLanguage;
     t: any; // To support next-i18next and react-i18next without project install both frameworks
     onMenuHeaderClick?: any;
@@ -110,18 +111,15 @@ export const AdvanceSearch = (props: any) => {
 
 export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
    
-    menubar: any[] = [];
-    menu: any[] = [];
+    menubar: MenuBar = [];
+    logoPath: string = '';
 
-    logoPath: any = '';
-
-    constructor(props: any) {
+    constructor(props: IRecipeProps) {
         super(props);
         const { logoPath } = props;
         if(logoPath) this.logoPath = logoPath;
 
         this.menubar = [...this.props.menubar];
-        this.menu = props.menu;
 
         this.state = {
             appMenuEl: null,
@@ -134,12 +132,10 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                 || process.env.NEXT_PUBLIC_DOMAIN
                 || 'https://my.9asset.com'
         }
-
         console.log('layoutAppBar: ', this.state)
     }
    
     async componentDidMount () {
-
         const token = await this.getToken();
     }
 
@@ -206,15 +202,15 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
 
     renderMenu () {
         if(this.props.menubar) {
-            return this.props.menubar.map((t: any, i: any) => <HotMenu text={t.text} items={t.items} link={t.link}  key={i}
-                useExternalLinkComponent={this.props.useExternalLinkComponent}
+            return this.props.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
+                useExternalLinkComponent={this.props.useExternalLinkComponent || false}
                 onMenuItemClick={this.props.onSubMenuItemClick}
                 onMenuHeaderClick={this.props.onMenuHeaderClick}
             />);
         } 
 
-        return this.menubar.map((t: any, i: any) => <HotMenu text={t.text} items={t.items} link={t.link}  key={i}
-            useExternalLinkComponent={this.props.useExternalLinkComponent}
+        return this.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
+            useExternalLinkComponent={this.props.useExternalLinkComponent || false}
             onMenuItemClick={this.props.onSubMenuItemClick}
             onMenuHeaderClick={this.props.onMenuHeaderClick}
         />);
@@ -280,9 +276,8 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         
     }
 
-    onMenuClick(id: number) {
-
-        this.props.onMenuClick && this.props.onMenuClick(id);
+    onMenuClick(type: 'project' | 'sell' | 'rent') {
+        this.props.onMenuClick && this.props.onMenuClick(type);
     }
 
     getUserDisplayName() {
@@ -312,7 +307,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         return (
             <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
                 <Toolbar>
-                    <a href ={this.props.mainLink || '/' }>
+                    <a href ={this.props.homeUrl || '/' }>
                         <img src={this.logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
                     </a>
                     
@@ -320,21 +315,21 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         <Button
                             color="info"
                             style={{ color: '#5e5e5e'}}
-                            onClick={()=> this.onMenuClick(0)}
+                            onClick={()=> this.onMenuClick('project')}
                         >
                             {`${this.props.t('project')}`}
                         </Button>
                         <Button
                             color="primary"
                             style={{ color: '#5e5e5e' }}
-                            onClick={()=> this.onMenuClick(1)}
+                            onClick={()=> this.onMenuClick('sell')}
                         >
                             {`${this.props.t('sell')}`}
                         </Button>
                         <Button
                             color="primary"
                             style={{ color: '#5e5e5e' }}
-                            onClick={()=> this.onMenuClick(2)}
+                            onClick={()=> this.onMenuClick('rent')}
                         >
                             {`${this.props.t('rent')}`}
                         </Button>

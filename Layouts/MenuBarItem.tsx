@@ -49,23 +49,23 @@ export interface Item {
     id?: string;
 }
 
-export interface HotMenuProps {
+export interface MenuBarItemProps {
     text: string;
-    items: Item[];
+    items?: Item[];
     useExternalLinkComponent?: boolean;
     onMenuItemClick?: any;
     onMenuHeaderClick?: any;
     link?: any;
 }
 
-export interface HotMenuState {
+export interface MenuBarItemState {
     open: boolean;
     anchorEl: HTMLElement | null;
 }
 
-export class MenuBarItem extends React.Component<HotMenuProps, HotMenuState> {
+export class MenuBarItem extends React.Component<MenuBarItemProps, MenuBarItemState> {
 
-    constructor (props: Readonly<HotMenuProps> | HotMenuProps) {
+    constructor (props: Readonly<MenuBarItemProps> | MenuBarItemProps) {
         super(props);
 
         this.state = {
@@ -106,7 +106,7 @@ export class MenuBarItem extends React.Component<HotMenuProps, HotMenuState> {
             onClose={this.handleClose}
         >
         {
-            this.props.items.map((item, index) => {
+            (this.props.items || []).map((item, index) => {
               if(this.props.useExternalLinkComponent) {
                 return <MenuItem key={index} onClick={() => {
                   this.props.onMenuItemClick && this.props.onMenuItemClick(item);

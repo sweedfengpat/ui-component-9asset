@@ -1,7 +1,7 @@
 import { Divider, List, ListItemButton, ListItemText, MenuItem, Menu } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import React from "react";
-import { MenuSection, IMenuItem } from "./MainMenu";
+import { MenuSection, IMenuItem } from "./DrawerMenu";
 
 
 export interface ProfileMenuProps  {

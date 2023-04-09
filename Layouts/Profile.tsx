@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import { UserInfo } from "firebase/auth";
 import { useRef, useState } from "react";
 import { TFunction } from "react-i18next";
-import { HeaderMenu, ProfileMenuItem } from "./HeaderMenu";
+import { ProfileMenu, ProfileMenuItem } from "./ProfileMenu";
 import { MainMenuLanguage } from "./MainLayoutAppBar";
 
 const MenuList = new Map<string, ProfileMenuItem[]>([
@@ -69,7 +69,7 @@ export const Profile = (props: ProfileProps) => {
     const avatarRef = useRef<HTMLDivElement | null>(null);
 
     const renderMenu = () => (<>
-    <HeaderMenu
+    <ProfileMenu
         t={props.t}
         language={props.language}
         anchorElement={avatarRef.current}

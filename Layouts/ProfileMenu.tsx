@@ -68,7 +68,7 @@ export interface HeaderMenuProps {
     onMenuClicked?: (appName: string) => void;
 }
 
-export const HeaderMenu = (props: HeaderMenuProps) => {
+export const ProfileMenu = (props: HeaderMenuProps) => {
 
     const { t, language } = props;
 

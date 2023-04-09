@@ -27,24 +27,24 @@ export interface IMenuItem {
   items?: IMenuItem[]
 }
 
-export interface MainMenuProps extends WithTranslation {
+export interface DrawerMenuProps extends WithTranslation {
   menu: IMenuItem[]
   location: any
   onMenuItemClick?: (e: MouseEvent, item: IMenuItem) => void
 }
 
-export interface MainenuState {
+export interface DrawerMenuState {
   expanded: string[]
   popupMenu: 'language' | 'currency' | ''
 
   anchorEl: HTMLElement | null
 }
 
-export class MainMenu extends React.Component<
-  MainMenuProps,
-  MainenuState
+export class DrawerMenu extends React.Component<
+  DrawerMenuProps,
+  DrawerMenuState
 > {
-  constructor(props: Readonly<MainMenuProps> | MainMenuProps) {
+  constructor(props: Readonly<DrawerMenuProps> | DrawerMenuProps) {
     super(props)
     this.state = {
       expanded: [],
@@ -260,4 +260,4 @@ export class MainMenu extends React.Component<
     }
   }
 }
-export default MainMenu
+export default DrawerMenu
