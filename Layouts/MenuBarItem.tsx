@@ -63,7 +63,7 @@ export interface HotMenuState {
     anchorEl: HTMLElement | null;
 }
 
-export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
+export class MenuBarItem extends React.Component<HotMenuProps, HotMenuState> {
 
     constructor (props: Readonly<HotMenuProps> | HotMenuProps) {
         super(props);
@@ -92,7 +92,6 @@ export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
             color="primary"
             style={{ color: '#ffffff'}}
             onClick={this.handleMouseOver}
-            
         >
             {this.props.text}
         </Button>
