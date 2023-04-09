@@ -23,6 +23,7 @@ import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { IMenuItem } from "./DrawerMenu";
 import { Profile } from "./Profile";
+import { ProfileMenuItem } from "./ProfileMenu";
 // import { TFunction as ReactI18NextTFunction } from "react-i18next";
 // import { TFunction } from "next-i18next";
 
@@ -35,6 +36,7 @@ interface IRecipeProps {
     useExternalLinkComponent?: boolean;
     homeUrl?: string;
     menubar: MenuBar;
+    menuProfile: ProfileMenuItem[];
 
     app: FirebaseApp;
     
@@ -43,6 +45,7 @@ interface IRecipeProps {
     onMobileFilterClick:  (event: any) => void;
     onMobileSearchClick:  (event: any) => void;
     onMenuClick?: (type: 'project' | 'sell' | 'rent') => void;
+    onProfileMenuClick?: (item: ProfileMenuItem) => void;
     onSubMenuItemClick?: (id: number) => void;
 
     logoPath?: string;
@@ -54,16 +57,12 @@ interface IRecipeProps {
 }
 
 interface IRecipeState {
-    appMenuEl: any;
-    isAppMenuOpen: boolean;
     selectLang: string;
     isAuth: string;
     loginBasePath: string;
-    buyerUrl?: string;
-    sellerUrl?: string;
     homeUrl?: string;
     user?: any;
-    menubar?: any;
+    menubar?: MenuBar;
 }
 
 export const AdvanceSearch = (props: any) => {
@@ -122,8 +121,6 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         this.menubar = [...this.props.menubar];
 
         this.state = {
-            appMenuEl: null,
-            isAppMenuOpen: false,
             selectLang: props.language ?? 'th',
             isAuth: 'false',
             user: null,
@@ -216,20 +213,6 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         />);
     }
 
-    handelMenuApps(event: any) {
-        this.setState({ ...this.state,
-            appMenuEl: event.currentTarget,
-            isAppMenuOpen: true
-        });
-    }
-
-    handleAppMenuClose() {
-        this.setState({ ...this.state,
-            appMenuEl: null,
-            isAppMenuOpen: false
-        }); 
-    }
-
     onLangChange(e: any) {
 
         this.setState({
@@ -254,26 +237,8 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         }
     }
 
-    handelMenuClicked = (appName: string) => {
-        const index = appName.indexOf(':');
-        if (index >= 1) {
-            const [ app, path ] = appName.split(':', 2);
-            this.openApp(app, path, false);
-        } else {
-            this.openApp(appName);
-        }
-    }
-
-    openApp(app: string, path = '', newTab = true) {
-        this.handleAppMenuClose();
-        if(app === 'home') {
-            window.open(this.state.sellerUrl ? this.state.homeUrl: `${this.state.loginBasePath}`, newTab ? '_blank' : '_self');
-        } else if(app === 'seller') {
-            window.open(this.state.sellerUrl ? this.state.sellerUrl: `${this.state.loginBasePath}/seller/${path || ''}`, newTab ? '_blank' : '_self');
-        } else if(app === 'buyer') {
-            window.open(this.state.sellerUrl ? this.state.buyerUrl: `${this.state.loginBasePath}/buyer/`, newTab ? '_blank' : '_self')
-        }
-        
+    handelMenuClicked = (item: ProfileMenuItem) => {
+        this.props.onProfileMenuClick && this.props.onProfileMenuClick(item);
     }
 
     onMenuClick(type: 'project' | 'sell' | 'rent') {
@@ -343,11 +308,12 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         {  this.getUserDisplayName() }
                     </div>
                     <div style={{ display: 'flex' }}>
-                        <Profile 
+                        <Profile
                             user={user}
                             t={this.props.t}
                             language={this.props.language}
                             isAuth={this.state.isAuth === 'true'}
+                            menuItems={this.props.menuProfile}
                             onLangChanged={(ln: MainMenuLanguage) => { this.props.onLangChanged && this.props.onLangChanged(ln); }}
                             onMenuClicked={this.handelMenuClicked}
                         />
@@ -372,46 +338,6 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Menu
-                    id="menu-appbar"
-                    anchorEl={this.state.appMenuEl}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={Boolean(this.state.isAppMenuOpen)}
-                    onClose={this.handleAppMenuClose.bind(this)}
-                >
-                    <Grid container spacing={2} style={{paddingTop: '0px', paddingBottom: '0px'}}>
-                        <Grid item xs={12}>
-                            <Grid container >
-                                <Grid key= {1} item style={{margin: '10px'}}>
-                                    <IconButton aria-label="Home" onClick={ () => this.openApp('home') } >
-                                        <HomeIcon fontSize="large" style={{ color: green[500] }} />
-                                    </IconButton>
-                                    <div style={{textAlign: 'center'}}>Home</div>
-                                </Grid>
-                                <Grid key= {2} item style={{margin: '10px'}}>
-                                    <IconButton aria-label="buyer" onClick={ () => this.openApp('buyer') }>
-                                        <HomeIcon fontSize="large" style={{ color: red[500] }} />
-                                    </IconButton>
-                                    <div style={{textAlign: 'center'}}>Buyer</div>
-                                </Grid>
-                                <Grid key= {3} item style={{margin: '10px'}}>
-                                    <IconButton aria-label="seller" onClick={ () => this.openApp('seller') } >
-                                        <HomeIcon fontSize="large" style={{ color: blue[500] }} />
-                                    </IconButton>
-                                    <div style={{textAlign: 'center'}}>Seller</div>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Menu>
             </AppBar>
         );
     }

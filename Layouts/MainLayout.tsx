@@ -11,6 +11,7 @@ import { MenuBarItem } from "./MenuBarItem";
 import Logo from '../assets/images/9asset-logo.png';
 import { LayoutAppBar, MainMenuLanguage } from './MainLayoutAppBar';
 import { FirebaseApp } from "firebase/app";
+import { ProfileMenuItem } from "./ProfileMenu";
 
 const MainLayoutRoot = styled.div({
     display: 'flex',
@@ -135,7 +136,7 @@ const ElevationScroll = (props: ElevationScrollProps) => {
 // }
 
 export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
-    profilemenu: MenuSection[];
+    profilemenu: ProfileMenuItem[];
 
     drawermenu: IMenuItem[];
     onDrawerMenuClicked?: (e: MouseEvent, item: IMenuItem) => void;
@@ -143,7 +144,7 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
 
     onLanguageChanged: (lang: string) => void;
     type?: 'seller' | 'buyer' | 'none' | undefined;
-    onProfileMenuItemClick?: (e: any) => void;
+    onProfileMenuItemClicked?: (menu: ProfileMenuItem) => void;
 
     
     
@@ -252,10 +253,8 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         }
     }
 
-    onProfileMenuItemClick(e: any){
-        if(this.props.onProfileMenuItemClick) {
-            this.props.onProfileMenuItemClick(e);
-        }
+    handleProfileMenuItemClick(item: ProfileMenuItem){
+        this.props.onProfileMenuItemClicked && this.props.onProfileMenuItemClicked(item);
     }
 
     onMenuHeaderClick(id: any) {
@@ -269,7 +268,6 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     }
 
     render() {
-        const profilemenu = this.props.profilemenu;
         const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || '{}');
         return (
             <Route render={(props: RouteComponentProps) => {
@@ -284,6 +282,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     logoPath = {Logo}
                                     // mainLink
                                     menubar={this.props.menubar ? this.props.menubar: this.menubar}
+                                    menuProfile={this.props.profilemenu}
                                     // useExternalLinkComponent={false}
                                     // onSubMenuItemClick
                                     // onAppChange={(event)=> { console.log('onAppChange'); return {}; }}
@@ -297,7 +296,9 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     
                                     onMobileFilterClick={(event)=> console.log('onMobileFilterClick')}
                                     onMobileSearchClick={(event)=> console.log('onMobileSearchClick')}
+
                                     onMenuClick={this.handleHotMenuClicked.bind(this)}
+                                    onProfileMenuClick={this.handleProfileMenuItemClick.bind(this)}
                                     onMenuHeaderClick={this.onMenuHeaderClick.bind(this)}
                                    
 

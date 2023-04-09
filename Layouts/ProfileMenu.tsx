@@ -7,13 +7,15 @@ import { getUserName } from "./Profile";
 import { UserInfo } from "firebase/auth";
 import { ChevronLeft } from "@mui/icons-material";
 import React from "react";
+import { type } from "os";
 
 type MenuType = 'default' | 'language' | 'currency';
 
 export interface ProfileMenuItem {
     text: string;
     disabled?: boolean;
-    appName?: string;
+    link?: string;
+    target?: string;
 
     items?: ProfileMenuItem[];
 }
@@ -65,7 +67,7 @@ export interface HeaderMenuProps {
     onMenuClose: () => void;
     onLoginRequest?: () => void;
     onLangChanged?: (lang: MainMenuLanguage) => void;
-    onMenuClicked?: (appName: string) => void;
+    onMenuClicked?: (item: ProfileMenuItem) => void;
 }
 
 export const ProfileMenu = (props: HeaderMenuProps) => {
@@ -254,7 +256,7 @@ export const ProfileMenu = (props: HeaderMenuProps) => {
 
     const handleItemClick = (item: ProfileMenuItem) => {
         if (!item.items || item.items.length === 0) {
-            props.onMenuClicked && props.onMenuClicked(item.appName || item.text);
+            props.onMenuClicked && props.onMenuClicked(item);
         }
     }
 

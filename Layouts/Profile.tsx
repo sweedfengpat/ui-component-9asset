@@ -5,33 +5,6 @@ import { TFunction } from "react-i18next";
 import { ProfileMenu, ProfileMenuItem } from "./ProfileMenu";
 import { MainMenuLanguage } from "./MainLayoutAppBar";
 
-const MenuList = new Map<string, ProfileMenuItem[]>([
-    ['seller', [
-        // { text: 'menu.buyerRequirement', disabled: true },
-        { text: 'menu.listing', appName: 'seller:listing' },
-        // { text: 'menu.project', disabled: true },
-        // {
-        //     text: 'menu.prospectActivity',
-        //     disabled: true,
-        //     items: [
-        //         { text: 'menu.prospectInterest', appName: 'seller:', disabled: true },
-        //         { text: 'menu.prospectInquiry', appName: 'prospect:inquiry', disabled: true },
-        //         { text: 'menu.prospectAppointment', appName: 'prospect:appointment', disabled: true }
-        //     ]
-        // },
-        // { text: 'menu.package', disabled: true },
-        // { text: 'menu.buyerCenter', disabled: true },
-        {
-            text: 'menu.myAccount',
-            items: [
-                { text: 'menu.profile', appName: 'seller:myprofile' },
-                { text: 'menu.companyProfile', appName: 'seller:company-profile' },
-                { text: 'menu.affiliateAgent', appName: 'seller:affiliate-agent' }
-            ]
-        }
-    ]]
-]);
-
 const getFirstLetter = (userInfo: UserInfo | null) => {
     if (userInfo) {
         if (userInfo.displayName) {
@@ -53,14 +26,15 @@ export const getUserName = (user: UserInfo | null) => {
 }
 
 export interface ProfileProps {
-    user: UserInfo
+    user: UserInfo;
+    menuItems?: ProfileMenuItem[];
     t: TFunction<string, undefined>;
     language: MainMenuLanguage;
 
     isAuth: boolean;
 
     onLangChanged?: (lng: MainMenuLanguage) => void;
-    onMenuClicked?: (menuKey: string) => void;
+    onMenuClicked?: (item: ProfileMenuItem) => void;
 }
 
 export const Profile = (props: ProfileProps) => {
@@ -76,15 +50,15 @@ export const Profile = (props: ProfileProps) => {
         user={props.user}
         isAuth={props.isAuth}
         isOpen={isMenuOpen}
-        items={ MenuList.get('seller') || [] }
+        items={ props.menuItems|| [] }
         
         onLoginRequest={() => { setIsMenuOpen(false); }}
         onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
         onMenuClose={() => { setIsMenuOpen(false); }}
         onMenuClicked={
-            (appName) => {
+            (item) => {
                 setIsMenuOpen(false);
-                props.onMenuClicked && props.onMenuClicked(appName);
+                props.onMenuClicked && props.onMenuClicked(item);
             }
         }
     />
