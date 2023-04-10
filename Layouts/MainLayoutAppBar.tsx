@@ -14,452 +14,54 @@ import {
     blue
 } from '@mui/material/colors';
 import React, {useEffect, useRef, useState} from "react";
-import { HotMenu } from "./HotMenu";
+import { Item, MenuBarItem } from "./MenuBarItem";
 import axios from 'axios';
 import SearchIcon from '@mui/icons-material/Search';
 
-import ProfileMenu from "./ProfileMenu";
+// import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { IMenuItem } from "./MainMenu";
-import { fontSize } from "@mui/system";
+import { IMenuItem } from "./DrawerMenu";
+import { Profile } from "./Profile";
+import { ProfileMenuItem } from "./ProfileMenu";
 // import { TFunction as ReactI18NextTFunction } from "react-i18next";
 // import { TFunction } from "next-i18next";
 
-const getFirstLetter = (user: any) => {
-    const userInfo = user;
-    if (userInfo) {
-        if (userInfo.displayName) {
-            return userInfo.displayName[0];
-        } else if (userInfo.email) {
-            return (userInfo.email as string)[0].toUpperCase();
-        }
-    }
-    return undefined;
-}
+export type MainMenuLanguage = 'th' | 'en' | 'cn';
 
-export enum MainMenuLanguage {
-    th = 'th',
-    en = 'en',
-    cn = 'cn'
-}
-
-const Profile  = (props: any) => {
-    // const { t } = useTranslation();
-    const { t, language } = props;
-
-    const DisplayLanguage: { [index in MainMenuLanguage]: string} = {
-        'en': 'English',
-        'th': 'ไทย',
-        'cn': 'Chinese' 
-    }
-
-    const startLanguage: MainMenuLanguage = language? 
-        language as MainMenuLanguage: MainMenuLanguage.th;
-
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [menuType, setMenuType] = React.useState<string>('default');
-    const [currentLanguage, setCurrentLanguage]  = useState(
-        DisplayLanguage[startLanguage]);
-
-    const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const isMenuOpen = Boolean(anchorEl);
-
-    const loginBasePath = process.env.REACT_APP_DOMAIN
-        || process.env.NEXT_PUBLIC_DOMAIN
-        || 'https://my.9asset.com';
-
-    const handleMenuClose = (e: any) => {
-        setAnchorEl(null);
-    }
-
-    const handleProfileClicked = () => {
-        // history.push('/myprofile');
-        setAnchorEl(null);
-        props.onProfileMenuItemClick && props.onProfileMenuItemClick('/myprofile');
-    }
-
-    const handleCompanyProfileClicked = () => {
-      setAnchorEl(null);
-      props.onProfileMenuItemClick && props.onProfileMenuItemClick('/company-profile');
-    }
-
-    const handleAffiliateAgentClicked = () => {
-      setAnchorEl(null);
-      props.onProfileMenuItemClick && props.onProfileMenuItemClick('/affiliate-agent');
-    }
-
-    const handleChangePassword = () => {
-        // history.push('/changepassword');
-        setAnchorEl(null);
-        props.onProfileMenuItemClick && props.onProfileMenuItemClick('/changepassword');
-    }
-
-    const handleLogout = () => {
-        // history.push('/logout');
-        window.open(`${loginBasePath}/login/logout`, '_self');
-        setAnchorEl(null);
-    }
-
-    const handleLogin = () => {
-        // history.push('/logout');
-        props.handleLogin && props.handleLogin();
-        setAnchorEl(null);
-        const currentUrl = encodeURIComponent(window.location.href);
-        window.location.href = `${loginBasePath}/login?redirect=${currentUrl}`;
-    }
-
-    const onChangeMenuRequested = (val: string) => {
-        setMenuType(val);
-    }
-
-    const onChangeLanguage = (lang: MainMenuLanguage) => {
-        console.log('onChangeLanguage: ', lang, props.onLangChanged);
-        setCurrentLanguage(DisplayLanguage[lang])
-        props.onLangChanged && props.onLangChanged(lang); 
-        
-        onChangeMenuRequested('default')
-        setAnchorEl(null);
-    }
-
-    const getUserName = () => {
-        const username = getFirstLetter(props.user);
-        if(username){
-            return username;
-        }
-
-        return '9';
-    }
-
-    const getName = () => {
-        if (props.user) {
-            if(currentLanguage === DisplayLanguage['en']) {
-                return `${props.user.nameEn || '' } ${props.user.lastnameEn || '' }`.trim();
-            } else if(currentLanguage === DisplayLanguage['cn']) {
-                return `${props.user.nameCn || '' } ${props.user.lastnameCn || '' }`.trim();
-            } else {
-                return `${props.user.nameTh || '' } ${props.user.lastnameTh || '' }`.trim();
-            }
-        }
-        else {
-            return '';
-        }
-    }
-
-    const renderProfileMenu = (
-        <ListItem component="div" disablePadding
-            // onClick={(e: any) => onChangeMenuRequested('language')}
-        >
-            <ListItemButton>
-                <ListItemText style={{
-                    paddingLeft: '0px',
-                    paddingRight: '16px',
-                    paddingTop: '8px',
-                    paddingBottom: '0px'
-                }}>
-                    {t('Profile')}
-                </ListItemText>
-            </ListItemButton>
-        </ListItem>
-    );
-
-    const renderCommonMenu = (<>
-    
-        <Divider variant="middle" />
-        <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('language')}>
-            <ListItemButton>
-                <ListItemText>{t('Language')}</ListItemText>
-                <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>{currentLanguage}</ListItemIcon>
-            </ListItemButton>
-        </ListItem>
-        {/* <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('currency')}>
-            <ListItemButton>
-                <ListItemText>Price Display</ListItemText>
-                <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>THB</ListItemIcon>
-            </ListItemButton>
-        </ListItem> */}
-    </>);
-
-    const renderMainMenu = () => {
-        return (
-            <ProfileMenu
-                menu={props.profilemenu}
-                history={props.history}
-                location={props.location}
-            />
-        );
-    }
-
-    const nonAuthMenu = (
-        <ListItem component="div" disablePadding>
-            <ListItemButton 
-                sx={{ textAlign: 'center' }}
-                onClick={handleLogin}
-                component="a" 
-                // href="/login"
-                // style={{backgroundColor: '#f4762a'}}
-                >
-                <ListItemText
-                    primary={t('Sign in')}
-                    primaryTypographyProps={{
-                        color: '#f4762a',
-                        fontWeight: 'medium',
-                        variant: 'body1',
-                    }}
-                />
-            </ListItemButton>
-            {t('or')}
-            <ListItemButton component="a" 
-                href= {`${loginBasePath}/login/register`}
-                sx={{ textAlign: 'center' }}
-                // style={{backgroundColor: 'rgb(108, 172, 25)'}}
-                >
-                <ListItemText
-                    primary={t('Sign up')}
-                    primaryTypographyProps={{
-                        color: '#f4762a',
-                        fontWeight: 'medium',
-                        variant: 'body1',
-                    }}
-                />
-            </ListItemButton>
-        </ListItem>
-    );
-
-    const authMenu = (
-        <ListItem alignItems="flex-start">
-            <ListItemAvatar>
-                <Avatar>{getUserName()}</Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
-        </ListItem>
-    );
-
-    const renderLangMenu = (
-        <List
-            sx={{
-                width: '100%',
-                minWidth: 300,
-                maxWidth: 360,
-                bgcolor: 'background.paper'
-            }}
-        >
-            
-            <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('default')}>
-                <ListItemButton>
-                    <ListItemIcon><ChevronLeft /></ListItemIcon>
-                    <ListItemText primaryTypographyProps={{
-                        color: 'default',
-                        variant: 'subtitle2',
-                    }}>{t('Language')}</ListItemText>
-                </ListItemButton>
-            </ListItem>
-            <ListItem component="div" disablePadding>
-                <ListItemButton
-                    onClick={() => onChangeLanguage(MainMenuLanguage.en)} 
-                ><ListItemText>{DisplayLanguage[MainMenuLanguage.en]}</ListItemText></ListItemButton>
-            </ListItem>
-            <ListItem component="div" disablePadding>
-                <ListItemButton
-                    onClick={() => onChangeLanguage(MainMenuLanguage.cn)} 
-                ><ListItemText>{DisplayLanguage[MainMenuLanguage.cn]}</ListItemText></ListItemButton>
-            </ListItem>
-            <ListItem component="div" disablePadding>
-                <ListItemButton
-                    onClick={() => onChangeLanguage(MainMenuLanguage.th)} 
-                ><ListItemText>{DisplayLanguage[MainMenuLanguage.th]}</ListItemText></ListItemButton>
-            </ListItem>
-        </List>
-    );
-
-    const renderCurrencyMenu = (
-        <List
-            sx={{
-                width: '100%',
-                minWidth: 300,
-                maxWidth: 360,
-                bgcolor: 'background.paper'
-            }}
-        >
-            
-            <ListItem component="div" disablePadding onClick={(e: any) => onChangeMenuRequested('default')}>
-                <ListItemButton>
-                    <ListItemIcon><ChevronLeft /></ListItemIcon>
-                    <ListItemText primaryTypographyProps={{
-                        color: 'default',
-                        variant: 'subtitle2',
-                    }}>Price Display</ListItemText>
-                </ListItemButton>
-            </ListItem>
-            <ListItem component="div" disablePadding>
-                <ListItemButton><ListItemText>THB</ListItemText></ListItemButton>
-            </ListItem>
-            <ListItem component="div" disablePadding>
-                <ListItemButton><ListItemText>USD</ListItemText></ListItemButton>
-            </ListItem>
-            <ListItem component="div" disablePadding>
-                <ListItemButton><ListItemText>CNY</ListItemText></ListItemButton>
-            </ListItem>
-        </List>
-    );
-
-    const profileMenu = (
-        <List
-            sx={{
-                width: '100%',
-                minWidth: 300,
-                maxWidth: 360,
-                bgcolor: 'background.paper'
-            }}
-            subheader={<ListSubheader sx={{ lineHeight: '30px', marginTop: '10px' }}>{t('My Account')}</ListSubheader>}
-        >
-            { props.isAuth === 'true' ? authMenu : nonAuthMenu }
-            <Divider variant="middle" />
-            { renderCommonMenu }
-            <Divider variant="middle" />
-            { renderMainMenu() }
-        </List>
-    );
-
-    const renderMenu = (
-        
-        <Popover
-            anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            open={isMenuOpen}
-            keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            onClose={handleMenuClose}
-        >
-            {
-                menuType === 'default' ? profileMenu : (
-                    menuType === 'language' ? (renderLangMenu) :
-                    ( menuType === 'currency' ? (renderCurrencyMenu) : profileMenu )
-                )
-            }
-            {/* { 
-                menuType === 'default' ? (props.isAuth === 'true' ? renderAuthMenu : renderNonAuthMenu) : 
-                    ( menuType === 'language' ? (renderLangMenu) :
-                        ( menuType === 'currency' ? (renderCurrencyMenu) : renderNonAuthMenu ) 
-                    )
-            } */}
-            
-            {
-                props.isAuth === 'true' && menuType === 'default' ? 
-                // [
-                //   <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>,
-                //   <MenuItem onClick={handleCompanyProfileClicked}>Company Profile</MenuItem>,
-                //   <MenuItem onClick={handleAffiliateAgentClicked}>Affiliate Agent</MenuItem>,
-                //   <MenuItem onClick={() => props.openApp('home')}>{t('Home')}</MenuItem>,
-
-                //  <MenuItem onClick={() => props.openApp('seller')}>{t('Seller')}</MenuItem>,
-                //     <MenuItem onClick={() => {}}>{ t('menu.buyerRequirement') }</MenuItem>,
-                //     <MenuItem onClick={() => props.openApp('seller', 'listing', false)}>{ t('menu.listing') }</MenuItem>,
-
-                //     <Divider variant="middle" />,
-                //     <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
-                // ]
-                <MenuList sx={{ pt: 0 }}>
-                    <NMenuItem onClick={() => {}} disabled>{ t('menu.buyerRequirement') }</NMenuItem>
-                    <NMenuItem onClick={() => props.openApp('seller', 'listing', false)}>{ t('menu.listing') }</NMenuItem>
-                    <NMenuItem onClick={() => {}} disabled>{ t('menu.project') }</NMenuItem>
-
-                    <NMenuItem onClick={() => {}} sx={{ paddingBottom: '0px' }}>{ t('menu.prospectActivity') }</NMenuItem>
-                    <NMenuSubItem onClick={() => {}} sx={{ paddingY: '0px' }}>
-                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.prospectInterest') }</ListItemText>
-                    </NMenuSubItem>
-                    <NMenuSubItem onClick={() => {}} sx={{ paddingY: '0px' }}>
-                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.prospectInquiry') }</ListItemText>
-                    </NMenuSubItem>
-                    <NMenuSubItem onClick={() => {}} sx={{ paddingT: '0px' }}>
-                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.prospectAppointment') }</ListItemText>
-                    </NMenuSubItem>
-                   
-                    <NMenuItem onClick={() => {}} disabled>{ t('menu.package') }</NMenuItem>
-                    <NMenuItem onClick={() => {}} disabled>{ t('menu.buyerCenter') }</NMenuItem>
-
-                    <NMenuItem onClick={() => {}} sx={{ paddingBottom: '0px' }}>{ t('menu.myAccount') }</NMenuItem>
-                    <NMenuSubItem onClick={() => {}} sx={{ paddingY: '0px' }}>
-                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.profile') }</ListItemText>
-                    </NMenuSubItem>
-                    <NMenuSubItem onClick={() => {}} sx={{ paddingY: '0px' }}>
-                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.companyProfile') }</ListItemText>
-                    </NMenuSubItem>
-                    <NMenuSubItem onClick={() => {}} sx={{ paddingT: '0px' }}>
-                        <ListItemText sx={{ paddingLeft: '15px' }}>{ t('menu.affiliateAgent') }</ListItemText>
-                    </NMenuSubItem>
-
-                    <Divider variant="middle" />
-                    <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
-                </MenuList>
-              : undefined
-                // <MenuItem onClick={handleLogin}>Login</MenuItem>
-            }
-        </Popover>
-    );
-
-    const userName = getUserName();
-
-    const forceRenderMenuWhenLanguageChange = () => {
-        return renderMenu;
-    }
-
-    return (<>
-    <Avatar
-        alt="9 Asset"
-        style={{ height: '30px', width: '30px', margin: '12px' }}
-        onClick={handleProfileMenuOpen}
-    >{ userName }</Avatar>
-    {forceRenderMenuWhenLanguageChange()}
-    </>
-    );
-}
-
-const NMenuItem = styled(MenuItem)(() => ({
-    fontSize: '0.9em',
-    paddingY: '10px'
-}));
-const NMenuSubItem = styled(MenuItem)(() => ({
-    fontSize: '0.9em',
-}));
+export type MenuBar = { text: string, link: string, items?: MenuBar }[];
 
 interface IRecipeProps {
     userServiceUrl: string;
-    useExternalLinkComponent: boolean;
-    mainLink?: string;
-    menubar: any;
-    mainmenu: any[];
-    profilemenu: any[];
+    useExternalLinkComponent?: boolean;
+    homeUrl?: string;
+    menubar: MenuBar;
+    menuProfile: ProfileMenuItem[];
+
     app: FirebaseApp;
-    onAppChange?: (event: any) => void;
+    
+    // onAppChange?: (event: any) => void;
     onLangChanged?:  (event: any) => void;
     onMobileFilterClick:  (event: any) => void;
     onMobileSearchClick:  (event: any) => void;
-    onMenuClick?: (id: number) => void;
-    onSubMenuItemClick?: (id: number) => void;
-    onProfileMenuItemClick?: (id: number) => void;
-    onMainMenuClick?: (e: MouseEvent, item: IMenuItem) => void;
+    onMenuClick?: (type: 'project' | 'sell' | 'rent') => void;
+    onProfileMenuClick?: (item: ProfileMenuItem) => void;
+    onMenuBarItemClick?: (item: Item) => void;
+
     logoPath?: string;
     allowNoLoginAccessSite?: boolean | undefined;
-    location?: any;
+
     language: MainMenuLanguage;
     t: any; // To support next-i18next and react-i18next without project install both frameworks
-    onMenuHeaderClick?: any;
 }
 
 interface IRecipeState {
-    appMenuEl: any;
-    isAppMenuOpen: boolean;
     selectLang: string;
     isAuth: string;
     loginBasePath: string;
-    buyerUrl?: string;
-    sellerUrl?: string;
     homeUrl?: string;
     user?: any;
-    menubar?: any;
+    menubar?: MenuBar;
 }
 
 export const AdvanceSearch = (props: any) => {
@@ -507,22 +109,17 @@ export const AdvanceSearch = (props: any) => {
 
 export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
    
-    menubar: any[] = [];
-    menu: any[] = [];
+    menubar: MenuBar = [];
+    logoPath: string = '';
 
-    logoPath: any = '';
-
-    constructor(props: any) {
+    constructor(props: IRecipeProps) {
         super(props);
         const { logoPath } = props;
         if(logoPath) this.logoPath = logoPath;
 
         this.menubar = [...this.props.menubar];
-        this.menu = props.menu;
 
         this.state = {
-            appMenuEl: null,
-            isAppMenuOpen: false,
             selectLang: props.language ?? 'th',
             isAuth: 'false',
             user: null,
@@ -531,22 +128,11 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                 || process.env.NEXT_PUBLIC_DOMAIN
                 || 'https://my.9asset.com'
         }
-
         console.log('layoutAppBar: ', this.state)
     }
    
     async componentDidMount () {
-
         const token = await this.getToken();
-        
-        // console.log('component did mount token: ', token);
-        // if(!token) {
-        //     this.setState({
-        //         ...this.state,
-        //         isAuth: 'false',
-        //         user: null
-        //     })
-        // }
     }
 
     async getToken () {
@@ -606,45 +192,18 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         return auth.currentUser?.getIdToken();
     }
 
-    onMenuHeaderClick() {
-
-    }
-
     renderMenu () {
         if(this.props.menubar) {
-            return this.props.menubar.map((t: any, i: any) => <HotMenu text={t.text} items={t.items} link={t.link}  key={i}
-                useExternalLinkComponent={this.props.useExternalLinkComponent}
-                onMenuItemClick={this.props.onSubMenuItemClick}
-                onMenuHeaderClick={this.props.onMenuHeaderClick}
+            return this.props.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
+                useExternalLinkComponent={this.props.useExternalLinkComponent || false}
+                onMenuItemClick={(item) => this.props.onMenuBarItemClick && this.props.onMenuBarItemClick(item)}
             />);
         } 
 
-        return this.menubar.map((t: any, i: any) => <HotMenu text={t.text} items={t.items} link={t.link}  key={i}
-            useExternalLinkComponent={this.props.useExternalLinkComponent}
-            onMenuItemClick={this.props.onSubMenuItemClick}
-            onMenuHeaderClick={this.props.onMenuHeaderClick}
+        return this.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
+            useExternalLinkComponent={this.props.useExternalLinkComponent || false}
+            onMenuItemClick={(item) => this.props.onMenuBarItemClick && this.props.onMenuBarItemClick(item)}
         />);
-        
-        // menu.push( <HotMenu text={'...'} items={[]}   
-        //     useExternalLinkComponent={this.props.useExternalLinkComponent} 
-        //     onMenuItemClick={this.props.onSubMenuItemClick}
-        //     onMenuHeaderClick={this.props.onMenuHeaderClick}
-        // /> );
-        // return menu;
-    }
-
-    handelMenuApps(event: any) {
-        this.setState({ ...this.state,
-            appMenuEl: event.currentTarget,
-            isAppMenuOpen: true
-        });
-    }
-
-    handleAppMenuClose() {
-        this.setState({ ...this.state,
-            appMenuEl: null,
-            isAppMenuOpen: false
-        }); 
     }
 
     onLangChange(e: any) {
@@ -671,21 +230,12 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         }
     }
 
-    openApp(app: string, path = '', newTab = true) {
-        this.handleAppMenuClose();
-        if(app === 'home') {
-            window.open(this.state.sellerUrl ? this.state.homeUrl: `${this.state.loginBasePath}`, newTab ? '_blank' : '_self');
-        } else if(app === 'seller') {
-            window.open(this.state.sellerUrl ? this.state.sellerUrl: `${this.state.loginBasePath}/seller/${path || ''}`, newTab ? '_blank' : '_self');
-        } else if(app === 'buyer') {
-            window.open(this.state.sellerUrl ? this.state.buyerUrl: `${this.state.loginBasePath}/buyer/`, newTab ? '_blank' : '_self')
-        }
-        
+    handelMenuClicked = (item: ProfileMenuItem) => {
+        this.props.onProfileMenuClick && this.props.onProfileMenuClick(item);
     }
 
-    onMenuClick(id: number) {
-
-        this.props.onMenuClick && this.props.onMenuClick(id);
+    onMenuClick(type: 'project' | 'sell' | 'rent') {
+        this.props.onMenuClick && this.props.onMenuClick(type);
     }
 
     getUserDisplayName() {
@@ -706,52 +256,38 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
 
     render() {
         let user = this.state.user;
-        // let isAuth = this.state.isAuth;
         if (!user) {
             if (typeof window !== "undefined") {
                 user = window.localStorage && JSON.parse(window.localStorage.getItem(`9asset.userinfo`) || 'null');
             }
         }
-        // if (user) {
-        //     isAuth = 'true';
-        // }
         
         return (
             <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
                 <Toolbar>
-                    <a href ={this.props.mainLink || '/' }>
+                    <a href ={this.props.homeUrl || '/' }>
                         <img src={this.logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
                     </a>
                     
-                    {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                    
-                    </Box> */}
-                    {/* <Button
-                        color="primary"
-                        style={{ color: '#f4762a', marginLeft: '10px', textTransform: 'none' }}
-                        endIcon={<KeyboardArrowDown />}
-                    >
-                        Thailand
-                    </Button> */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
                         <Button
                             color="info"
                             style={{ color: '#5e5e5e'}}
-                            onClick={()=> this.onMenuClick(0)}
+                            onClick={()=> this.onMenuClick('project')}
                         >
                             {`${this.props.t('project')}`}
                         </Button>
                         <Button
                             color="primary"
                             style={{ color: '#5e5e5e' }}
-                            onClick={()=> this.onMenuClick(1)}
+                            onClick={()=> this.onMenuClick('sell')}
                         >
                             {`${this.props.t('sell')}`}
                         </Button>
                         <Button
                             color="primary"
                             style={{ color: '#5e5e5e' }}
-                            onClick={()=> this.onMenuClick(2)}
+                            onClick={()=> this.onMenuClick('rent')}
                         >
                             {`${this.props.t('rent')}`}
                         </Button>
@@ -764,29 +300,15 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     <div style={{marginRight: '10px'}}>
                         {  this.getUserDisplayName() }
                     </div>
-                    {/* <Select variant="outlined" size="small" 
-                        inputProps={{ margin: 'dense' }} value={this.state.selectLang} 
-                        onChange={this.onLangChange.bind(this)} >
-                        <MenuItem value={'en'}>EN</MenuItem>
-                        <MenuItem value={'th'}>TH</MenuItem>
-                        <MenuItem value={'cn'}>CN</MenuItem>
-                    </Select> */}
-                    {/* <IconButton color="inherit" onClick={this.handelMenuApps.bind(this)} >
-                        <Badge badgeContent={0} color="error">
-                            <Apps />
-                        </Badge>
-                    </IconButton> */}
-                    {/* <IconButton aria-label="show 17 new notifications" color="inherit">
-                        <Badge badgeContent={17} color="error">
-                            <Notifications />
-                        </Badge>
-                    </IconButton> */}
                     <div style={{ display: 'flex' }}>
-                        <Profile {...this.props}
-                            isAuth={this.state.isAuth}
-                            user={user} 
-                            openApp = {this.openApp.bind(this) }
-                            onProfileMenuItemClick={this.props.onProfileMenuItemClick}
+                        <Profile
+                            user={user}
+                            t={this.props.t}
+                            language={this.props.language}
+                            isAuth={this.state.isAuth === 'true'}
+                            menuItems={this.props.menuProfile}
+                            onLangChanged={(ln: MainMenuLanguage) => { this.props.onLangChanged && this.props.onLangChanged(ln); }}
+                            onMenuClicked={this.handelMenuClicked}
                         />
                     </div>
                 </Toolbar>
@@ -798,9 +320,9 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     </Grid>
                     <Grid item width={"100%"} sx={{display: { xs: 'flex', sm: 'flex', md: 'none' } }} >
                         <Grid container justifyContent="space-between" direction="row"  alignItems="center" >
-                            <Grid item xs={12} md={12} style={{paddingLeft: '10px', paddingRight: '10px'}}>
+                            <Grid item xs={12} md={12} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                                 <Button size="small" variant="outlined" startIcon={<SearchIcon />}
-                                    sx={{width: '100%', bgcolor: 'white', color: 'black', textAlign: 'left',
+                                    sx={{ width: '100%', bgcolor: 'white', color: 'black', textAlign: 'left',
                                         justifyContent: 'left'
                                     }}
                                     onClick={this.onMobileSearchClick.bind(this)} 
@@ -809,46 +331,6 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Menu
-                    id="menu-appbar"
-                    anchorEl={this.state.appMenuEl}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={Boolean(this.state.isAppMenuOpen)}
-                    onClose={this.handleAppMenuClose.bind(this)}
-                >
-                    <Grid container spacing={2} style={{paddingTop: '0px', paddingBottom: '0px'}}>
-                        <Grid item xs={12}>
-                            <Grid container >
-                                <Grid key= {1} item style={{margin: '10px'}}>
-                                    <IconButton aria-label="Home" onClick={ () => this.openApp('home') } >
-                                        <HomeIcon fontSize="large" style={{ color: green[500] }} />
-                                    </IconButton>
-                                    <div style={{textAlign: 'center'}}>Home</div>
-                                </Grid>
-                                <Grid key= {2} item style={{margin: '10px'}}>
-                                    <IconButton aria-label="buyer" onClick={ () => this.openApp('buyer') }>
-                                        <HomeIcon fontSize="large" style={{ color: red[500] }} />
-                                    </IconButton>
-                                    <div style={{textAlign: 'center'}}>Buyer</div>
-                                </Grid>
-                                <Grid key= {3} item style={{margin: '10px'}}>
-                                    <IconButton aria-label="seller" onClick={ () => this.openApp('seller') } >
-                                        <HomeIcon fontSize="large" style={{ color: blue[500] }} />
-                                    </IconButton>
-                                    <div style={{textAlign: 'center'}}>Seller</div>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Menu>
             </AppBar>
         );
     }

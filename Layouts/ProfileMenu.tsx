@@ -1,160 +1,429 @@
-import { Divider, List, ListItemButton, ListItemText, MenuItem, Menu } from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Avatar, Dialog, DialogContent, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, MenuList, Popover, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
+import { useEffect, useState } from "react";
+import { TFunction } from "react-i18next";
+import { MenuDialogTitle } from "../components/MenuDialogTitle";
+import { MainMenuLanguage } from "./MainLayoutAppBar";
+import { getUserName } from "./Profile";
+import { UserInfo } from "firebase/auth";
+import { ChevronLeft } from "@mui/icons-material";
 import React from "react";
-import { MenuSection, IMenuItem } from "./MainMenu";
+import { type } from "os";
 
-export interface ProfileMenuProps  {
-    menu: MenuSection[]; 
-    history: any;
-    location: any;
+type MenuType = 'default' | 'language' | 'currency';
+
+export interface ProfileMenuItem {
+    text: string;
+    disabled?: boolean;
+    link?: string;
+    target?: string;
+
+    items?: ProfileMenuItem[];
 }
 
-export interface ProfileMenState {
-    expanded: string[];
-    popupMenu: 'language' | 'currency' | '';
+const MenuDialog = styled(Dialog)(({ theme }) => ({
+    '.MuiPaper-root': {
+        position: 'absolute',
+        top: '10px',
+        width: '96%',
+        margin: '0'
+    },
+}));
 
-    anchorEl: HTMLElement | null;
-}
+const NMenuItem = styled(MenuItem)(({ theme }) => ({
+    paddingY: '10px',
 
-export class ProfileMenu extends React.Component<ProfileMenuProps, ProfileMenState> {
+    '.MuiListItemText-primary': {
+        fontSize: '1em',
 
-    constructor(props: Readonly<ProfileMenuProps> | ProfileMenuProps) {
-        super(props);
-        this.state = {
-            expanded: [],
-            popupMenu: '',
-            anchorEl: null,
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '1.1em',
+        }
+    }
+    
+}));
+
+const NMenuSubItem = styled(MenuItem)(({ theme }) => ({
+    '.MuiListItemText-primary': {
+        fontSize: '1em',
+
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '1.1em',
         }
     }
 
-    componentDidMount () {
-        this.setState({ expanded: 
-            this.props.menu ?
-            this.props.menu.map(m => m.key): [] });
+}));
+
+export interface HeaderMenuProps {
+    t: TFunction<string, undefined>;
+    language: MainMenuLanguage;
+    items: ProfileMenuItem[];
+
+    user: any;
+    isAuth: boolean;
+    
+    isOpen: boolean;
+    anchorElement: HTMLElement | null;
+
+    onMenuClose: () => void;
+    onLoginRequest?: () => void;
+    onLangChanged?: (lang: MainMenuLanguage) => void;
+    onMenuClicked?: (item: ProfileMenuItem) => void;
+}
+
+export const ProfileMenu = (props: HeaderMenuProps) => {
+
+    const { t, language } = props;
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const loginBasePath = process.env.REACT_APP_DOMAIN
+        || process.env.NEXT_PUBLIC_DOMAIN
+        || 'https://my.9asset.com';
+
+    const [menuType, setMenuType] = useState<MenuType>('default');
+    const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
+
+    const DisplayLanguage: { [index in MainMenuLanguage]: string} = {
+        'en': 'English',
+        'th': 'ไทย',
+        'cn': 'Chinese' 
     }
 
-    render () {
-        const section = this.props.menu || [];
-        return (
-        <>
-            { section && section.length > 0 &&
-            (<List>
-                {
-                    section.map((i, j) => this.renderSection(i, j))
-                }
-            </List>)
+    useEffect(() => {
+        setElementRef(props.anchorElement);
+    }, [props.anchorElement]);
+
+    const getName = () => {
+        const currentLanguage = props.language;
+        if (props.user) {
+            if(currentLanguage === 'en') {
+                return `${props.user.nameEn || '' } ${props.user.lastnameEn || '' }`.trim();
+            } else if(currentLanguage === 'cn') {
+                return `${props.user.nameCn || '' } ${props.user.lastnameCn || '' }`.trim();
+            } else {
+                return `${props.user.nameTh || '' } ${props.user.lastnameTh || '' }`.trim();
             }
-            { this.renderPopupMenu() }
-        </>
+        }
+        else {
+            return '';
+        }
+    }
+
+    const handleLogin = () => {
+        props.onLoginRequest && props.onLoginRequest();
+       
+        const currentUrl = encodeURIComponent(window.location.href);
+        window.location.href = `${loginBasePath}/login?redirect=${currentUrl}`;
+    }
+
+    const handleChangeMenuRequested = (menuType: MenuType) => {
+        setMenuType(menuType);
+    }
+
+    const handleChangeLanguage = (lang: MainMenuLanguage) => {
+        props.onLangChanged && props.onLangChanged(lang); 
+        handleChangeMenuRequested('default');
+    }
+
+    const handleLogout = () => {
+        window.open(`${loginBasePath}/login/logout`, '_self');
+    }
+
+    const renderPopoverLangMenu = () => {
+        return (
+            <List
+                sx={{
+                    width: '100%',
+                    minWidth: 300,
+                    maxWidth: 360,
+                    bgcolor: 'background.paper'
+                }}
+            >
+                
+                <ListItem component="div" disablePadding onClick={(e: any) => handleChangeMenuRequested('default')}>
+                    <ListItemButton>
+                        <ListItemIcon><ChevronLeft /></ListItemIcon>
+                        <ListItemText primaryTypographyProps={{
+                            color: 'default',
+                            variant: 'subtitle2',
+                            fontSize: '1.1em'
+                        }}>{t('Language')}</ListItemText>
+                    </ListItemButton>
+                </ListItem>
+                <ListItem component="div" dense sx={{ py: 0 }}>
+                    <ListItemButton onClick={() => handleChangeLanguage('en')} >
+                        <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['en']}</ListItemText>
+                    </ListItemButton>
+                </ListItem>
+                <ListItem component="div" dense sx={{ py: 0 }}>
+                    <ListItemButton onClick={() => handleChangeLanguage('cn')} >
+                        <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['cn']}</ListItemText>
+                    </ListItemButton>
+                </ListItem>
+                <ListItem component="div" dense sx={{ py: 0 }}>
+                    <ListItemButton onClick={() => handleChangeLanguage('th')} >
+                        <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['th']}</ListItemText>
+                    </ListItemButton>
+                </ListItem>
+            </List>
         );
     }
 
-    renderPopupMenu = () => {
-        const items = 
-            (this.state.popupMenu === 'language' ? 
-                ['English', 'Chinese', 'ภาษาไทย'] : 
-                    (this.state.popupMenu === 'currency' ? 
-                        ['THB', 'USD', 'CNY'] : []))
-            .map(i => {
-                return (<MenuItem disableRipple onClick={() => { this.setState({ popupMenu: '', anchorEl: null }) }}>{i}</MenuItem>);
-            })
-        
-        return (<>
-        <Menu 
-            open={this.state.popupMenu !== ''}
-            anchorEl={this.state.anchorEl} 
-            onClose={() => { this.setState({ popupMenu: '', anchorEl: null }) }}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right'}}
-            sx={{ minWidth: 180 }}
-        >
-            { items }
-        </Menu>
-        </>)
-    }
+    const renderPopoverMenuDetail = () => {
+        const authMenu = (
+        <ListItem alignItems="flex-start">
+            <ListItemAvatar>
+                <Avatar>{ getUserName(props.user) }</Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
+        </ListItem>
+        );
 
-    handleCommonMenuClick = (event: React.MouseEvent<HTMLButtonElement>, type: 'language' | 'currency' | '') => {
-        this.setState({ popupMenu: type });
-        this.setState({ anchorEl: event.currentTarget });
-    }
-
-    handleClick = (e: MouseEvent, item: IMenuItem) => {
-        e.preventDefault();
-        const key = item.key;
-        if (this.state.expanded.includes(key)) {
-            this.setState({ expanded: this.state.expanded.filter(t => t !== key) });
-        } else {
-            const expanded = this.state.expanded;
-            expanded.push(key)
-            this.setState({ expanded: expanded });
-        }
-        e.stopPropagation();
-    };
-
-    onMenuClick = (e: MouseEvent, item: IMenuItem) => {
-       
-        e.preventDefault();
-        if (item.link !== undefined) {
-            this.props.history.push(item.link || '');
-        } else {
-            const key = item.key;
-            if (this.state.expanded.includes(key)) {
-                this.setState({ expanded: this.state.expanded.filter(t => t !== key) });
-            } else {
-                const expanded = this.state.expanded;
-                expanded.push(key)
-                this.setState({ expanded: expanded });
-            }
-        }
-        e.stopPropagation();
-    }
-
-    private isExpanded = (key: string) => {
-        return this.state.expanded.includes(key);
-    }
-
-    private renderSection = (item: MenuSection, index: number) => {
-        const open = this.isExpanded(item.key);
-        return (<>
-       
-        <ListItemButton
-            alignItems="flex-start"
-            onClick={(e: any) => this.onMenuClick(e as any, item)}
-            key={index}
-        >
-            <ListItemText
-                primary={item.title}
-                primaryTypographyProps={{
-                    fontSize: 15,
-                    fontWeight: 'bold',
-                    lineHeight: '20px',
-                    mb: '2px',
-                }}>   
-            </ListItemText>
-            { item.items.length > 0 ? (open ? <ExpandLess /> : <ExpandMore />) : (<></>)} 
-        </ListItemButton>
-        {
-            open && item.items.map(i => this.renderMenu(i, 0))
-        }
-        {   
-            index < this.props.menu.length - 1 ? <Divider variant="middle" /> : <></> 
-        }
-        </>)
-    }
-
-    private renderMenu = (item: IMenuItem, indent: number): any => {
-        const isActive = this.props.location.pathname === item.link;
-        return (<>
-            <ListItemButton key={item.key} selected={ isActive || false } sx={{ py: 0 }} onClick={(e: any) => this.onMenuClick(e as any, item)}>
+        const nonAuthMenu = (
+        <ListItem component="div" disablePadding>
+            <ListItemButton 
+                sx={{ textAlign: 'center', marginRight: '10px' }}
+                onClick={handleLogin}
+                component="a"
+            >
                 <ListItemText
-                    sx={{ paddingLeft: `${indent*15}px`}}
-                    primary={item.title}
-                    primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
+                    primary={t('Sign in')}
+                    primaryTypographyProps={{
+                        color: '#f4762a',
+                        fontWeight: 'medium',
+                        variant: 'body1',
+                    }}
                 />
             </ListItemButton>
-            {
-                item && (item.items || []).map(i => this.renderMenu(i, indent+1))
-            }
+            { t('or') }
+            <ListItemButton component="a" 
+                href= {`${loginBasePath}/login/register`}
+                sx={{ textAlign: 'center', marginLeft: '10px' }}
+                >
+                <ListItemText
+                    primary={t('Sign up')}
+                    primaryTypographyProps={{
+                        color: '#f4762a',
+                        fontWeight: 'medium',
+                        variant: 'body1',
+                    }}
+                />
+            </ListItemButton>
+        </ListItem>
+        );
+
+        const currentLanguage = (props.language || 'th').toUpperCase();
+
+        const commonMenu = (<>
+        <Divider variant="middle" sx={{ mb: '8px' }} />
+        <NMenuItem onClick={(e: any) => handleChangeMenuRequested('language')}>
+            <ListItemText>{t('Language')}</ListItemText>
+            <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>{currentLanguage}</ListItemIcon>
+        </NMenuItem>
+        </>);
+
+        const logoutMenu = (<>
+        <Divider variant="middle" />
+        <NMenuItem onClick={handleLogout}>
+            <ListItemText>{t('Logout')}</ListItemText>
+        </NMenuItem>
+        </>);
+
+        if (menuType === 'default') {
+            
+            return (
+            <List
+                sx={{
+                    width: '100%',
+                    minWidth: 300,
+                    maxWidth: 360,
+                    bgcolor: 'background.paper'
+                }}
+                subheader={<ListSubheader sx={{ lineHeight: '30px', marginTop: '10px' }}>{t('My Account')}</ListSubheader>}
+            >
+
+                { props.isAuth ? authMenu : nonAuthMenu }
+                { commonMenu }
+                { props.isAuth && renderDialogMenuItems() }
+                { props.isAuth && logoutMenu }
+            </List>)
+        } else if (menuType === 'language') {
+            return renderPopoverLangMenu();
+        }
+
+        return (<></>);
+    };
+
+    const handleItemClick = (item: ProfileMenuItem) => {
+        if (!item.items || item.items.length === 0) {
+            props.onMenuClicked && props.onMenuClicked(item);
+        }
+    }
+
+    const renderDialogMenuItems = () => {
+        return (<>
+        {
+            props.items.map((item, index) => (<React.Fragment key={index}>
+                <NMenuItem
+                    disabled={ item.disabled || false }
+                    onClick={() => handleItemClick(item)}
+                >
+                    <ListItemText>{ t(item.text) }</ListItemText>
+                </NMenuItem>
+                { item.items && item.items.length > 0 ? 
+                    (
+                        item.items.map((s, j) => (
+                        <NMenuSubItem key={`${index}-${j}`} disabled={ item.disabled || false } onClick={() => handleItemClick(s)}>
+                            <ListItemText inset>{ t(s.text) }</ListItemText>
+                        </NMenuSubItem>
+                        ))
+                    ): <></> }
+            </React.Fragment>))
+        }
         </>);
     }
-}
-export default ProfileMenu;
+
+    const renderDialogMenuDetail = () => {
+        const currentLanguage = (props.language || 'th').toUpperCase();
+
+        const commonMenu = (
+        <NMenuItem onClick={(e: any) => handleChangeMenuRequested('language')}>
+            <ListItemText>{t('Language')}</ListItemText>
+            <ListItemIcon sx={{ textAlign: 'right', display: 'block' }}>{currentLanguage}</ListItemIcon>
+        </NMenuItem>);
+
+        const logoutMenu = (
+        <NMenuItem onClick={handleLogout}>
+            <ListItemText>{t('Logout')}</ListItemText>
+        </NMenuItem>
+        );
+
+        const langMenu = (
+        <MenuList>
+            <MenuItem sx={{ px: 0 }} onClick={(e: any) => handleChangeMenuRequested('default')}>
+                <ListItemButton sx={{ pl: 1 }}>
+                    <ListItemIcon><ChevronLeft /></ListItemIcon>
+                    <ListItemText primaryTypographyProps={{
+                        color: 'default',
+                        variant: 'inherit',
+                        fontWeight: 'bold',
+                        fontSize: '1.1em'
+                    }}>{t('Language')}</ListItemText>
+                </ListItemButton>
+            </MenuItem>
+            <NMenuItem sx={{ py: 0 }} dense >
+                <ListItemButton sx={{ py: 0 }}
+                    onClick={() => handleChangeLanguage('en')}
+                ><ListItemText>{DisplayLanguage['en']}</ListItemText></ListItemButton>
+            </NMenuItem>
+            <NMenuItem sx={{ py: 0 }} dense>
+                <ListItemButton
+                    onClick={() => handleChangeLanguage('cn')} 
+                ><ListItemText>{DisplayLanguage['cn']}</ListItemText></ListItemButton>
+            </NMenuItem>
+            <NMenuItem sx={{ py: 0 }} dense>
+                <ListItemButton
+                    onClick={() => handleChangeLanguage('th')} 
+                ><ListItemText>{DisplayLanguage['th']}</ListItemText></ListItemButton>
+            </NMenuItem>
+        </MenuList>);
+
+        if (menuType === 'default') {
+            return (
+            <MenuList dense>
+                { commonMenu }
+                { props.isAuth && renderDialogMenuItems() }
+                { props.isAuth && (<Divider variant="middle" />) }
+                { props.isAuth && logoutMenu }
+            </MenuList>);
+        } else if (menuType === 'language') {
+            return langMenu;
+        } else {
+            return (<></>);
+        }
+    }
+
+    const handleDialogClose = () => {
+        setElementRef(null);
+        props.onMenuClose && props.onMenuClose();
+    }
+
+    const renderMobileMenu = () => {
+
+        const authTitle = (
+        <ListItem alignItems="flex-start">
+            <ListItemAvatar>
+                <Avatar>{ getUserName(props.user) }</Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
+        </ListItem>
+        );
+
+        const nonAuthTitle = (
+            <ListItem component="div" disablePadding>
+                <ListItemButton 
+                    sx={{ textAlign: 'center', marginRight: '10px' }}
+                    onClick={handleLogin}
+                    component="a"
+                >
+                    <ListItemText
+                        primary={t('Sign in')}
+                        primaryTypographyProps={{
+                            color: '#f4762a',
+                            fontWeight: 'medium',
+                            variant: 'body1',
+                        }}
+                    />
+                </ListItemButton>
+                { t('or') }
+                <ListItemButton component="a" 
+                    href= {`${loginBasePath}/login/register`}
+                    sx={{ textAlign: 'center', marginLeft: '10px' }}
+                    >
+                    <ListItemText
+                        primary={t('Sign up')}
+                        primaryTypographyProps={{
+                            color: '#f4762a',
+                            fontWeight: 'medium',
+                            variant: 'body1',
+                        }}
+                    />
+                </ListItemButton>
+            </ListItem>
+        );
+
+        return (
+        <MenuDialog
+            sx={{ m: 0 }}
+            open={props.isOpen}
+            onClose={handleDialogClose}
+        >
+            <MenuDialogTitle id={"menu-dialog"} onClose={handleDialogClose}>
+                <Typography variant="subtitle2" component="p">{ t('My Account') }</Typography>
+                { props.isAuth ? authTitle : nonAuthTitle }
+            </MenuDialogTitle>
+            <DialogContent dividers sx={{ py: 0, px: 0 }}>
+                { renderDialogMenuDetail() }
+            </DialogContent>
+        </MenuDialog>);
+    }
+
+    const handlePopoverClose = () => {
+        props.onMenuClose && props.onMenuClose();
+    }
+
+    const renderDesktopMenu = () => {
+        return (<Popover
+            open={elementRef !== null && props.isOpen}
+            anchorEl={elementRef}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            keepMounted
+            onClose={handlePopoverClose}
+        >
+            { renderPopoverMenuDetail() }
+        </Popover>);
+    }
+
+    return isMobile ? renderMobileMenu() : renderDesktopMenu();
+};

@@ -1,16 +1,17 @@
 import { Drawer, Toolbar, useScrollTrigger, Divider, Box, Container, Grid, Button } from "@mui/material";
 import React from "react";
-import { WithTranslation } from "react-i18next";
+import { TFunction, WithTranslation } from "react-i18next";
 import { Route, RouteComponentProps, RouteProps } from "react-router-dom";
 import styled from "styled-components";
 
 import { ProfileCard } from '../components/ProfileCard';
-import MainMenu, { IMenuItem, MenuSection } from "./MainMenu";
+import DrawerMenu, { IMenuItem, MenuSection } from "./DrawerMenu";
 
-import { HotMenu } from "./HotMenu";
+import { Item, MenuBarItem } from "./MenuBarItem";
 import Logo from '../assets/images/9asset-logo.png';
 import { LayoutAppBar, MainMenuLanguage } from './MainLayoutAppBar';
 import { FirebaseApp } from "firebase/app";
+import { ProfileMenuItem } from "./ProfileMenu";
 
 const MainLayoutRoot = styled.div({
     display: 'flex',
@@ -135,74 +136,66 @@ const ElevationScroll = (props: ElevationScrollProps) => {
 // }
 
 export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
-    profilemenu: MenuSection[];
-    mainmenu: IMenuItem[];
-    onLanguageChanged: (lang: string) => void;
+    profilemenu: ProfileMenuItem[];
+    drawermenu: IMenuItem[];
     type?: 'seller' | 'buyer' | 'none' | undefined;
-    onProfileMenuItemClick?: (e: any) => void;
-
-    onMainMenuClick?: (e: MouseEvent, item: IMenuItem) => void;
     
+    onDrawerMenuClicked?: (e: MouseEvent, item: IMenuItem) => void;
+    onHotMenuClicked?: (type: 'project' | 'sell' | 'rent') => void;
+
+    onLanguageChanged: (lang: string) => void;
+    onProfileMenuItemClicked?: (menu: ProfileMenuItem) => void;
+    onMenuBarItemClicked?: (item: Item) => void;
+
     app: FirebaseApp;
     language: MainMenuLanguage;
-    t: any;
+    t: TFunction<string, undefined> | TFunction<"translation">;
     menubar?: any[];
-    onMenuHeaderClick?: (item: any) => void;
 }
 
 
 
 export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
 
-    // menubar = [
-    //     { text: 'คอนโด', items: [
-    //         { text: 'คอนโดโครงการ', link: '/โครงการ/คอนโด' },
-    //         { text: 'ขายคอนโด', link: '/ขาย/คอนโด' },
-    //         { text: 'เช่าคอนโด', link: '/เช่า/คอนโด' },
-    //         { text: 'เซ้งคอนโด', link: '/เซ้ง/คอนโด' }
-    //     ] },
-    //     { text: 'บ้านเดี่ยว', items: [
-    //         { text: 'คอนโดบ้านเดี่ยว', link: '/โครงการ/บ้านเดี่ยว' },
-    //         { text: 'ขายบ้านเดี่ยว', link: '/ขาย/บ้านเดี่ยว' },
-    //         { text: 'เช่าบ้านเดี่ยว', link: '/เช่า/บ้านเดี่ยว' },
-    //         { text: 'เซ้งบ้านเดี่ยว', link: '/เซ้ง/บ้านเดี่ยว' }
-    //     ] },
-    //     { text: 'ทาวน์เฮาส์-โฮม', items: [] },
-    //     { text: 'อาคารพาณิชย์', items: [] },
-    //     { text: 'โฮมออฟฟิส', items: [] },
-    //     { text: 'บ้านแฝด', items: [] },
-    //     { text: 'อพาร์ทเมนท์', items: [] },
-    //     { text: 'ที่ดิน', items: [] }
-    // ];
-
     menubar = [
-        { text: this.props.t('condo'), items: [
-        ], link: `/${this.props.t('all')}/${this.props.t('condo')}`},
-        { text: this.props.t('house'), items: [
-        ], link: `/${this.props.t('all')}/${this.props.t('house')}`},
-        { text: this.props.t('townhouse'), items: [],  link: `/${this.props.t('all')}/${this.props.t('townhouse')}` },
-        { text: this.props.t('commercial'), items: [],  link: `/${this.props.t('all')}/${this.props.t('commercial')}` },
-        { text: this.props.t('homeoffice'), items: [], link: `/${this.props.t('all')}/${this.props.t('homeoffice')}` },
-        { text: this.props.t('twinhome'), items: [],  link: `/${this.props.t('all')}/${this.props.t('twinhome')}` },
-        { text: this.props.t('apartment'), items: [], link: `/${this.props.t('all')}/${this.props.t('apartment')}` },
-        { text: this.props.t('land'), items: [], link: `/${this.props.t('all')}/${this.props.t('land')}` }
+        {
+            text: this.props.t('condo'),
+            items: [],
+            link: `/${this.props.t('all')}/${this.props.t('condo')}`
+        },
+        {
+            text: this.props.t('house'),
+            link: `/${this.props.t('all')}/${this.props.t('house')}`
+        },
+        {
+            text: this.props.t('townhouse'),
+            link: `/${this.props.t('all')}/${this.props.t('townhouse')}`
+        },
+        {
+            text: this.props.t('commercial'),
+            link: `/${this.props.t('all')}/${this.props.t('commercial')}`
+        },
+        {
+            text: this.props.t('homeoffice'),
+            link: `/${this.props.t('all')}/${this.props.t('homeoffice')}`
+        },
+        {
+            text: this.props.t('twinhome'),
+            link: `/${this.props.t('all')}/${this.props.t('twinhome')}`
+        },
+        {
+            text: this.props.t('apartment'),
+            link: `/${this.props.t('all')}/${this.props.t('apartment')}`
+        },
+        {
+            text: this.props.t('land'),
+            link: `/${this.props.t('all')}/${this.props.t('land')}`
+        }
     ];
-      
 
     handleMouseOver (event: React.MouseEvent<HTMLElement>) {
         
     }
-
-    // async componentDidMount () {
-    //     try {
-    //         const token = localStorage.getItem('9asset_token');
-    //         const user = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
-    //         localStorage.setItem(`9asset.userinfo`, JSON.stringify(user));
-    //     } catch {
-    //         console.log('error to load 9asset_token');
-    //         // localStorage.clear();
-    //     }
-    // }
 
     onLangChanged = (lang: any) => {
         console.log('OnLangChanged: ', lang);
@@ -210,21 +203,42 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         this.props.onLanguageChanged(lang);
 
         this.menubar = [
-            { text: this.props.t('condo'), items: [
-            ], link: `/${this.props.t('all')}/${this.props.t('condo')}`},
-            { text: this.props.t('house'), items: [
-            ], link: `/${this.props.t('all')}/${this.props.t('house')}`},
-            { text: this.props.t('townhouse'), items: [],  link: `/${this.props.t('all')}/${this.props.t('townhouse')}` },
-            { text: this.props.t('commercial'), items: [],  link: `/${this.props.t('all')}/${this.props.t('commercial')}` },
-            { text: this.props.t('homeoffice'), items: [], link: `/${this.props.t('all')}/${this.props.t('homeoffice')}` },
-            { text: this.props.t('twinhome'), items: [],  link: `/${this.props.t('all')}/${this.props.t('twinhome')}` },
-            { text: this.props.t('apartment'), items: [], link: `/${this.props.t('all')}/${this.props.t('apartment')}` },
-            { text: this.props.t('land'), items: [], link: `/${this.props.t('all')}/${this.props.t('land')}` }
+            {
+                text: this.props.t('condo'),
+                link: `/${this.props.t('all')}/${this.props.t('condo')}`
+            },
+            {
+                text: this.props.t('house'),
+                link: `/${this.props.t('all')}/${this.props.t('house')}`
+            },
+            {
+                text: this.props.t('townhouse'),
+                link: `/${this.props.t('all')}/${this.props.t('townhouse')}`
+            },
+            {
+                text: this.props.t('commercial'),
+                link: `/${this.props.t('all')}/${this.props.t('commercial')}` },
+            {
+                text: this.props.t('homeoffice'),
+                link: `/${this.props.t('all')}/${this.props.t('homeoffice')}`
+            },
+            {
+                text: this.props.t('twinhome'),
+                link: `/${this.props.t('all')}/${this.props.t('twinhome')}`
+            },
+            {
+                text: this.props.t('apartment'),
+                link: `/${this.props.t('all')}/${this.props.t('apartment')}`
+            },
+            {   
+                text: this.props.t('land'),
+                link: `/${this.props.t('all')}/${this.props.t('land')}`
+            }
         ];
     }
 
-    onMainMenuClicked = (e: MouseEvent, item: IMenuItem) => {
-        this.props.onMainMenuClick && this.props.onMainMenuClick(e, item);
+    handleDrawerMenuClicked = (e: MouseEvent, item: IMenuItem) => {
+        this.props.onDrawerMenuClicked && this.props.onDrawerMenuClicked(e, item);
     }
 
     renderSellerBuyerButtons () {
@@ -237,27 +251,19 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         }
     }
 
-    renderMenu () {
-        const menu = this.menubar.map((t, i) => <HotMenu text={t.text} items={t.items} />);
-        menu.push( <HotMenu text={'...'} items={[]} /> );
-        return menu;
+    handleProfileMenuItemClicked (item: ProfileMenuItem) {
+        this.props.onProfileMenuItemClicked && this.props.onProfileMenuItemClicked(item);
     }
 
-    onProfileMenuItemClick(e: any){
-        if(this.props.onProfileMenuItemClick) {
-            this.props.onProfileMenuItemClick(e);
-        }
-    }
+    handleMenuBarItemClicked (item: Item) {
+        this.props.onMenuBarItemClicked && this.props.onMenuBarItemClicked(item);
+    } 
 
-    onMenuHeaderClick(id: any) {
-        if(this.props.onMenuHeaderClick) {
-            this.props.onMenuHeaderClick(id)
-        }
+    handleHotMenuClicked (type: 'project' | 'sell' | 'rent') {
+        this.props.onHotMenuClicked && this.props.onHotMenuClicked(type);
     }
 
     render() {
-        const mainmenu = this.props.mainmenu;
-        const profilemenu = this.props.profilemenu;
         const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || '{}');
         return (
             <Route render={(props: RouteComponentProps) => {
@@ -268,23 +274,30 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                         <MainLayoutRoot>
                             <ElevationScroll {...props}>
                                 <LayoutAppBar 
-                                    logoPath = {Logo}
-                                    userServiceUrl={`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`}
-                                    useExternalLinkComponent={false}
-                                    menubar={this.props.menubar ? this.props.menubar: this.menubar}
-                                    mainmenu={mainmenu}
-                                    profilemenu={profilemenu}
                                     app={this.props.app}
-                                    onAppChange={(event)=> { console.log('onAppChange'); return {}}}
-                                    onLangChanged={this.onLangChanged.bind(this)}
+                                    logoPath = {Logo}
+                                    // mainLink
+                                    menubar={this.props.menubar ? this.props.menubar: this.menubar}
+                                    menuProfile={this.props.profilemenu}
+                                    // useExternalLinkComponent={false}
+                                    // onSubMenuItemClick
+                                    // onAppChange={(event)=> { console.log('onAppChange'); return {}; }}
+                                    allowNoLoginAccessSite={false}
+                                    userServiceUrl={`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`}
+                                    onLangChanged={this.onLangChanged}
+
+
+                                    //mainmenu={mainmenu}
+
+                                    
                                     onMobileFilterClick={(event)=> console.log('onMobileFilterClick')}
                                     onMobileSearchClick={(event)=> console.log('onMobileSearchClick')}
-                                    onMenuClick={(id)=> console.log('onMenuClick')}
-                                    onMenuHeaderClick={this.onMenuHeaderClick.bind(this)}
-                                    onProfileMenuItemClick={this.onProfileMenuItemClick.bind(this)}
-                                    allowNoLoginAccessSite={false}
-                                    location={this.props.location}
-                                    language={this.props.language}
+
+                                    onMenuClick={this.handleHotMenuClicked.bind(this)}
+                                    onProfileMenuClick={this.handleProfileMenuItemClicked.bind(this)}
+                                    onMenuBarItemClick={this.handleMenuBarItemClicked.bind(this)}
+
+                                    language={this.props.i18n.language as MainMenuLanguage}
                                     t={this.props.t}
                                 />
                             </ElevationScroll>
@@ -302,10 +315,10 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                 <ProfileCard user={user}></ProfileCard>
                               
                                 <Divider variant="middle"></Divider>
-                                <MainMenu
-                                    menu={mainmenu}
+                                <DrawerMenu
+                                    menu={this.props.drawermenu}
                                     location={this.props.location}
-                                    onMenuItemClick={this.onMainMenuClicked}
+                                    onMenuItemClick={this.handleDrawerMenuClicked}
                                     t={this.props.t}
                                     tReady={this.props.tReady}
                                     i18n={this.props.i18n}

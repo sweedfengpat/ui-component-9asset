@@ -49,23 +49,22 @@ export interface Item {
     id?: string;
 }
 
-export interface HotMenuProps {
+export interface MenuBarItemProps {
     text: string;
-    items: Item[];
+    items?: Item[];
     useExternalLinkComponent?: boolean;
-    onMenuItemClick?: any;
-    onMenuHeaderClick?: any;
+    onMenuItemClick?: (item: Item) => void;
     link?: any;
 }
 
-export interface HotMenuState {
+export interface MenuBarItemState {
     open: boolean;
     anchorEl: HTMLElement | null;
 }
 
-export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
+export class MenuBarItem extends React.Component<MenuBarItemProps, MenuBarItemState> {
 
-    constructor (props: Readonly<HotMenuProps> | HotMenuProps) {
+    constructor (props: Readonly<MenuBarItemProps> | MenuBarItemProps) {
         super(props);
 
         this.state = {
@@ -74,12 +73,13 @@ export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
         };
     }
 
-    handleMouseOver  = (event: React.MouseEvent<HTMLElement>) => {
-        if(this.props.onMenuHeaderClick) {
-          this.props.onMenuHeaderClick(this.props);
-        } else { 
-          this.setState({ open: true, anchorEl: event.currentTarget });
-        }
+    handleClicked  = (event: React.MouseEvent<HTMLElement>) => {
+      if (this.props.items && this.props.items.length > 0) {
+        this.setState({ open: true, anchorEl: event.currentTarget });
+      }
+      else {
+        this.props.onMenuItemClick && this.props.onMenuItemClick({ text: this.props.text, link: this.props.link } as Item);
+      }
     }
 
     handleClose = () => {
@@ -89,14 +89,13 @@ export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
     render () {
         return (<>
         <Button
-            color="primary"
-            style={{ color: '#ffffff'}}
-            onClick={this.handleMouseOver}
-            
+          color="primary"
+          style={{ color: '#ffffff'}}
+          onClick={this.handleClicked}
         >
-            {this.props.text}
+            { this.props.text }
         </Button>
-        <StyledMenu
+        {/* <StyledMenu
             id="demo-customized-menu"
             MenuListProps={{
             'aria-labelledby': 'demo-customized-button',
@@ -107,7 +106,7 @@ export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
             onClose={this.handleClose}
         >
         {
-            this.props.items.map((item, index) => {
+            (this.props.items || []).map((item, index) => {
               if(this.props.useExternalLinkComponent) {
                 return <MenuItem key={index} onClick={() => {
                   this.props.onMenuItemClick && this.props.onMenuItemClick(item);
@@ -117,7 +116,7 @@ export class HotMenu extends React.Component<HotMenuProps, HotMenuState> {
               }
             })
         }
-        </StyledMenu>
+        </StyledMenu> */}
         </>);
     }
 

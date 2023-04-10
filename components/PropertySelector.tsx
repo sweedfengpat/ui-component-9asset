@@ -24,7 +24,7 @@ export class PropertySelector extends React.Component<PropertySelectorProps, any
         
         const lng = (this.props?.language?.toUpperCase()  || 'TH') as string;
         const categories = this.props.items;
-        const options = categories.sort((a, b) => a.category_Sort = b.category_Sort)
+        const options = categories.sort((a, b) => (a.category_Sort || 0) - (b.category_Sort || 0))
                                   .map(cate => <MenuItem key={cate.category_ID} selected={cate.category_ID === this.props.selected} value={cate.category_ID}>{ (cate as any)[`category_Name_${lng}`]}</MenuItem>);
         // const { t } = this.props;
         // const validationFailed = this.state.validated.find(item => item.key === 'property');
