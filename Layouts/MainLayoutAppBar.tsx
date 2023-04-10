@@ -14,7 +14,7 @@ import {
     blue
 } from '@mui/material/colors';
 import React, {useEffect, useRef, useState} from "react";
-import { MenuBarItem } from "./MenuBarItem";
+import { Item, MenuBarItem } from "./MenuBarItem";
 import axios from 'axios';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -46,14 +46,13 @@ interface IRecipeProps {
     onMobileSearchClick:  (event: any) => void;
     onMenuClick?: (type: 'project' | 'sell' | 'rent') => void;
     onProfileMenuClick?: (item: ProfileMenuItem) => void;
-    onSubMenuItemClick?: (id: number) => void;
+    onMenuBarItemClick?: (item: Item) => void;
 
     logoPath?: string;
     allowNoLoginAccessSite?: boolean | undefined;
 
     language: MainMenuLanguage;
     t: any; // To support next-i18next and react-i18next without project install both frameworks
-    onMenuHeaderClick?: any;
 }
 
 interface IRecipeState {
@@ -193,23 +192,17 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         return auth.currentUser?.getIdToken();
     }
 
-    onMenuHeaderClick() {
-
-    }
-
     renderMenu () {
         if(this.props.menubar) {
             return this.props.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
                 useExternalLinkComponent={this.props.useExternalLinkComponent || false}
-                onMenuItemClick={this.props.onSubMenuItemClick}
-                onMenuHeaderClick={this.props.onMenuHeaderClick}
+                onMenuItemClick={(item) => this.props.onMenuBarItemClick && this.props.onMenuBarItemClick(item)}
             />);
         } 
 
         return this.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
             useExternalLinkComponent={this.props.useExternalLinkComponent || false}
-            onMenuItemClick={this.props.onSubMenuItemClick}
-            onMenuHeaderClick={this.props.onMenuHeaderClick}
+            onMenuItemClick={(item) => this.props.onMenuBarItemClick && this.props.onMenuBarItemClick(item)}
         />);
     }
 
@@ -327,9 +320,9 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
                     </Grid>
                     <Grid item width={"100%"} sx={{display: { xs: 'flex', sm: 'flex', md: 'none' } }} >
                         <Grid container justifyContent="space-between" direction="row"  alignItems="center" >
-                            <Grid item xs={12} md={12} style={{paddingLeft: '10px', paddingRight: '10px'}}>
+                            <Grid item xs={12} md={12} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                                 <Button size="small" variant="outlined" startIcon={<SearchIcon />}
-                                    sx={{width: '100%', bgcolor: 'white', color: 'black', textAlign: 'left',
+                                    sx={{ width: '100%', bgcolor: 'white', color: 'black', textAlign: 'left',
                                         justifyContent: 'left'
                                     }}
                                     onClick={this.onMobileSearchClick.bind(this)} 

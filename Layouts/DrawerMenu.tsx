@@ -45,7 +45,7 @@ export class DrawerMenu extends React.Component<
   DrawerMenuState
 > {
   constructor(props: Readonly<DrawerMenuProps> | DrawerMenuProps) {
-    super(props)
+    super(props);
     this.state = {
       expanded: [],
       popupMenu: '',

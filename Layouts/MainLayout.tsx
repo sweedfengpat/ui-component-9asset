@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { ProfileCard } from '../components/ProfileCard';
 import DrawerMenu, { IMenuItem, MenuSection } from "./DrawerMenu";
 
-import { MenuBarItem } from "./MenuBarItem";
+import { Item, MenuBarItem } from "./MenuBarItem";
 import Logo from '../assets/images/9asset-logo.png';
 import { LayoutAppBar, MainMenuLanguage } from './MainLayoutAppBar';
 import { FirebaseApp } from "firebase/app";
@@ -137,22 +137,20 @@ const ElevationScroll = (props: ElevationScrollProps) => {
 
 export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     profilemenu: ProfileMenuItem[];
-
     drawermenu: IMenuItem[];
+    type?: 'seller' | 'buyer' | 'none' | undefined;
+    
     onDrawerMenuClicked?: (e: MouseEvent, item: IMenuItem) => void;
     onHotMenuClicked?: (type: 'project' | 'sell' | 'rent') => void;
 
     onLanguageChanged: (lang: string) => void;
-    type?: 'seller' | 'buyer' | 'none' | undefined;
     onProfileMenuItemClicked?: (menu: ProfileMenuItem) => void;
+    onMenuBarItemClicked?: (item: Item) => void;
 
-    
-    
     app: FirebaseApp;
     language: MainMenuLanguage;
     t: TFunction<string, undefined> | TFunction<"translation">;
     menubar?: any[];
-    onMenuHeaderClick?: (item: any) => void;
 }
 
 
@@ -253,15 +251,13 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
         }
     }
 
-    handleProfileMenuItemClick(item: ProfileMenuItem){
+    handleProfileMenuItemClicked (item: ProfileMenuItem) {
         this.props.onProfileMenuItemClicked && this.props.onProfileMenuItemClicked(item);
     }
 
-    onMenuHeaderClick(id: any) {
-        if(this.props.onMenuHeaderClick) {
-            this.props.onMenuHeaderClick(id)
-        }
-    }
+    handleMenuBarItemClicked (item: Item) {
+        this.props.onMenuBarItemClicked && this.props.onMenuBarItemClicked(item);
+    } 
 
     handleHotMenuClicked (type: 'project' | 'sell' | 'rent') {
         this.props.onHotMenuClicked && this.props.onHotMenuClicked(type);
@@ -298,9 +294,8 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     onMobileSearchClick={(event)=> console.log('onMobileSearchClick')}
 
                                     onMenuClick={this.handleHotMenuClicked.bind(this)}
-                                    onProfileMenuClick={this.handleProfileMenuItemClick.bind(this)}
-                                    onMenuHeaderClick={this.onMenuHeaderClick.bind(this)}
-                                   
+                                    onProfileMenuClick={this.handleProfileMenuItemClicked.bind(this)}
+                                    onMenuBarItemClick={this.handleMenuBarItemClicked.bind(this)}
 
                                     language={this.props.i18n.language as MainMenuLanguage}
                                     t={this.props.t}

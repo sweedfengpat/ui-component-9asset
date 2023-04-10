@@ -53,8 +53,7 @@ export interface MenuBarItemProps {
     text: string;
     items?: Item[];
     useExternalLinkComponent?: boolean;
-    onMenuItemClick?: any;
-    onMenuHeaderClick?: any;
+    onMenuItemClick?: (item: Item) => void;
     link?: any;
 }
 
@@ -74,12 +73,13 @@ export class MenuBarItem extends React.Component<MenuBarItemProps, MenuBarItemSt
         };
     }
 
-    handleMouseOver  = (event: React.MouseEvent<HTMLElement>) => {
-        if(this.props.onMenuHeaderClick) {
-          this.props.onMenuHeaderClick(this.props);
-        } else { 
-          this.setState({ open: true, anchorEl: event.currentTarget });
-        }
+    handleClicked  = (event: React.MouseEvent<HTMLElement>) => {
+      if (this.props.items && this.props.items.length > 0) {
+        this.setState({ open: true, anchorEl: event.currentTarget });
+      }
+      else {
+        this.props.onMenuItemClick && this.props.onMenuItemClick({ text: this.props.text, link: this.props.link } as Item);
+      }
     }
 
     handleClose = () => {
@@ -89,13 +89,13 @@ export class MenuBarItem extends React.Component<MenuBarItemProps, MenuBarItemSt
     render () {
         return (<>
         <Button
-            color="primary"
-            style={{ color: '#ffffff'}}
-            onClick={this.handleMouseOver}
+          color="primary"
+          style={{ color: '#ffffff'}}
+          onClick={this.handleClicked}
         >
-            {this.props.text}
+            { this.props.text }
         </Button>
-        <StyledMenu
+        {/* <StyledMenu
             id="demo-customized-menu"
             MenuListProps={{
             'aria-labelledby': 'demo-customized-button',
@@ -116,7 +116,7 @@ export class MenuBarItem extends React.Component<MenuBarItemProps, MenuBarItemSt
               }
             })
         }
-        </StyledMenu>
+        </StyledMenu> */}
         </>);
     }
 
