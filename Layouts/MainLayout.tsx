@@ -5,7 +5,7 @@ import { Route, RouteComponentProps, RouteProps } from "react-router-dom";
 import styled from "styled-components";
 
 import { ProfileCard } from '../components/ProfileCard';
-import DrawerMenu, { IMenuItem, MenuSection } from "./DrawerMenu";
+import DrawerMenuFunctionComponent, { IMenuItem, MenuSection } from "./DrawerMenuFunctionComponent";
 
 import { Item, MenuBarItem } from "./MenuBarItem";
 import Logo from '../assets/images/9asset-logo.png';
@@ -238,6 +238,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     }
 
     handleDrawerMenuClicked = (e: MouseEvent, item: IMenuItem) => {
+        debugger
         this.props.onDrawerMenuClicked && this.props.onDrawerMenuClicked(e, item);
     }
 
@@ -315,7 +316,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                 <ProfileCard user={user}></ProfileCard>
                               
                                 <Divider variant="middle"></Divider>
-                                <DrawerMenu
+                                <DrawerMenuFunctionComponent
                                     menu={this.props.drawermenu}
                                     location={this.props.location}
                                     onMenuItemClick={this.handleDrawerMenuClicked}
