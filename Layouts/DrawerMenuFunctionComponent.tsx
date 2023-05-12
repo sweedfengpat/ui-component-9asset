@@ -16,7 +16,6 @@ import {
 } from '@mui/icons-material'
 import React, { useState } from 'react'
 import { WithTranslation } from 'react-i18next'
-import { makeStyles } from '@material-ui/styles'
 import { useHistory, useLocation } from 'react-router-dom'
 
 export interface MenuSection {
@@ -48,32 +47,6 @@ export interface DrawerMenuState {
   anchorEl: HTMLElement | null
 }
 
-const drawerWidth = 240
-
-const useStyles = makeStyles((theme: any) => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  // // necessary for content to be below app bar
-  // toolbar: theme.mixins.toolbar,
-  // content: {
-  //   flexGrow: 1,
-  //   backgroundColor: theme.palette.background.default,
-  //   padding: theme.spacing(3),
-  // },
-}))
-
 export interface DrawerMenuProps {
   // menu={this.props.drawermenu}
   // location={this.props.location}
@@ -91,7 +64,6 @@ export interface DrawerMenuProps {
 }
 
 export function DrawerMenuFunctionComponent({ ...props }) {
-  const classes = useStyles()
   // react hook to query path params
   const history = useHistory()
   const location = useLocation()
@@ -167,7 +139,11 @@ export function DrawerMenuFunctionComponent({ ...props }) {
                           >
                             <ListItemText
                               primary={props.t(`menu.${item.title}`)}
-                            
+                              primaryTypographyProps={{
+                                color: '#333333',
+                                fontFamily: 'Noto Sans Thai',
+                                fontSize: 15,
+                              }}
                             />
                           </ListItem>
                         )
