@@ -107,7 +107,7 @@ export function DrawerMenuFunctionComponent({ ...props }) {
                     primary={props.t(`menu.${menu.title}`)}
                     primaryTypographyProps={{
                       color: '#333333',
-                      fontFamily: 'Noto Sans Thai',
+                      // fontFamily: 'Noto Sans Thai',
                       fontSize: 16,
                       fontWeight: '500',
                     }}
@@ -141,7 +141,7 @@ export function DrawerMenuFunctionComponent({ ...props }) {
                               primary={props.t(`menu.${item.title}`)}
                               primaryTypographyProps={{
                                 color: '#333333',
-                                fontFamily: 'Noto Sans Thai',
+                                // fontFamily: 'Noto Sans Thai',
                                 fontSize: 15,
                               }}
                             />
