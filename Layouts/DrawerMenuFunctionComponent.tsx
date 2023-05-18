@@ -131,7 +131,9 @@ export function DrawerMenuFunctionComponent({ ...props }) {
                           <ListItem
                             button
                             key={item.title}
-                            onClick={() => {}}
+                            onClick={() => {
+                              history.push(item.link)
+                            }}
                             selected={pathname.includes(item.link)}
                             sx={{
                               paddingLeft: `${3 * 15 + 8}px`,
