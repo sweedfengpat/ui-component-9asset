@@ -35,12 +35,19 @@ export interface ProfileProps {
 
     onLangChanged?: (lng: MainMenuLanguage) => void;
     onMenuClicked?: (item: ProfileMenuItem) => void;
+
+    onLoginRequested?: () => void;
 }
 
 export const Profile = (props: ProfileProps) => {
     const { t, language, user } = props;
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const avatarRef = useRef<HTMLDivElement | null>(null);
+
+    const handleLoginRequested = () => {
+        setIsMenuOpen(false);
+        props.onLoginRequested?.();
+    };
 
     const renderMenu = () => (<>
     <ProfileMenu
@@ -52,7 +59,7 @@ export const Profile = (props: ProfileProps) => {
         isOpen={isMenuOpen}
         items={ props.menuItems|| [] }
         
-        onLoginRequest={() => { setIsMenuOpen(false); }}
+        onLoginRequest={handleLoginRequested}
         onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
         onMenuClose={() => { setIsMenuOpen(false); }}
         onMenuClicked={
