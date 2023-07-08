@@ -8,6 +8,11 @@ import {
     ChevronLeft,
     Height,
     Close,
+    Menu,
+    Add,
+    More,
+    Search,
+    AppsRounded,
  } from "@mui/icons-material";
 
 import { 
@@ -28,6 +33,9 @@ import { Profile } from "./Profile";
 import { ProfileMenuItem } from "./ProfileMenu";
 import { useTranslation } from "react-i18next";
 import { TransitionProps } from "@mui/material/transitions";
+import { LoginModal } from "../components/LoginModal";
+import { isMobile } from "react-device-detect";
+import { MainMenu } from "./MainMenu";
 // import { TFunction as ReactI18NextTFunction } from "react-i18next";
 // import { TFunction } from "next-i18next";
 
@@ -114,38 +122,27 @@ interface IRecipeState {
     iFrameRef: RefObject<HTMLIFrameElement>;
 }
 
-const UpTransition = React.forwardRef(function Transition(
+const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
-      children: React.ReactElement;
-    },
-    ref: React.Ref<unknown>,
-  ) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const RightTransition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-      children: React.ReactElement;
+      children: React.ReactElement<any, any>;
     },
     ref: React.Ref<unknown>,
   ) {
     return <Slide direction="right" ref={ref} {...props} />;
-});
+  });
 
 export const LayoutAppBar = (props: ILayoutProps) => {
 
     const loginBasePath = process.env.REACT_APP_DOMAIN || process.env.NEXT_PUBLIC_DOMAIN || 'https://my.9asset.com';
-
+    const { t } = useTranslation();
     const [user, setUser] = useState<any>(null);
     const [seletedLang, setSelectedLang] = useState<string>(props.language || 'th')
     const [logoPath, ] = useState<string|undefined>(props.logoPath);
     const [isAuth, setIsAuth] = useState<'true'|'false'>('false');
-    const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(true);
+    const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [menubar, setMenuBar] = useState<MenuBar>(props.menubar || []);
-    const iFrameRef = useRef<HTMLIFrameElement|null>(null);
-    
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
     useEffect(() => {
         if (!user) {
@@ -156,34 +153,12 @@ export const LayoutAppBar = (props: ILayoutProps) => {
         }
     }, []);
 
-    const onLoginMessage = (e: MessageEvent) => {
-        if (e.origin !== 'http://localhost:8080') {
-            return;
-        }
-
-        if (e.data === 'loged-in') {
-            setIsLoginModalOpened(false);
-        } else {
-            
-        }
-    }
+    
 
     useEffect(() => {
         const unsub = getToken();
         return () => { unsub && unsub(); };
     }, []);
-
-    useEffect(() => {
-        window.addEventListener('message', onLoginMessage, false);
-    }, []);
-
-    useEffect(() => {
-        if (iFrameRef.current) {
-            iFrameRef.current.addEventListener('onload', (e) => {
-                console.log(iFrameRef.current?.contentWindow);
-            })
-        }
-    }, [iFrameRef?.current])
 
     const getToken = () => {
         console.log('app: ', props.app);
@@ -196,7 +171,6 @@ export const LayoutAppBar = (props: ILayoutProps) => {
               // https://firebase.google.com/docs/reference/js/firebase.User
 
                 const token = await firebaseUser.getIdToken();
-                isLoginModalOpened && setIsLoginModalOpened(false);
                 console.log('my token: ', token);
                 if(props.userServiceUrl) {
                     try {
@@ -258,13 +232,19 @@ export const LayoutAppBar = (props: ILayoutProps) => {
         }
     }
 
-    const onLoginFrameLoaded = (obj: HTMLIFrameElement) => {
-        console.log(obj.contentWindow?.document.body.scrollHeight);
+
+    const handeProfileMenuClicked = (item: ProfileMenuItem) => {
+        props.onProfileMenuClick && props.onProfileMenuClick(item);
     }
 
+    const handeMenuClicked = (e: any) => {
+        setElementRef(e.currentTarget as HTMLElement);
+        setIsMenuOpen(true);
+    }
 
-    const handelMenuClicked = (item: ProfileMenuItem) => {
-        props.onProfileMenuClick && props.onProfileMenuClick(item);
+    const handleMenuClosed = () => {
+        setElementRef(null);
+        setIsMenuOpen(false);
     }
 
     const handleLoginRequested = () => {
@@ -272,7 +252,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     }
 
 
-    const renderMenu = () => {
+    const renderMenuBar = () => {
         if(props.menubar) {
             return props.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
                 useExternalLinkComponent={props.useExternalLinkComponent || false}
@@ -286,66 +266,13 @@ export const LayoutAppBar = (props: ILayoutProps) => {
         />);
     }
 
-    const renderLoginModel = () => {
-        return (
-        <Dialog
-            open={isLoginModalOpened}
-            fullWidth={true}
-            fullScreen={isMobile}
-            sx={{
-                '&': {
-                    top: isMobile ? '0px' : '0px'
-                },
-            }}
-            TransitionComponent={ isMobile ? RightTransition : UpTransition}
-            maxWidth="xs"
-        >
-            {/* <DialogTitle sx={{ m: 0, p: 2 }}> */}
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="close"
-                    sx={{
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[500],
-                    }}
-                    onClick={() => setIsLoginModalOpened(false)}
-                    >
-                    <Close />
-                </IconButton>
-            {/* </DialogTitle> */}
-            {
-            // <AppBar position="relative" color="default">
-            //     <Toolbar sx={{ m: 0 }} >
-            //         <Typography sx={{ flex: 1, margin: '0' }} variant="h6" component="div">
-            //         Please login to continue
-            //         </Typography>
-            //         <IconButton
-            //             edge="start"
-            //             color="inherit"
-            //             aria-label="close"
-            //             >
-            //             <Close />
-            //         </IconButton>
-            //     </Toolbar>
-            // </AppBar>
-            }
-            <Box
-                title="search-component"
-                ref={iFrameRef}
-                component="iframe"
-                src={`${'http://localhost:8080'}/login?isHeadlessMode=true`}
-                style={{ 
-                    border: 'none',
-                    height: isMobile ? '100%' : '570px',
-                    width: isMobile ? '100%': '100%'
-                }} 
-            />
-        </Dialog>
-        );
+    const renderMenu = () => {
+        return <MainMenu open={isMenuOpen} elementRef={elementRef} onMenuClose={handleMenuClosed} />;
     }
+
+    const renderLoginModal = () => {
+        return <LoginModal open={isLoginModalOpened} onLoginClosed={() => setIsLoginModalOpened(false) } />
+    };
 
     return (<>
     <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1000 }} >
@@ -386,6 +313,11 @@ export const LayoutAppBar = (props: ILayoutProps) => {
                 { getUserDisplayName() }
             </div>
             <div style={{ display: 'flex' }}>
+                <IconButton onClick={handeMenuClicked}>
+                    <AppsRounded fontSize="large"  />
+                </IconButton>
+            </div>
+            <div style={{ display: 'flex' }}>
                 <Profile
                     user={user}
                     t={props.t}
@@ -393,16 +325,21 @@ export const LayoutAppBar = (props: ILayoutProps) => {
                     isAuth={isAuth === 'true'}
                     menuItems={props.menuProfile}
                     onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
-                    onMenuClicked={handelMenuClicked}
+                    onMenuClicked={handeProfileMenuClicked}
                     onLoginRequested={handleLoginRequested}
                 />
+            </div>
+            <div style={{ display: 'flex' }}>
+                <IconButton onClick={handeMenuClicked}>
+                    <Menu fontSize="large"  />
+                </IconButton>
             </div>
         </Toolbar>
         <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} 
             justifyContent='center' alignItems='center'   
         >
             <Grid item maxWidth={'900px'} sx={{display: { xs: 'none', sm: 'none', md: 'flex' } }} >
-                { renderMenu() }
+                { renderMenuBar() }
             </Grid>
             <Grid item width={"100%"} sx={{display: { xs: 'flex', sm: 'flex', md: 'none' } }} >
                 <Grid container justifyContent="space-between" direction="row"  alignItems="center" >
@@ -418,7 +355,8 @@ export const LayoutAppBar = (props: ILayoutProps) => {
             </Grid>
         </Grid>
     </AppBar>
-    { renderLoginModel() }
+    { renderLoginModal() }
+    { renderMenu() }
     </>
 
     );

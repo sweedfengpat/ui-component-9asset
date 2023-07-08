@@ -12,7 +12,7 @@ export const MenuDialogTitle = (props: MenuDialogTitleProps) => {
 
     const closeButton = (
     <IconButton 
-        sx={{ position: 'absolute', right: 8, top: 0, color: (theme) => theme.palette.grey[500] }}
+        sx={{ position: 'absolute', right: 4, top: 0, color: (theme) => theme.palette.grey[500] }}
         onClick={() => { props.onClose && props.onClose() }}
     >
         <Close />

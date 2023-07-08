@@ -72,17 +72,18 @@ export const Profile = (props: ProfileProps) => {
     </>);
 
     const handleAvatarClicked = (event: React.MouseEvent<HTMLElement>) => {
-        setIsMenuOpen(!isMenuOpen);
+        // setIsMenuOpen(!isMenuOpen);
         // setAvatarRef(event.currentTarget);
+        handleLoginRequested();
     };
 
     return (<>
     <Avatar
         alt="9 Asset"
-        style={{ height: '30px', width: '30px', margin: '12px' }}
+        sx={{ height: '30px', width: '30px', margin: '12px', display: { xs: 'none', sm: 'flex' } }}
         ref={avatarRef}
         onClick={handleAvatarClicked}
     >{ getUserName(props.user) }</Avatar>
-    { renderMenu() }
+    {/* { renderMenu() } */}
     </>);
 }

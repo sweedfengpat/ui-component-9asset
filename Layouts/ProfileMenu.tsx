@@ -11,8 +11,8 @@ import { getUserName } from "./Profile";
 import { UserInfo } from "firebase/auth";
 import { ChevronLeft } from "@mui/icons-material";
 import React from "react";
-import { type } from "os";
 import { TransitionProps } from "@mui/material/transitions";
+import { MenuDialog } from "./MainMenu";
 
 type MenuType = 'default' | 'language' | 'currency';
 
@@ -24,15 +24,6 @@ export interface ProfileMenuItem {
 
     items?: ProfileMenuItem[];
 }
-
-const MenuDialog = styled(Dialog)(({ theme }) => ({
-    '.MuiPaper-root': {
-        position: 'absolute',
-        top: '0px',
-        width: '100%',
-        margin: '0'
-    },
-}));
 
 const NMenuItem = styled(MenuItem)(({ theme }) => ({
     paddingY: '10px',

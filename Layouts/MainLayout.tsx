@@ -1,5 +1,5 @@
-import { Drawer, Toolbar, useScrollTrigger, Divider, Box, Container, Grid, Button } from "@mui/material";
-import React from "react";
+import { Drawer, Toolbar, useScrollTrigger, Divider, Box, Container, Grid, Button, BottomNavigation, useMediaQuery, useTheme, BottomNavigationAction, Paper, Dialog, Slide, IconButton } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import { TFunction, WithTranslation } from "react-i18next";
 import { Route, RouteComponentProps, RouteProps } from "react-router-dom";
 import styled from "styled-components";
@@ -12,6 +12,11 @@ import Logo from '../assets/images/9asset-logo.png';
 import { LayoutAppBar, MainMenuLanguage } from './MainLayoutAppBar';
 import { FirebaseApp } from "firebase/app";
 import { ProfileMenuItem } from "./ProfileMenu";
+import { AccountBoxOutlined, AccountCircle, AccountCircleOutlined, Close, FormatListBulleted, HomeOutlined, List, Person2Outlined, VerifiedUser } from "@mui/icons-material";
+import { TransitionProps } from "@mui/material/transitions";
+import { LoginModal } from "../components/LoginModal";
+import { BuyerMenu } from "./BuyerMenu";
+import { SellerMenu } from "./SellerMenu";
 
 const MainLayoutRoot = styled.div({
     display: 'flex',
@@ -54,86 +59,52 @@ const ElevationScroll = (props: ElevationScrollProps) => {
     });
 }
 
-// const Profile  = (props: any) => {
-//     const history = useHistory();
-//     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-//     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-//         setAnchorEl(event.currentTarget);
-//     };
-//     const isMenuOpen = Boolean(anchorEl);
+interface ButtomMenuBarProps {
+    onLoginRequest?: () => void;
+    onBuyerRequest?: () => void;
+}
 
-//     const handleMenuClose = () => {
-//         setAnchorEl(null);
-//     }
+const ButtomMenuBar = ({ onLoginRequest, onBuyerRequest }: ButtomMenuBarProps) => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
+    const [isBuyernModalOpened, setIsBuyerModalOpened] = useState<boolean>(false);
+    const [isSellerModalOpened, setIsSellerModalOpened] = useState<boolean>(false);
 
-//     const handleProfileClicked = () => {
-//         history.push('/myprofile');
-//         setAnchorEl(null);
-//     }
+    const handleLoginRequested = () => {
+        setIsLoginModalOpened(true);
+        setIsBuyerModalOpened(false);
+        onLoginRequest?.();
+    }
 
-//     const handleChangePassword = () => {
-//         history.push('/changepassword');
-//         setAnchorEl(null);
-//     }
+    const handleBuyerRequested = () => {
+        setIsBuyerModalOpened(true);
+        setIsLoginModalOpened(false);
+        onBuyerRequest?.();
+    }
 
-//     const handleLogout = () => {
-//         history.push('/logout');
-//         setAnchorEl(null);
-//     }
+    const handleSellerRequested = () => {
+        setIsSellerModalOpened(true);
+        setIsLoginModalOpened(false);
+        onBuyerRequest?.();
+    }
 
-//     const getUserName = () => {
-//         const userInfo = props.user;
-//         if (userInfo) {
-//             if (userInfo.displayName) {
-//                 return userInfo.displayName[0];
-//             } else if (userInfo.email) {
-//                 return (userInfo.email as string)[0].toUpperCase();
-//             }
-//         }
-//         return '9';
-//     }
-
-//     const renderMenu = (
-//         <Menu
-//           anchorEl={anchorEl}
-//           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-//           keepMounted
-//           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-//           open={isMenuOpen}
-//           onClose={handleMenuClose}
-//         >
-//           <MenuItem onClick={handleProfileClicked}>Profile</MenuItem>
-//           <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
-//           <MenuItem onClick={handleLogout}>Logout</MenuItem>
-//         </Menu>
-//     );
-
-//     const userName = getUserName();
-
-//     console.log('xxxx: ', props.user.photoUrl);
-
-//     return (
-//     <>
-//         {
-//             props.user.photoUrl ?
-//             <Avatar
-//                 alt={`${userName}`}
-//                 style={{ height: '30px', width: '30px', margin: '12px' }}
-//                 onClick={handleProfileMenuOpen}
-//                 src={props.user.photoUrl}
-//                 />
-//             :
-//             <Avatar
-//                 alt="9 Asset"
-//                 style={{ height: '30px', width: '30px', margin: '12px' }}
-//                 onClick={handleProfileMenuOpen}
-//             >{ userName }
-//             </Avatar>
-//         }
-//         {renderMenu}
-//     </>
-//     );
-// }
+    return isMobile ? (<>
+    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={6}>
+        <BottomNavigation 
+            showLabels
+        >
+            <BottomNavigationAction label="Home" icon={<HomeOutlined />} onClick={() => { window.location.href='/' }} />
+            <BottomNavigationAction label="Requirement" icon={<FormatListBulleted />} onClick={() => { handleSellerRequested(); }} />
+            <BottomNavigationAction label="Chat" icon={<HomeOutlined />} onClick={() => { handleBuyerRequested(); }} />
+            <BottomNavigationAction label="Me" icon={<Person2Outlined />} onClick={() => {handleLoginRequested();}} />
+        </BottomNavigation>
+    </Paper>
+    <LoginModal open={isLoginModalOpened} onLoginClosed={() => setIsLoginModalOpened(false)} />
+    <BuyerMenu open={isBuyernModalOpened} onClose={() => setIsBuyerModalOpened(false) } />
+    <SellerMenu open={isSellerModalOpened} onClose={() => setIsSellerModalOpened(false) } />
+    </>) : <></>;
+}
 
 export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     profilemenu: ProfileMenuItem[];
@@ -152,8 +123,6 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     t: TFunction<string, undefined> | TFunction<"translation">;
     menubar?: any[];
 }
-
-
 
 export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
 
@@ -238,7 +207,6 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
     }
 
     handleDrawerMenuClicked = (e: MouseEvent, item: IMenuItem) => {
-        debugger
         this.props.onDrawerMenuClicked && this.props.onDrawerMenuClicked(e, item);
     }
 
@@ -262,6 +230,10 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
 
     handleHotMenuClicked (type: 'project' | 'sell' | 'rent') {
         this.props.onHotMenuClicked && this.props.onHotMenuClicked(type);
+    }
+
+    renderBottomMenu () {
+        return (<ButtomMenuBar />);
     }
 
     render() {
@@ -334,7 +306,7 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     </Container>
                                 </Box>
                             </MainContainer>
-
+                            { this.renderBottomMenu() }
                         </MainLayoutRoot>
                     );
                 }
