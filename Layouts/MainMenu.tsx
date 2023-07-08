@@ -1,9 +1,9 @@
 import { AppBar, Box, Button, Dialog, DialogContent, DialogTitle, Divider, Fade, IconButton, List, ListItem, ListItemButton, ListItemText, MenuList, Popover, Slide, Toolbar, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import React from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close, NavigateBefore } from "@mui/icons-material";
-import logo from '../assets/images/9asset-logo.png'
+import logoImage from '../assets/images/9asset-logo.png'
 import { useTranslation } from "react-i18next";
 
 const Transition = React.forwardRef(function Transition(
@@ -27,6 +27,7 @@ export const MenuDialog = styled(Dialog)(({ theme }) => ({
 
 
 export interface MenuDialogTitleProps {
+    logo?: string;
     menuType: MenuType;
     onClose?: () => void;
     onBackRequested?: () => void;
@@ -58,7 +59,7 @@ export const MenuDialogTitle = (props: MenuDialogTitleProps) => {
                 }}
             >
                 <Box sx={{ display: 'flex' }}>
-                    <Box component="img" src={logo} sx={{ width: 25 }} />
+                    <Box component="img" src={props.logo} sx={{ width: 25 }} />
                     <Box
                         component="div"
                         sx={{
@@ -122,7 +123,7 @@ enum MenuType {
     Country
 }
 
-export const MainMenu = ({ open, elementRef, onMenuClose }: any) => {
+export const MainMenu = ({ logo, open, elementRef, onMenuClose }: any) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const { t, i18n } = useTranslation();
@@ -236,6 +237,7 @@ export const MainMenu = ({ open, elementRef, onMenuClose }: any) => {
             TransitionComponent={Transition}
         >
             <MenuDialogTitle
+                logo={logo}
                 menuType={menuType}
                 onClose={handleMenuClose}
                 onBackRequested={() => setMenuType(MenuType.Default)}

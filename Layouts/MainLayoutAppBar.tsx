@@ -13,6 +13,7 @@ import {
     More,
     Search,
     AppsRounded,
+    SearchOutlined,
  } from "@mui/icons-material";
 
 import { 
@@ -36,6 +37,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { LoginModal } from "../components/LoginModal";
 import { isMobile } from "react-device-detect";
 import { MainMenu } from "./MainMenu";
+import { ButtomMenuBar } from "./ButtomBar";
 // import { TFunction as ReactI18NextTFunction } from "react-i18next";
 // import { TFunction } from "next-i18next";
 
@@ -267,7 +269,8 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     }
 
     const renderMenu = () => {
-        return <MainMenu open={isMenuOpen} elementRef={elementRef} onMenuClose={handleMenuClosed} />;
+        
+        return <MainMenu logo={logoPath} open={isMenuOpen} elementRef={elementRef} onMenuClose={handleMenuClosed} />;
     }
 
     const renderLoginModal = () => {
@@ -281,6 +284,20 @@ export const LayoutAppBar = (props: ILayoutProps) => {
                 <img src={logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
             </a>
             
+            <Box sx={{ flexGrow: 1, pl: 4, display: { xs: 'flex', md: 'none' } }}>
+                <IconButton 
+                    sx={{ 
+                        bgcolor: '#f4762a', 
+                        color: '#fff',
+                        padding: '5px',
+                        borderRadius: '20px'
+                    }}
+                    onClick={onMobileSearchClick} 
+                >
+                    <SearchOutlined  />
+                </IconButton>
+            </Box>
+
             <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
                 <Button
                     color="info"
@@ -335,28 +352,25 @@ export const LayoutAppBar = (props: ILayoutProps) => {
                 </IconButton>
             </div>
         </Toolbar>
-        <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} 
-            justifyContent='center' alignItems='center'   
+        <Grid container 
+            direction={'row'} 
+            sx={{ 
+                background: '#f4762a',
+                height: '42px',
+                color: '#fffff',
+                display: { xs: 'none', sm: 'none', md: 'flex' } 
+            }} 
+            justifyContent='center'
+            alignItems='center'   
         >
-            <Grid item maxWidth={'900px'} sx={{display: { xs: 'none', sm: 'none', md: 'flex' } }} >
+            <Grid item maxWidth={'900px'}>
                 { renderMenuBar() }
-            </Grid>
-            <Grid item width={"100%"} sx={{display: { xs: 'flex', sm: 'flex', md: 'none' } }} >
-                <Grid container justifyContent="space-between" direction="row"  alignItems="center" >
-                    <Grid item xs={12} md={12} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-                        <Button size="small" variant="outlined" startIcon={<SearchIcon />}
-                            sx={{ width: '100%', bgcolor: 'white', color: 'black', textAlign: 'left',
-                                justifyContent: 'left'
-                            }}
-                            onClick={onMobileSearchClick} 
-                        >Search</Button>
-                    </Grid>
-                </Grid>
             </Grid>
         </Grid>
     </AppBar>
     { renderLoginModal() }
     { renderMenu() }
+    { <ButtomMenuBar /> }
     </>
 
     );

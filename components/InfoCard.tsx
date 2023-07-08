@@ -18,7 +18,7 @@ export const InfoCard = (props: InfoCardProps) => {
         // variant="outlined"
         elevation={1}
     >
-        <Typography component="div" variant="h3" sx={{ fontWeight: '400' }} color="primary">
+        <Typography component="div" variant="h3" sx={{ fontWeight: '400', color: '#f4762a' }}>
             { props.value }
         </Typography>
         <Typography variant="caption" component="div" sx={{ mt: 0, fontSize: '10px' }}>

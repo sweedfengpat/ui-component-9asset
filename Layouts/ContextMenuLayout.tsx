@@ -1,7 +1,7 @@
 import { Close, NavigateBefore, Verified } from "@mui/icons-material";
 import { AppBar, Avatar, Box, Button, Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Slide, Stack, Toolbar, Typography, styled, useMediaQuery, useScrollTrigger, useTheme } from "@mui/material";
 import { useState } from "react";
-import logo from '../assets/images/9asset-logo.png'
+// import logo from '../assets/images/9asset-logo.png'
 import React from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import theme from "../../theme";
@@ -73,7 +73,7 @@ const ContextModalTitleWithProfile = (props: ContextModalTitleWithProfileProps) 
                 }}
             >
                 <Box sx={{ display: 'flex' }}>
-                    <Box component="img" src={logo} sx={{ width: 20, marginTop: '-2px' }} />
+                    {/* <Box component="img" src={logo} sx={{ width: 20, marginTop: '-2px' }} /> */}
                     <Box component="span" sx={{ pl: 1, paddingTop: '0px', fontWeight: '600', color: 'black' }}>{props.title}</Box>
                 </Box>
                 <Box sx={{ display: 'flex' }}>
