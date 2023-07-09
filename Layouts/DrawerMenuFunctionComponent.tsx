@@ -157,6 +157,16 @@ export function DrawerMenuFunctionComponent({ ...props }) {
             )
           })}
       </List>
+      <div
+        style={{
+          fontSize: '12px',
+          bottom: '20px',
+          position: 'absolute',
+          right: '20px',
+        }}
+      >
+        {`v${process.env.REACT_APP_BUILD_NUMBER || '0.0.1'}`}
+      </div>
     </>
   )
 }
