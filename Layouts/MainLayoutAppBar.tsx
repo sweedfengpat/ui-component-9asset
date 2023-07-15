@@ -276,7 +276,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
         return <MainMenu logo={logoPath} open={isMenuOpen} elementRef={elementRef} onMenuClose={handleMenuClosed} />;
     }
 
-    const handleLoginClosed = (isLoggedIn) => {
+    const handleLoginClosed = (isLoggedIn: boolean) => {
         setIsLoginModalOpened(false);
 
         if (isLoggedIn) {
