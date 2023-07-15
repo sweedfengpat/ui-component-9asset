@@ -14,25 +14,25 @@ interface ButtomMenuBarProps {
 export const ButtomMenuBar = ({ onLoginRequest, onBuyerRequest }: ButtomMenuBarProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
-    const [isBuyernModalOpened, setIsBuyerModalOpened] = useState<boolean>(false);
-    const [isSellerModalOpened, setIsSellerModalOpened] = useState<boolean>(false);
+    // const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
+    // const [isBuyernModalOpened, setIsBuyerModalOpened] = useState<boolean>(false);
+    // const [isSellerModalOpened, setIsSellerModalOpened] = useState<boolean>(false);
 
     const handleLoginRequested = () => {
-        setIsLoginModalOpened(true);
-        setIsBuyerModalOpened(false);
+        // setIsLoginModalOpened(true);
+        // setIsBuyerModalOpened(false);
         onLoginRequest?.();
     }
 
     const handleBuyerRequested = () => {
-        setIsBuyerModalOpened(true);
-        setIsLoginModalOpened(false);
+        // setIsBuyerModalOpened(true);
+        // setIsLoginModalOpened(false);
         onBuyerRequest?.();
     }
 
     const handleSellerRequested = () => {
-        setIsSellerModalOpened(true);
-        setIsLoginModalOpened(false);
+        // setIsSellerModalOpened(true);
+        // setIsLoginModalOpened(false);
         onBuyerRequest?.();
     }
 
@@ -45,8 +45,8 @@ export const ButtomMenuBar = ({ onLoginRequest, onBuyerRequest }: ButtomMenuBarP
             <BottomNavigationAction label="Me" icon={<Person2Outlined />} onClick={() => {handleLoginRequested();}} />
         </BottomNavigation>
     </Paper>
-    <LoginModal open={isLoginModalOpened} onLoginClosed={() => setIsLoginModalOpened(false)} />
+    {/* <LoginModal open={isLoginModalOpened} onLoginClosed={() => setIsLoginModalOpened(false)} />
     <BuyerMenu open={isBuyernModalOpened} onClose={() => setIsBuyerModalOpened(false) } />
-    <SellerMenu open={isSellerModalOpened} onClose={() => setIsSellerModalOpened(false) } />
+    <SellerMenu open={isSellerModalOpened} onClose={() => setIsSellerModalOpened(false) } /> */}
     </>) : <></>;
 }

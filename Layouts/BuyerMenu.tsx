@@ -1,5 +1,6 @@
 import { Box, Button, Divider, Grid, List, ListItemButton, ListItemText, Paper, Typography, styled } from "@mui/material";
 import { ContextMenu } from "./ContextMenuLayout";
+import React from "react";
 import { useState } from "react";
 import { InfoCard } from "../components/InfoCard";
 
@@ -16,19 +17,31 @@ interface BuyerMenuProps {
     onClose?: () => void;
 }
 
+enum Mode {
+    Default,
+    AddRequirment
+}
+
 export const BuyerMenu = (props: BuyerMenuProps) => {
 
     const [level, setLevel] = useState(0);
+    const [mode, setMode] = useState<Mode>(Mode.Default);
 
     const handleChangeTo = (item: number) => {
         setLevel(1);
+    }
+
+    const onAddRequirementRequested = () => {
+        setLevel(1);
+        setMode(Mode.AddRequirment);
+        console.log('aa')
     }
 
     const renderDefault = () => {
         return (<>
         <Grid container spacing={1}>
             <Grid item xs={12}>
-                <Button variant="contained" sx={{ textTransform: 'none', boxShadow: 0 }} onClick={() => handleChangeTo(1)}>
+                <Button variant="contained" sx={{ textTransform: 'none', boxShadow: 0 }} onClick={onAddRequirementRequested}>
                     Add Requirement
                 </Button>
             </Grid>
@@ -90,10 +103,13 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
     }
 
     const getMenuDetail = () => {
-        if (level === 0) {
-            return renderDefault();
+        switch(mode) {
+            case Mode.AddRequirment:
+                return <Paper elevation={0} sx={{ p: 1, width: '100%', height: '100%' }} component="iframe" src="http://localhost:8080/login"></Paper>;
+            case Mode.Default:
+            default:
+                return <Paper elevation={0} sx={{ p: 2 }} >{ renderDefault() }</Paper>;
         }
-        return <Button variant="contained" onClick={() => handleChangeTo(1)}>B</Button>;
     }
 
     return (
@@ -105,9 +121,7 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
         onClose={() => props.onClose?.() }
         onBackRequested={() => { setLevel(0); } }
     >
-        <Paper elevation={0} sx={{ p: 2 }}>
-            { getMenuDetail() }
-        </Paper>
+        { getMenuDetail() }
     </ContextMenu>
     );
 }

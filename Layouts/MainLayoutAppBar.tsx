@@ -1,7 +1,7 @@
 import {
     AppBar, Toolbar, Divider, Box, 
     Grid, Button, Slide, MenuItem, Avatar, IconButton,
-    Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar, MenuList, styled, Dialog, Typography, useTheme, useMediaQuery, DialogTitle, DialogContent
+    Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar, MenuList, styled, Dialog, Typography, useTheme, useMediaQuery, DialogTitle, DialogContent, ThemeProvider
 } from "@mui/material";
 import {
     Home as HomeIcon,
@@ -35,11 +35,10 @@ import { ProfileMenuItem } from "./ProfileMenu";
 import { useTranslation } from "react-i18next";
 import { TransitionProps } from "@mui/material/transitions";
 import { LoginModal } from "../components/LoginModal";
-import { isMobile } from "react-device-detect";
 import { MainMenu } from "./MainMenu";
 import { ButtomMenuBar } from "./ButtomBar";
-// import { TFunction as ReactI18NextTFunction } from "react-i18next";
-// import { TFunction } from "next-i18next";
+import theme from "../theme";
+import { BuyerMenu } from "./BuyerMenu";
 
 export type MainMenuLanguage = 'th' | 'en' | 'cn';
 
@@ -133,6 +132,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="right" ref={ref} {...props} />;
   });
 
+  
 export const LayoutAppBar = (props: ILayoutProps) => {
 
     const loginBasePath = process.env.REACT_APP_DOMAIN || process.env.NEXT_PUBLIC_DOMAIN || 'https://my.9asset.com';
@@ -141,8 +141,11 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     const [seletedLang, setSelectedLang] = useState<string>(props.language || 'th')
     const [logoPath, ] = useState<string|undefined>(props.logoPath);
     const [isAuth, setIsAuth] = useState<'true'|'false'>('false');
+    
     const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
+    const [isBuyernModalOpened, setIsBuyerModalOpened] = useState<boolean>(false);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+    
     const [menubar, setMenuBar] = useState<MenuBar>(props.menubar || []);
     const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
@@ -273,12 +276,22 @@ export const LayoutAppBar = (props: ILayoutProps) => {
         return <MainMenu logo={logoPath} open={isMenuOpen} elementRef={elementRef} onMenuClose={handleMenuClosed} />;
     }
 
+    const handleLoginClosed = (isLoggedIn) => {
+        setIsLoginModalOpened(false);
+
+        if (isLoggedIn) {
+            setIsBuyerModalOpened(true);
+        }
+    }
+
     const renderLoginModal = () => {
-        return <LoginModal open={isLoginModalOpened} onLoginClosed={() => setIsLoginModalOpened(false) } />
+        return <LoginModal open={isLoginModalOpened} onLoginClosed={handleLoginClosed} />
     };
 
-    return (<>
-    <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1000 }} >
+    return (
+    <ThemeProvider theme={theme}>
+    <>
+    <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
         <Toolbar>
             <a href ={props.homeUrl || '/' }>
                 <img src={logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
@@ -370,8 +383,9 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     </AppBar>
     { renderLoginModal() }
     { renderMenu() }
-    { <ButtomMenuBar /> }
+    <BuyerMenu open={isBuyernModalOpened} onClose={() => setIsBuyerModalOpened(false) } />
+    <ButtomMenuBar onLoginRequest={() => setIsLoginModalOpened(true) } />
     </>
-
+    </ThemeProvider>
     );
 }

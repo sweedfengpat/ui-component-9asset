@@ -26,20 +26,20 @@ export const LoginModal = ({ open, onLoginClosed }: any) => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const iFrameRef = useRef<HTMLIFrameElement|null>(null);
 
-    const onLoginMessage = (e: MessageEvent) => {
+    const onLoginMessage = (e: MessageEvent) => {console.log(e)
         if (e.origin !== 'http://localhost:8080') {
             return;
         }
-
-        if (e.data === 'loged-in') {
-            onLoginClosed?.();
+        
+        if (e.data === 'loged-in' || e.data === 'loaded') {
+            onLoginClosed?.(true);
         } else {
             
         }
     }
 
     useEffect(() => {
-        window.addEventListener('message', onLoginMessage, false);
+        window.addEventListener('message', onLoginMessage);
     }, []);
 
     useEffect(() => {
