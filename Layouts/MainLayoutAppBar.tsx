@@ -298,17 +298,17 @@ export const LayoutAppBar = (props: ILayoutProps) => {
             </a>
             
             <Box sx={{ flexGrow: 1, pl: 4, display: { xs: 'flex', md: 'none' } }}>
-                <IconButton 
+                <Button color="primary" variant="contained" disableElevation
                     sx={{ 
-                        bgcolor: '#f4762a', 
-                        color: '#fff',
                         padding: '5px',
-                        borderRadius: '20px'
+                        borderRadius: '20px',
+                        minWidth: '24px',
+                        width: '34px !important'
                     }}
-                    onClick={onMobileSearchClick} 
+                    onClick={onMobileSearchClick}
                 >
-                    <SearchOutlined  />
-                </IconButton>
+                    <SearchOutlined fontSize="medium" />
+                </Button>
             </Box>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>

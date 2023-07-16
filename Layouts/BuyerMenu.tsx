@@ -105,7 +105,7 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
     const getMenuDetail = () => {
         switch(mode) {
             case Mode.AddRequirment:
-                return <Paper elevation={0} sx={{ p: 1, width: '100%', height: '100%' }} component="iframe" src="http://localhost:8080/login"></Paper>;
+                return <Paper elevation={0} sx={{ p: 1, width: '100%', height: '100%' }} component="iframe" src="http://localhost:3001/buyer/requirement?isHeadlessMode=true"></Paper>;
             case Mode.Default:
             default:
                 return <Paper elevation={0} sx={{ p: 2 }} >{ renderDefault() }</Paper>;
