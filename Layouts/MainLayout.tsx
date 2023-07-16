@@ -76,6 +76,8 @@ export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     language: MainMenuLanguage;
     t: TFunction<string, undefined> | TFunction<"translation">;
     menubar?: any[];
+
+    isHeadlessMode?: boolean;
 }
 
 export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
@@ -197,7 +199,8 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                 if (this.props.component) {
                     props.match = (this.props as any).computedMatch;
                     const component = React.createElement(this.props.component, props);
-                    return (
+                    return  this.props.isHeadlessMode ? (<MainLayoutRoot>{component}</MainLayoutRoot>):
+                    (
                         <MainLayoutRoot>
                             <ElevationScroll {...props}>
                                 <LayoutAppBar 
