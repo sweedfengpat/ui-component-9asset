@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Grid, List, ListItemButton, ListItemText, Paper, Typography, styled } from "@mui/material";
 import { ContextMenu } from "./ContextMenuLayout";
-import React from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
 import { InfoCard } from "../components/InfoCard";
 
@@ -19,7 +19,12 @@ interface BuyerMenuProps {
 
 enum Mode {
     Default,
-    AddRequirment
+    AddRequirment,
+    Requirements,
+    Interested,
+    RecentlyView,
+    Appointment,
+    Inquiry
 }
 
 export const BuyerMenu = (props: BuyerMenuProps) => {
@@ -34,7 +39,25 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
     const onAddRequirementRequested = () => {
         setLevel(1);
         setMode(Mode.AddRequirment);
-        console.log('aa')
+    }
+
+    const handleInfoCardClicked = (key: string) => {
+        if (key === 'requirement') {
+            setLevel(1);
+            setMode(Mode.Requirements);
+        } else if (key === 'interested') {
+            setLevel(1);
+            setMode(Mode.Interested);
+        } else if (key === 'recently') {
+            setLevel(1);
+            setMode(Mode.RecentlyView);
+        } else if (key === 'appointment') {
+            setLevel(1);
+            setMode(Mode.Appointment);
+        } else if (key === 'inquiry') {
+            setLevel(1);
+            setMode(Mode.Inquiry);
+        }
     }
 
     const renderDefault = () => {
@@ -50,19 +73,19 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
                 <SectionLabel>Activities</SectionLabel>
             </Grid>
             <Grid item xs={4}>
-                <InfoCard title="Requirements" value={1} />
+                <InfoCard data="requirement" title="Requirements" value={1} onClick={handleInfoCardClicked} />
             </Grid>
             <Grid item xs={4}>
-                <InfoCard title="Interested" value={10} />
+                <InfoCard data="interested" title="Interested" value={10} onClick={handleInfoCardClicked} />
             </Grid>
             <Grid item xs={4}>
-                <InfoCard title="Recently View" value={10} />
+                <InfoCard data="recently" title="Recently View" value={10} onClick={handleInfoCardClicked} />
             </Grid>
             <Grid item xs={4}>
-                <InfoCard title="Appointment" value={10} />
+                <InfoCard data="appointment" title="Appointment" value={10} onClick={handleInfoCardClicked} />
             </Grid>
             <Grid item xs={4}>
-                <InfoCard title="Inquiry" value={10} />
+                <InfoCard data="inquiry" title="Inquiry" value={10} onClick={handleInfoCardClicked} />
             </Grid>
         </Grid>
         
@@ -105,11 +128,26 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
     const getMenuDetail = () => {
         switch(mode) {
             case Mode.AddRequirment:
-                return <Paper elevation={0} sx={{ p: 1, width: '100%', height: '100%' }} component="iframe" src="http://localhost:3001/buyer/requirement?isHeadlessMode=true"></Paper>;
+                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="http://localhost:3000/buyer/requirement?isHeadlessMode=true"></Paper>;
+            case Mode.Requirements:
+                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="http://localhost:3000/buyer/requirements?isHeadlessMode=true"></Paper>;
+            case Mode.Interested:
+                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="https://my.9asset.com/buyer/interested?isHeadlessMode=true"></Paper>;
+            case Mode.RecentlyView:
+                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="https://my.9asset.com/buyer/recently?isHeadlessMode=true"></Paper>;
+            case Mode.Appointment:
+                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="https://my.9asset.com/buyer/appointment?isHeadlessMode=true"></Paper>;
+            case Mode.Inquiry:
+                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="https://my.9asset.com/buyer/inquiry?isHeadlessMode=true"></Paper>;
             case Mode.Default:
             default:
                 return <Paper elevation={0} sx={{ p: 2 }} >{ renderDefault() }</Paper>;
         }
+    }
+
+    const handleBackRequested = () => {
+        setLevel(0);
+        setMode(Mode.Default);
     }
 
     return (
@@ -119,7 +157,7 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
         title={ level === 0 ?'Buyer' : 'My Requirement' }
         additionalAction={<Button variant="text" sx={{ p: 0, textTransform: 'none', fontWeight: '600' }}>Seller Center</Button>}
         onClose={() => props.onClose?.() }
-        onBackRequested={() => { setLevel(0); } }
+        onBackRequested={handleBackRequested}
     >
         { getMenuDetail() }
     </ContextMenu>

@@ -31,9 +31,14 @@ export const LoginModal = ({ open, onLoginClosed }: any) => {
             return;
         }
         
-        if (e.data === 'loged-in' || e.data === 'loaded') {
-            onLoginClosed?.(true);
-        } else {
+        try {
+            const payload = JSON.parse(e.data);
+            if (payload.source === 'login' && (payload.event === 'logged-in' || payload.event === 'loaded')) {
+                onLoginClosed?.(true);
+            } else {
+                
+            }
+        } catch {
             
         }
     }

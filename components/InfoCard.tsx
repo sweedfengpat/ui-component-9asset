@@ -1,8 +1,11 @@
 import { Paper, Typography } from "@mui/material";
 
 interface InfoCardProps {
+    data: string;
     title: string;
     value: number;
+
+    onClick?: (key: string) => void;
 }
 
 export const InfoCard = (props: InfoCardProps) => {
@@ -17,6 +20,7 @@ export const InfoCard = (props: InfoCardProps) => {
         }}
         // variant="outlined"
         elevation={1}
+        onClick={() => { props.onClick && props.onClick(props.data) }}
     >
         <Typography component="div" variant="h3" sx={{ fontWeight: '400', color: '#f4762a' }}>
             { props.value }

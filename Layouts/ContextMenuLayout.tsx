@@ -1,10 +1,10 @@
 import { Close, NavigateBefore, Verified } from "@mui/icons-material";
 import { AppBar, Avatar, Box, Button, Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemText, Paper, Slide, Stack, Toolbar, Typography, styled, useMediaQuery, useScrollTrigger, useTheme } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import logo from '../assets/images/9asset-logo.png'
 import React from "react";
 import { TransitionProps } from "@mui/material/transitions";
-import theme from "../../theme";
+import theme from "../theme";
 
 
 const Transition = React.forwardRef(function Transition(
@@ -160,6 +160,28 @@ export const ContextMenu = (props: ContextMenuProps) => {
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [title, setTitle] = useState(props.title);
+    
+    useEffect(() => {
+        window.addEventListener('message', onMessageReceived);
+    }, []);
+
+    const onMessageReceived = (e: MessageEvent) => {
+        if (e.origin !== 'http://localhost:3000') {
+            return;
+        }
+
+        try {
+            const payload = JSON.parse(e.data);
+            if (payload) {
+                if (payload.action === 'set-title') {
+                    setTitle(payload.value);
+                }
+            }
+        } catch {
+
+        }
+    }
 
     const handleClose = () => {
         props.onClose?.();
@@ -204,12 +226,12 @@ export const ContextMenu = (props: ContextMenuProps) => {
                 onClose={handleClose}
             ></ContextModalTitleWithProfile> : 
             <ContextModalTitle
-                title={props.title}
+                title={title}
                 additionalAction={props.additionalAction}
                 onClose={handleClose}
                 onBackRequested={props.onBackRequested}
             /> }
-        <DialogContent dividers={true} sx={{ p: '10px', bgcolor: theme.palette.grey[100] }}>
+        <DialogContent dividers={true} sx={{ p: '0px', bgcolor: theme.palette.grey[100] }}>
             { props.level === 0 ? renderProfile() : <></>}
             { props.children }
         </DialogContent>
