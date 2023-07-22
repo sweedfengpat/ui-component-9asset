@@ -263,7 +263,7 @@ export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
         }
         
         return (
-            <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
+            <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1000 }} >
                 <Toolbar>
                     <a href ={this.props.homeUrl || '/' }>
                         <img src={this.logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
