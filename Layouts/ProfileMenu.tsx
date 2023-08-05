@@ -1,4 +1,8 @@
-import { Avatar, Dialog, DialogContent, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, MenuList, Popover, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Dialog, DialogContent, 
+    Divider, List, ListItem, ListItemAvatar, 
+    ListItemButton, ListItemIcon, ListItemText, 
+    ListSubheader, MenuItem, MenuList, 
+    Popover, Typography, styled, useMediaQuery, useTheme, Slide } from "@mui/material";
 import { useEffect, useState } from "react";
 import { TFunction } from "react-i18next";
 import { MenuDialogTitle } from "../components/MenuDialogTitle";
@@ -7,7 +11,8 @@ import { getUserName } from "./Profile";
 import { UserInfo } from "firebase/auth";
 import { ChevronLeft } from "@mui/icons-material";
 import React from "react";
-import { type } from "os";
+import { TransitionProps } from "@mui/material/transitions";
+import { MenuDialog } from "./MainMenu";
 
 type MenuType = 'default' | 'language' | 'currency';
 
@@ -19,15 +24,6 @@ export interface ProfileMenuItem {
 
     items?: ProfileMenuItem[];
 }
-
-const MenuDialog = styled(Dialog)(({ theme }) => ({
-    '.MuiPaper-root': {
-        position: 'absolute',
-        top: '10px',
-        width: '96%',
-        margin: '0'
-    },
-}));
 
 const NMenuItem = styled(MenuItem)(({ theme }) => ({
     paddingY: '10px',
@@ -52,6 +48,15 @@ const NMenuSubItem = styled(MenuItem)(({ theme }) => ({
     }
 
 }));
+
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+      children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+  ) {
+    return <Slide direction="right" ref={ref} {...props} />;
+  });
 
 export interface HeaderMenuProps {
     t: TFunction<string, undefined>;
@@ -110,10 +115,10 @@ export const ProfileMenu = (props: HeaderMenuProps) => {
     }
 
     const handleLogin = () => {
-        props.onLoginRequest && props.onLoginRequest();
+        props.onLoginRequest?.();// && props.onLoginRequest();
        
-        const currentUrl = encodeURIComponent(window.location.href);
-        window.location.href = `${loginBasePath}/login?redirect=${currentUrl}`;
+        // const currentUrl = encodeURIComponent(window.location.href);
+        // window.location.href = `${loginBasePath}/login?redirect=${currentUrl}`;
     }
 
     const handleChangeMenuRequested = (menuType: MenuType) => {
@@ -396,7 +401,9 @@ export const ProfileMenu = (props: HeaderMenuProps) => {
         <MenuDialog
             sx={{ m: 0 }}
             open={props.isOpen}
+            fullScreen={true}
             onClose={handleDialogClose}
+            TransitionComponent={Transition}
         >
             <MenuDialogTitle id={"menu-dialog"} onClose={handleDialogClose}>
                 <Typography variant="subtitle2" component="p">{ t('My Account') }</Typography>

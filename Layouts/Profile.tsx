@@ -35,12 +35,19 @@ export interface ProfileProps {
 
     onLangChanged?: (lng: MainMenuLanguage) => void;
     onMenuClicked?: (item: ProfileMenuItem) => void;
+
+    onLoginRequested?: () => void;
 }
 
 export const Profile = (props: ProfileProps) => {
     const { t, language, user } = props;
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const avatarRef = useRef<HTMLDivElement | null>(null);
+
+    const handleLoginRequested = () => {
+        setIsMenuOpen(false);
+        props.onLoginRequested?.();
+    };
 
     const renderMenu = () => (<>
     <ProfileMenu
@@ -52,7 +59,7 @@ export const Profile = (props: ProfileProps) => {
         isOpen={isMenuOpen}
         items={ props.menuItems|| [] }
         
-        onLoginRequest={() => { setIsMenuOpen(false); }}
+        onLoginRequest={handleLoginRequested}
         onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
         onMenuClose={() => { setIsMenuOpen(false); }}
         onMenuClicked={
@@ -65,17 +72,18 @@ export const Profile = (props: ProfileProps) => {
     </>);
 
     const handleAvatarClicked = (event: React.MouseEvent<HTMLElement>) => {
-        setIsMenuOpen(!isMenuOpen);
+        // setIsMenuOpen(!isMenuOpen);
         // setAvatarRef(event.currentTarget);
+        handleLoginRequested();
     };
 
     return (<>
     <Avatar
         alt="9 Asset"
-        style={{ height: '30px', width: '30px', margin: '12px' }}
+        sx={{ height: '30px', width: '30px', margin: '12px', display: { xs: 'none', sm: 'flex' } }}
         ref={avatarRef}
         onClick={handleAvatarClicked}
     >{ getUserName(props.user) }</Avatar>
-    { renderMenu() }
+    {/* { renderMenu() } */}
     </>);
 }
