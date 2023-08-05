@@ -26,14 +26,14 @@ export const LoginModal = ({ open, onLoginClosed }: any) => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const iFrameRef = useRef<HTMLIFrameElement|null>(null);
 
-    const onLoginMessage = (e: MessageEvent) => {console.log(e)
-        if (e.origin !== 'http://localhost:8080') {
+    const onLoginMessage = (e: MessageEvent) => {
+        if (e.origin !== process.env.NEXT_PUBLIC_URL_BASE) {
             return;
         }
         
         try {
-            const payload = JSON.parse(e.data);
-            if (payload.source === 'login' && (payload.event === 'logged-in' || payload.event === 'loaded')) {
+            const payload = e.data;
+            if (payload.source === 'login' && (payload.type === 'logged-in' || payload.type === 'loaded')) {
                 onLoginClosed?.(true);
             } else {
                 
@@ -87,7 +87,7 @@ export const LoginModal = ({ open, onLoginClosed }: any) => {
                 title="search-component"
                 ref={iFrameRef}
                 component="iframe"
-                src={`${'http://localhost:8080'}/login?isHeadlessMode=true`}
+                src={`${process.env.NEXT_PUBLIC_LOGIN_URL_BASE}?isHeadlessMode=true`}
                 style={{ 
                     border: 'none',
                     height: isMobile ? '100%' : '570px',

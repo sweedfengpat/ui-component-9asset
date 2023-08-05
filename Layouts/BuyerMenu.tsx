@@ -1,8 +1,10 @@
-import { Box, Button, Divider, Grid, List, ListItemButton, ListItemText, Paper, Typography, styled } from "@mui/material";
+import { Box, Button, Dialog, Divider, Grid, IconButton, InputAdornment, List, ListItemButton, ListItemText, MenuItem, Paper, Select, TextField, Typography, styled } from "@mui/material";
 import { ContextMenu } from "./ContextMenuLayout";
 import React, { useRef } from "react";
 import { useState } from "react";
 import { InfoCard } from "../components/InfoCard";
+import { SearchOutlined } from "@mui/icons-material";
+import { BuyerSearchModal } from "../components/BuyerSearchModal";
 
 
 const SectionLabel = styled(Typography)(({ theme }) => ({
@@ -31,6 +33,8 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
 
     const [level, setLevel] = useState(0);
     const [mode, setMode] = useState<Mode>(Mode.Default);
+    const [isSearching, setIsSearching] = useState<boolean>(false);
+    const contentRef = useRef<HTMLIFrameElement|null>(null);
 
     const handleChangeTo = (item: number) => {
         setLevel(1);
@@ -58,6 +62,13 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
             setLevel(1);
             setMode(Mode.Inquiry);
         }
+    }
+
+    const handleClosed = () => {
+        setLevel(0);
+        setMode(Mode.Default);
+        setIsSearching(false);
+        props.onClose?.();
     }
 
     const renderDefault = () => {
@@ -126,40 +137,80 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
     }
 
     const getMenuDetail = () => {
+        return mode !== Mode.Default
+            ? <Paper
+                elevation={0}
+                sx={{ p: 0, width: '100%', height: '100%' }}
+                component="iframe"
+                src={getUrl()}
+                ref={contentRef}
+              ></Paper> 
+            : <Box sx={{ p: 1}}><Paper elevation={0} sx={{ p: 2 }} >{ renderDefault() }</Paper></Box>
+    }
+
+    const getUrl = () => {
         switch(mode) {
             case Mode.AddRequirment:
-                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="http://localhost:3000/buyer/requirement?isHeadlessMode=true"></Paper>;
+                return "http://localhost:3001/buyer/requirement?isHeadlessMode=true";
             case Mode.Requirements:
-                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="http://localhost:3000/buyer/requirements?isHeadlessMode=true"></Paper>;
+                return "http://localhost:3001/buyer/requirements?isHeadlessMode=true";
             case Mode.Interested:
-                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="https://my.9asset.com/buyer/interested?isHeadlessMode=true"></Paper>;
+                return "http://localhost:3001/buyer/interested?isHeadlessMode=true";
             case Mode.RecentlyView:
-                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="https://my.9asset.com/buyer/recently?isHeadlessMode=true"></Paper>;
+                return "http://localhost:3001/buyer/recently?isHeadlessMode=true";
             case Mode.Appointment:
-                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="https://my.9asset.com/buyer/appointment?isHeadlessMode=true"></Paper>;
+                return "http://localhost:3001/buyer/appointment?isHeadlessMode=true";
             case Mode.Inquiry:
-                return <Paper elevation={0} sx={{ p: 0, width: '100%', height: '100%' }} component="iframe" src="https://my.9asset.com/buyer/inquiry?isHeadlessMode=true"></Paper>;
+                return "http://localhost:3001/buyer/inquiry?isHeadlessMode=true";
             case Mode.Default:
             default:
-                return <Paper elevation={0} sx={{ p: 2 }} >{ renderDefault() }</Paper>;
+                return ""; // <Box sx={{ p: 1}}><Paper elevation={0} sx={{ p: 2 }} >{ renderDefault() }</Paper></Box>;
         }
     }
 
     const handleBackRequested = () => {
         setLevel(0);
         setMode(Mode.Default);
+        setIsSearching(false);
     }
 
-    return (
+    const handleSearchRequested = () => {
+        setIsSearching(true);
+    }
+
+    const handleSearchApplied = (payload: any) => {
+        console.log(payload);
+        contentRef?.current?.contentWindow?.postMessage({
+            target: 'buyerApp',
+            type: 'search-requested',
+            payload
+        }, '*');
+        setIsSearching(false);
+    }
+
+    const getAdditionalButtons = () => {
+        if (level === 0) {
+            return <Button variant="text" sx={{ p: 0, textTransform: 'none', fontWeight: '600' }}>Seller Center</Button>;
+        }
+        return <IconButton color="primary" onClick={handleSearchRequested}><SearchOutlined /></IconButton>
+    }
+
+    return (<>
     <ContextMenu
         level={level}
         open={props.open}
         title={ level === 0 ?'Buyer' : 'My Requirement' }
-        additionalAction={<Button variant="text" sx={{ p: 0, textTransform: 'none', fontWeight: '600' }}>Seller Center</Button>}
-        onClose={() => props.onClose?.() }
+        additionalAction={getAdditionalButtons()}
+        onClose={handleClosed}
         onBackRequested={handleBackRequested}
     >
         { getMenuDetail() }
+        
     </ContextMenu>
-    );
+    <BuyerSearchModal
+        open={isSearching}
+        onSearchRequested={handleSearchApplied}
+        onClose={() => setIsSearching(false) }
+    />
+    </>);
 }

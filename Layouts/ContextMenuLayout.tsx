@@ -138,6 +138,7 @@ const ContextModalTitle = (props: ContextModalTitleProps) => {
                     <Box component="span" sx={{ pl: 1, paddingTop: '0px', fontWeight: '600', color: 'black' }}>{props.title}</Box>
                 </Box>
                 <Box sx={{ display: 'flex' }}>
+                { props.additionalAction }
                 </Box>
             </Box>
             { props.onClose ? closeButton : null } 
@@ -167,15 +168,15 @@ export const ContextMenu = (props: ContextMenuProps) => {
     }, []);
 
     const onMessageReceived = (e: MessageEvent) => {
-        if (e.origin !== 'http://localhost:3000') {
+        if (e.origin !== process.env.NEXT_PUBLIC_URL_BASE) {
             return;
         }
-
+        
         try {
-            const payload = JSON.parse(e.data);
+            const payload = e.data;
             if (payload) {
-                if (payload.action === 'set-title') {
-                    setTitle(payload.value);
+                if (payload.type === 'set-title') {
+                    setTitle(payload.payload.title);
                 }
             }
         } catch {
