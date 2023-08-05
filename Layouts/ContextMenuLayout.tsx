@@ -162,6 +162,12 @@ export const ContextMenu = (props: ContextMenuProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [title, setTitle] = useState(props.title);
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || '{}');
+        setUser(user);
+    }, []);
     
     useEffect(() => {
         window.addEventListener('message', onMessageReceived);
@@ -184,12 +190,16 @@ export const ContextMenu = (props: ContextMenuProps) => {
         }
     }
 
+    const getName = () => {
+        return user ? `${user.nameTh} ${user.lastnameTh}` : '';
+    }
+
     const handleClose = () => {
         props.onClose?.();
     }
 
     const renderProfile = () => {
-        return (
+        return user ? (
         <Paper elevation={0}>
             <List sx={{ bgcolor: 'white', width: '100%', p: 0, mb: 1 }} >
                 <ListItem alignItems="flex-start" sx={{ pt: 0 }}>
@@ -197,12 +207,12 @@ export const ContextMenu = (props: ContextMenuProps) => {
                         <Avatar />
                     </ListItemAvatar>
                     <ListItemText
-                        primary={<Typography sx={{ color: theme.palette.grey[800], fontWeight: '600', fontSize: '14px' }} variant="body1">John Doe</Typography>}
+                        primary={<Typography sx={{ color: theme.palette.grey[800], fontWeight: '600', fontSize: '14px' }} variant="body1">{getName()}</Typography>}
                         secondary={
                         <Stack direction="column" sx={{ p: 0 }}>
                             <Box sx={{ display: 'inline-flex'}}>
-                                <Typography sx={{ fontSize: '10px',  }}>john.doe@gmail.com</Typography>
-                                <Typography sx={{ fontSize: '10px', pl: 1 }} color="green">Verified</Typography> 
+                                <Typography sx={{ fontSize: '10px',  }}>{user?.email || '-'}</Typography>
+                                <Typography sx={{ fontSize: '10px', pl: 1 }} color="green">{user?.emailVerified ? 'Verified' : '' }</Typography> 
                             </Box>
                             <Typography component="span" sx={{ fontSize: '10px' }} color="primary">150 Coins</Typography>
                         </Stack>
@@ -210,7 +220,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
                     />
                 </ListItem>
             </List>
-        </Paper>);
+        </Paper>) : (<></>);
     }
 
     return (
