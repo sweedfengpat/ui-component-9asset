@@ -151,17 +151,17 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
     const getUrl = () => {
         switch(mode) {
             case Mode.AddRequirment:
-                return "http://localhost:3001/buyer/requirement?isHeadlessMode=true";
+                return `${process.env.NEXT_PUBLIC_BUYER_URL}/requirement?isHeadlessMode=true`;
             case Mode.Requirements:
-                return "http://localhost:3001/buyer/requirements?isHeadlessMode=true";
+                return `${process.env.NEXT_PUBLIC_BUYER_URL}/requirements?isHeadlessMode=true`;
             case Mode.Interested:
-                return "http://localhost:3001/buyer/interested?isHeadlessMode=true";
+                return `${process.env.NEXT_PUBLIC_BUYER_URL}/interested?isHeadlessMode=true`;
             case Mode.RecentlyView:
-                return "http://localhost:3001/buyer/recently?isHeadlessMode=true";
+                return `${process.env.NEXT_PUBLIC_BUYER_URL}/recently?isHeadlessMode=true`;
             case Mode.Appointment:
-                return "http://localhost:3001/buyer/appointment?isHeadlessMode=true";
+                return `${process.env.NEXT_PUBLIC_BUYER_URL}/appointment?isHeadlessMode=true`;
             case Mode.Inquiry:
-                return "http://localhost:3001/buyer/inquiry?isHeadlessMode=true";
+                return `${process.env.NEXT_PUBLIC_BUYER_URL}/inquiry?isHeadlessMode=true`;
             case Mode.Default:
             default:
                 return ""; // <Box sx={{ p: 1}}><Paper elevation={0} sx={{ p: 2 }} >{ renderDefault() }</Paper></Box>;
