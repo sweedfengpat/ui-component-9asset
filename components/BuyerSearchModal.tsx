@@ -19,7 +19,14 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     }
 }));
 
-export const BuyerSearchModal = ({ open, onSearchRequested, onClose }) => {
+export interface BuyerSearchModalProps {
+    open: boolean;
+    onSearchRequested?: (payload: any) => void;
+    onClose?: () => void;
+}
+
+
+export const BuyerSearchModal = ({ open, onSearchRequested, onClose }: BuyerSearchModalProps) => {
     const theme = useTheme();
 
     useEffect(() => {
