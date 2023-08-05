@@ -151,17 +151,17 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
     const getUrl = () => {
         switch(mode) {
             case Mode.AddRequirment:
-                return `${process.env.NEXT_PUBLIC_BUYER_URL}/requirement?isHeadlessMode=true`;
+                return `${process.env.NEXT_PUBLIC_BUYER_URL || 'https://my.9asset.com/buyer'}/requirement?isHeadlessMode=true`;
             case Mode.Requirements:
-                return `${process.env.NEXT_PUBLIC_BUYER_URL}/requirements?isHeadlessMode=true`;
+                return `${process.env.NEXT_PUBLIC_BUYER_URL || 'https://my.9asset.com/buyer'}/requirements?isHeadlessMode=true`;
             case Mode.Interested:
-                return `${process.env.NEXT_PUBLIC_BUYER_URL}/interested?isHeadlessMode=true`;
+                return `${process.env.NEXT_PUBLIC_BUYER_URL || 'https://my.9asset.com/buyer'}/interested?isHeadlessMode=true`;
             case Mode.RecentlyView:
-                return `${process.env.NEXT_PUBLIC_BUYER_URL}/recently?isHeadlessMode=true`;
+                return `${process.env.NEXT_PUBLIC_BUYER_URL || 'https://my.9asset.com/buyer'}/recently?isHeadlessMode=true`;
             case Mode.Appointment:
-                return `${process.env.NEXT_PUBLIC_BUYER_URL}/appointment?isHeadlessMode=true`;
+                return `${process.env.NEXT_PUBLIC_BUYER_URL || 'https://my.9asset.com/buyer'}/appointment?isHeadlessMode=true`;
             case Mode.Inquiry:
-                return `${process.env.NEXT_PUBLIC_BUYER_URL}/inquiry?isHeadlessMode=true`;
+                return `${process.env.NEXT_PUBLIC_BUYER_URL || 'https://my.9asset.com/buyer'}/inquiry?isHeadlessMode=true`;
             case Mode.Default:
             default:
                 return ""; // <Box sx={{ p: 1}}><Paper elevation={0} sx={{ p: 2 }} >{ renderDefault() }</Paper></Box>;
