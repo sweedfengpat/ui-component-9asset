@@ -33,7 +33,7 @@ export const LoginModal = ({ open, onLoginClosed }: any) => {
         
         try {
             const payload = e.data;
-            if (payload.source === 'login' && (payload.type === 'logged-in' || payload.type === 'loaded')) {
+            if (payload.source === 'login' && payload.type === 'logged-in') {
                 onLoginClosed?.(true);
             } else {
                 
