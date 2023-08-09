@@ -163,11 +163,14 @@ export const ContextMenu = (props: ContextMenuProps) => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [title, setTitle] = useState(props.title);
     const [user, setUser] = useState<any>(null);
-
+    const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || '{}');
+    
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || '{}');
-        setUser(user);
+        setUser(userInfo);
     }, []);
+    useEffect(() => {
+        setUser(userInfo);
+    }, [userInfo]);
     
     useEffect(() => {
         window.addEventListener('message', onMessageReceived);
