@@ -12,7 +12,6 @@ import Logo from '../assets/images/9asset-logo.png';
 import { LayoutAppBar, MainMenuLanguage } from './MainLayoutAppBar';
 import { FirebaseApp } from "firebase/app";
 import { ProfileMenuItem } from "./ProfileMenu";
-import { AccountBoxOutlined, AccountCircle, AccountCircleOutlined, Close, FormatListBulleted, HomeOutlined, List, Person2Outlined, VerifiedUser } from "@mui/icons-material";
 import { TransitionProps } from "@mui/material/transitions";
 import { LoginModal } from "../components/LoginModal";
 import { BuyerMenu } from "./BuyerMenu";
@@ -20,7 +19,7 @@ import { SellerMenu } from "./SellerMenu";
 import { ButtomMenuBar } from './ButtomBar';
 
 const MainLayoutRoot = styled.div({
-    display: 'flex',
+    display: 'block',
     height: '100%',
     overflow: 'hidden',
     width: '100%',
