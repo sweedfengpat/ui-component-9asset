@@ -384,7 +384,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     { renderLoginModal() }
     { renderMenu() }
     <BuyerMenu open={isBuyernModalOpened} onClose={() => setIsBuyerModalOpened(false) } />
-    <ButtomMenuBar onLoginRequest={() => setIsLoginModalOpened(true) } />
+    <ButtomMenuBar onLoginRequest={() => setIsBuyerModalOpened(true) } />
     </>
     </ThemeProvider>
     );

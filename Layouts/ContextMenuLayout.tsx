@@ -168,8 +168,11 @@ export const ContextMenu = (props: ContextMenuProps) => {
     useEffect(() => {
         setUser(userInfo);
     }, []);
+
     useEffect(() => {
-        setUser(userInfo);
+        if (!user) {
+            setUser(userInfo);
+        }
     }, [userInfo]);
     
     useEffect(() => {
