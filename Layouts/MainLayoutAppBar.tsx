@@ -253,7 +253,17 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     }
 
     const handleLoginRequested = () => {
-        setIsLoginModalOpened(true);
+        if (isAuth !== 'true') {
+            setIsLoginModalOpened(true);
+        }
+    }
+
+    const handleMeMenuRequested = () => {
+        if (isAuth !== 'true') {
+            setIsLoginModalOpened(true);
+        } else {
+            setIsBuyerModalOpened(true);
+        }
     }
 
 
@@ -384,7 +394,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     { renderLoginModal() }
     { renderMenu() }
     <BuyerMenu open={isBuyernModalOpened} onClose={() => setIsBuyerModalOpened(false) } />
-    <ButtomMenuBar onLoginRequest={() => setIsLoginModalOpened(true) } />
+    <ButtomMenuBar onMeRequest={handleMeMenuRequested} />
     </>
     </ThemeProvider>
     );

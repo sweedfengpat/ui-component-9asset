@@ -8,10 +8,10 @@ import React from "react";
 
 interface ButtomMenuBarProps {
     onLoginRequest?: () => void;
-    onBuyerRequest?: () => void;
+    onMeRequest?: () => void;
 }
 
-export const ButtomMenuBar = ({ onLoginRequest, onBuyerRequest }: ButtomMenuBarProps) => {
+export const ButtomMenuBar = ({ onLoginRequest, onMeRequest }: ButtomMenuBarProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     // const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
@@ -24,16 +24,16 @@ export const ButtomMenuBar = ({ onLoginRequest, onBuyerRequest }: ButtomMenuBarP
         onLoginRequest?.();
     }
 
-    const handleBuyerRequested = () => {
+    const handleMeRequested = () => {
         // setIsBuyerModalOpened(true);
         // setIsLoginModalOpened(false);
-        onBuyerRequest?.();
+        onMeRequest?.();
     }
 
     const handleSellerRequested = () => {
         // setIsSellerModalOpened(true);
         // setIsLoginModalOpened(false);
-        onBuyerRequest?.();
+        // onBuyerRequest?.();
     }
 
     return isMobile ? (<>
@@ -41,8 +41,8 @@ export const ButtomMenuBar = ({ onLoginRequest, onBuyerRequest }: ButtomMenuBarP
         <BottomNavigation showLabels>
             <BottomNavigationAction label="Home" icon={<HomeOutlined />} onClick={() => { window.location.href='/' }} />
             <BottomNavigationAction label="Requirement" icon={<FormatListBulleted />} onClick={() => { handleSellerRequested(); }} />
-            <BottomNavigationAction label="Chat" icon={<HomeOutlined />} onClick={() => { handleBuyerRequested(); }} />
-            <BottomNavigationAction label="Me" icon={<Person2Outlined />} onClick={() => {handleLoginRequested();}} />
+            <BottomNavigationAction label="Chat" icon={<HomeOutlined />} onClick={() => { handleMeRequested(); }} />
+            <BottomNavigationAction label="Me" icon={<Person2Outlined />} onClick={() => { handleMeRequested(); }} />
         </BottomNavigation>
     </Paper>
     {/* <LoginModal open={isLoginModalOpened} onLoginClosed={() => setIsLoginModalOpened(false)} />

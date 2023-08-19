@@ -163,14 +163,10 @@ export const ContextMenu = (props: ContextMenuProps) => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [title, setTitle] = useState(props.title);
     const [user, setUser] = useState<any>(null);
-    const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || '{}');
-    
-    useEffect(() => {
-        setUser(userInfo);
-    }, []);
+    const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
 
     useEffect(() => {
-        if (!user) {
+        if (userInfo && !user) {
             setUser(userInfo);
         }
     }, [userInfo]);
@@ -197,7 +193,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
     }
 
     const getName = () => {
-        return user ? `${user.nameTh} ${user.lastnameTh}` : '';
+        return user ? `${user?.nameTh || '-'} ${user?.lastnameTh || '-'}` : '';
     }
 
     const handleClose = () => {
