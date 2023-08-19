@@ -179,7 +179,6 @@ export const BuyerMenu = (props: BuyerMenuProps) => {
     }
 
     const handleSearchApplied = (payload: any) => {
-        console.log(payload);
         contentRef?.current?.contentWindow?.postMessage({
             target: 'buyerApp',
             type: 'search-requested',

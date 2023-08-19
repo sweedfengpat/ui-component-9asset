@@ -37,7 +37,7 @@ export const BuyerSearchModal = ({ open, onSearchRequested, onClose }: BuyerSear
     }, []);
 
     const onMessageReceived = (e: MessageEvent) => {
-        if (e.origin !== process.env.NEXT_PUBLIC_URL_BASE) {
+        if (e.origin !== "https://my.9asset.com") {
             return;
         }
         
