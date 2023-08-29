@@ -158,11 +158,17 @@ export const LayoutAppBar = (props: ILayoutProps) => {
         }
     }, []);
 
-    
+    const loginRequested = () => {
+        setIsLoginModalOpened(true);
+    };
 
     useEffect(() => {
         const unsub = getToken();
-        return () => { unsub && unsub(); };
+        window.addEventListener('loginrequested', loginRequested);
+        return () => { 
+            unsub && unsub();
+            window.removeEventListener('loginrequested', loginRequested)
+        };
     }, []);
 
     const getToken = () => {

@@ -37,9 +37,9 @@ export const BuyerSearchModal = ({ open, onSearchRequested, onClose }: BuyerSear
     }, []);
 
     const onMessageReceived = (e: MessageEvent) => {
-        if (e.origin !== "https://my.9asset.com") {
-            return;
-        }
+        // if (e.origin !== "https://my.9asset.com") {
+        //     return;
+        // }
         
         try {
             const { target, type, payload } = e.data;
@@ -65,7 +65,7 @@ export const BuyerSearchModal = ({ open, onSearchRequested, onClose }: BuyerSear
 
         <Box
             component={"iframe"}
-            src={`${process.env.NEXT_PUBLIC_SEARCH_URL_BASE}/mobile/th?isSubApp=true&target=buyerSearchModal`}
+            src={`${process.env.NEXT_PUBLIC_SEARCH_URL_BASE}/mobile/buyer?isSubApp=true&target=buyerSearchModal`}
             sx={{ height: '100%' }}
         >
 
