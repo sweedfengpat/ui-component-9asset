@@ -148,6 +148,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     
     const [menubar, setMenuBar] = useState<MenuBar>(props.menubar || []);
     const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
+    const [isLoginFromBuyer, setIsLoginFromBuyer] = useState<boolean>(false);
 
     useEffect(() => {
         if (!user) {
@@ -159,6 +160,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     }, []);
 
     const loginRequested = () => {
+        setIsLoginFromBuyer(false);
         setIsLoginModalOpened(true);
     };
 
@@ -167,7 +169,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
         window.addEventListener('loginrequested', loginRequested);
         return () => { 
             unsub && unsub();
-            window.removeEventListener('loginrequested', loginRequested)
+            window.removeEventListener('loginrequested', loginRequested);
         };
     }, []);
 
@@ -267,6 +269,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     const handleMeMenuRequested = () => {
         if (isAuth !== 'true') {
             setIsLoginModalOpened(true);
+            setIsLoginFromBuyer(true);
         } else {
             setIsBuyerModalOpened(true);
         }
@@ -295,7 +298,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     const handleLoginClosed = (isLoggedIn: boolean) => {
         setIsLoginModalOpened(false);
 
-        if (isLoggedIn) {
+        if (isLoggedIn && isLoginFromBuyer) {
             setIsBuyerModalOpened(true);
         }
     }
