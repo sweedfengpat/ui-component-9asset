@@ -1,4 +1,4 @@
-import { Drawer, Toolbar, useScrollTrigger, Divider, Box, Container, Grid, Button, BottomNavigation, useMediaQuery, useTheme, BottomNavigationAction, Paper, Dialog, Slide, IconButton } from "@mui/material";
+import { Drawer, Toolbar, useScrollTrigger, Divider, Box, Container, Grid, Button, BottomNavigation, useMediaQuery, useTheme, BottomNavigationAction, Paper, Dialog, Slide, IconButton, CssBaseline } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { TFunction, WithTranslation } from "react-i18next";
 import { Route, RouteComponentProps, RouteProps } from "react-router-dom";
@@ -18,18 +18,17 @@ import { BuyerMenu } from "./BuyerMenu";
 import { SellerMenu } from "./SellerMenu";
 import { ButtomMenuBar } from './ButtomBar';
 
-const MainLayoutRoot = styled.div({
-    display: 'block',
-    height: '100%',
-    overflow: 'hidden',
-    width: '100%',
+// const MainLayoutRoot = styled.div({
+//     display: 'block',
+//     height: '100%',
+//     overflow: 'hidden',
+//     width: '100%',
+// });
+const MainLayoutRoot = styled(Box)({
+    display: 'flex'
 });
 
 const drawerWidth = 255;
-const CustomDrawer = styled(Drawer)({
-    width: drawerWidth,
-    flexShrink: 0,
-});
 
 const MainContainer = styled.div({
     backgroundColor: '#f4f6f8',
@@ -40,24 +39,6 @@ const MainContainer = styled.div({
     height: '100%',
     overflow: 'auto'
 });
-
-interface ElevationScrollProps {
-    window?: () => Window;
-    children: React.ReactElement;
-}
-
-const ElevationScroll = (props: ElevationScrollProps) => {
-    const { children, window } = props;
-    const trigger = useScrollTrigger({
-        disableHysteresis: true,
-        threshold: 0,
-        target: window ? window() : undefined,
-    });
-
-    return React.cloneElement(children, {
-        elevation: trigger ? 4 : 0,
-    });
-}
 
 export interface MainLayoutRouteProps extends RouteProps, WithTranslation {
     profilemenu: ProfileMenuItem[];
@@ -201,48 +182,52 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                     return  this.props.isHeadlessMode ? (<MainLayoutRoot>{component}</MainLayoutRoot>):
                     (
                         <MainLayoutRoot>
-                            <ElevationScroll {...props}>
-                                <LayoutAppBar 
-                                    app={this.props.app}
-                                    logoPath = {Logo}
-                                    // mainLink
-                                    menubar={this.props.menubar ? this.props.menubar: this.menubar}
-                                    menuProfile={this.props.profilemenu}
-                                    // useExternalLinkComponent={false}
-                                    // onSubMenuItemClick
-                                    // onAppChange={(event)=> { console.log('onAppChange'); return {}; }}
-                                    allowNoLoginAccessSite={false}
-                                    userServiceUrl={`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`}
-                                    onLangChanged={this.onLangChanged}
+                            <CssBaseline />
+                            <LayoutAppBar 
+                                app={this.props.app}
+                                logoPath = {Logo}
+                                // mainLink
+                                menubar={this.props.menubar ? this.props.menubar: this.menubar}
+                                menuProfile={this.props.profilemenu}
+                                // useExternalLinkComponent={false}
+                                // onSubMenuItemClick
+                                // onAppChange={(event)=> { console.log('onAppChange'); return {}; }}
+                                allowNoLoginAccessSite={false}
+                                userServiceUrl={`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`}
+                                onLangChanged={this.onLangChanged}
 
 
-                                    //mainmenu={mainmenu}
+                                //mainmenu={mainmenu}
 
-                                    
-                                    onMobileFilterClick={(event)=> console.log('onMobileFilterClick')}
-                                    onMobileSearchClick={(event)=> console.log('onMobileSearchClick')}
+                                
+                                onMobileFilterClick={(event)=> console.log('onMobileFilterClick')}
+                                onMobileSearchClick={(event)=> console.log('onMobileSearchClick')}
 
-                                    onMenuClick={this.handleHotMenuClicked.bind(this)}
-                                    onProfileMenuClick={this.handleProfileMenuItemClicked.bind(this)}
-                                    onMenuBarItemClick={this.handleMenuBarItemClicked.bind(this)}
+                                onMenuClick={this.handleHotMenuClicked.bind(this)}
+                                onProfileMenuClick={this.handleProfileMenuItemClicked.bind(this)}
+                                onMenuBarItemClick={this.handleMenuBarItemClicked.bind(this)}
 
-                                    language={this.props.i18n.language as MainMenuLanguage}
-                                    t={this.props.t}
-                                />
-                            </ElevationScroll>
-                            <CustomDrawer
-                                variant="permanent"
-                                classes={{ paper: 'drawer-menu' }}
+                                language={this.props.i18n.language as MainMenuLanguage}
+                                t={this.props.t}
+                            />
+
+                            <Drawer
                                 sx={{
-                                    display: { xs: 'none', sm: 'block' },
-                                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                                    width: drawerWidth,
+                                    flexShrink: 0,
+                                    '& .MuiDrawer-paper': {
+                                        width: drawerWidth,
+                                        boxSizing: 'border-box',
+                                    },
+                                    display: { xs: 'none', sm: 'flex' }
                                 }}
+                                variant="permanent"
+                                anchor="left"
                             >
                                 <Toolbar />
                                 <Grid container style={{ height: '42px' }}>
                                 </Grid>
                                 <ProfileCard user={user}></ProfileCard>
-                              
                                 <Divider variant="middle"></Divider>
                                 <DrawerMenuFunctionComponent
                                     menu={this.props.drawermenu}
@@ -252,12 +237,12 @@ export class MainLayoutRoute extends Route<MainLayoutRouteProps> {
                                     tReady={this.props.tReady}
                                     i18n={this.props.i18n}
                                 />
-                            </CustomDrawer>
+                            </Drawer>
                             <MainContainer>
-                                <Box sx={{ minHeight: '100%', pt: 0 }} style={{ background: '#f4f6f8', width: '100%' }}>
+                                <Box sx={{ minHeight: '100%', pt: 0, background: '#f4f6f8', width: '100%', flexFlow: 1 }}>
                                     <Toolbar />
                                     <Grid container style={{ height: '42px' }}></Grid>
-                                    <Container maxWidth={false} sx={{ paddingTop: '10px', paddingX: '5px' }}>
+                                    <Container maxWidth={false} sx={{ paddingTop: { xs: '10px', sm:'25px' }, paddingX: '5px' }}>
                                         {component}
                                     </Container>
                                 </Box>

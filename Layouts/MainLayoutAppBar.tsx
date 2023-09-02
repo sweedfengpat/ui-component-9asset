@@ -310,100 +310,100 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     return (
     <ThemeProvider theme={theme}>
     <>
-    <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
-        <Toolbar>
-            <a href ={props.homeUrl || '/' }>
-                <img src={logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
-            </a>
-            
-            <Box sx={{ flexGrow: 1, pl: 4, display: { xs: 'flex', md: 'none' } }}>
-                <Button color="primary" variant="contained" disableElevation
-                    sx={{ 
-                        padding: '5px',
-                        borderRadius: '20px',
-                        minWidth: '24px',
-                        width: '34px !important'
-                    }}
-                    onClick={onMobileSearchClick}
-                >
-                    <SearchOutlined fontSize="medium" />
-                </Button>
-            </Box>
+        <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
+            <Toolbar>
+                <a href ={props.homeUrl || '/' }>
+                    <img src={logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
+                </a>
+                
+                <Box sx={{ flexGrow: 1, pl: 4, display: { xs: 'flex', md: 'none' } }}>
+                    <Button color="primary" variant="contained" disableElevation
+                        sx={{ 
+                            padding: '5px',
+                            borderRadius: '20px',
+                            minWidth: '24px',
+                            width: '34px !important'
+                        }}
+                        onClick={onMobileSearchClick}
+                    >
+                        <SearchOutlined fontSize="medium" />
+                    </Button>
+                </Box>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
-                <Button
-                    color="info"
-                    style={{ color: '#5e5e5e'}}
-                    onClick={()=> onMenuClick('project')}
-                >
-                    {`${props.t('project')}`}
-                </Button>
-                <Button
-                    color="primary"
-                    style={{ color: '#5e5e5e' }}
-                    onClick={()=> onMenuClick('sell')}
-                >
-                    {`${props.t('sell')}`}
-                </Button>
-                <Button
-                    color="primary"
-                    style={{ color: '#5e5e5e' }}
-                    onClick={()=> onMenuClick('rent')}
-                >
-                    {`${props.t('rent')}`}
-                </Button>
-                <div style={{position: 'absolute', left: '275px', width: '450px'}}>
-                    <AdvanceSearch />
+                <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
+                    <Button
+                        color="info"
+                        style={{ color: '#5e5e5e'}}
+                        onClick={()=> onMenuClick('project')}
+                    >
+                        {`${props.t('project')}`}
+                    </Button>
+                    <Button
+                        color="primary"
+                        style={{ color: '#5e5e5e' }}
+                        onClick={()=> onMenuClick('sell')}
+                    >
+                        {`${props.t('sell')}`}
+                    </Button>
+                    <Button
+                        color="primary"
+                        style={{ color: '#5e5e5e' }}
+                        onClick={()=> onMenuClick('rent')}
+                    >
+                        {`${props.t('rent')}`}
+                    </Button>
+                    <div style={{position: 'absolute', left: '275px', width: '450px'}}>
+                        <AdvanceSearch />
+                    </div>
+                </Box>
+                <div style={{ flexGrow: 1 }}></div>
+                {/* { this.renderSellerBuyerButtons() } */}
+                <div style={{marginRight: '10px'}}>
+                    { getUserDisplayName() }
                 </div>
-            </Box>
-            <div style={{ flexGrow: 1 }}></div>
-            {/* { this.renderSellerBuyerButtons() } */}
-            <div style={{marginRight: '10px'}}>
-                { getUserDisplayName() }
-            </div>
-            <div style={{ display: 'flex' }}>
-                <IconButton onClick={handeMenuClicked}>
-                    <AppsRounded fontSize="large"  />
-                </IconButton>
-            </div>
-            <div style={{ display: 'flex' }}>
-                <Profile
-                    user={user}
-                    t={props.t}
-                    language={props.language}
-                    isAuth={isAuth === 'true'}
-                    menuItems={props.menuProfile}
-                    onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
-                    onMenuClicked={handeProfileMenuClicked}
-                    onLoginRequested={handleLoginRequested}
-                />
-            </div>
-            <div style={{ display: 'flex' }}>
-                <IconButton onClick={handeMenuClicked}>
-                    <Menu fontSize="large"  />
-                </IconButton>
-            </div>
-        </Toolbar>
-        <Grid container 
-            direction={'row'} 
-            sx={{ 
-                background: '#f4762a',
-                height: '42px',
-                color: '#fffff',
-                display: { xs: 'none', sm: 'none', md: 'flex' } 
-            }} 
-            justifyContent='center'
-            alignItems='center'   
-        >
-            <Grid item maxWidth={'900px'}>
-                { renderMenuBar() }
+                <div style={{ display: 'flex' }}>
+                    <IconButton onClick={handeMenuClicked}>
+                        <AppsRounded fontSize="large"  />
+                    </IconButton>
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <Profile
+                        user={user}
+                        t={props.t}
+                        language={props.language}
+                        isAuth={isAuth === 'true'}
+                        menuItems={props.menuProfile}
+                        onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
+                        onMenuClicked={handeProfileMenuClicked}
+                        onLoginRequested={handleLoginRequested}
+                    />
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <IconButton onClick={handeMenuClicked}>
+                        <Menu fontSize="large"  />
+                    </IconButton>
+                </div>
+            </Toolbar>
+            <Grid container 
+                direction={'row'} 
+                sx={{ 
+                    background: '#f4762a',
+                    height: '42px',
+                    color: '#fffff',
+                    display: { xs: 'none', sm: 'none', md: 'flex' } 
+                }} 
+                justifyContent='center'
+                alignItems='center'   
+            >
+                <Grid item maxWidth={'900px'}>
+                    { renderMenuBar() }
+                </Grid>
             </Grid>
-        </Grid>
-    </AppBar>
-    { renderLoginModal() }
-    { renderMenu() }
-    <BuyerMenu open={isBuyernModalOpened} onClose={() => setIsBuyerModalOpened(false) } />
-    <ButtomMenuBar onMeRequest={handleMeMenuRequested} />
+        </AppBar>
+        { renderLoginModal() }
+        { renderMenu() }
+        <BuyerMenu open={isBuyernModalOpened} onClose={() => setIsBuyerModalOpened(false) } />
+        <ButtomMenuBar onMeRequest={handleMeMenuRequested} />
     </>
     </ThemeProvider>
     );
