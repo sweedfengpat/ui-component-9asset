@@ -9,7 +9,6 @@ interface ProfileCardProps {
 
 export class ProfileCard extends React.Component<ProfileCardProps, any> {
 
-   
     getFirstLetter = (user: any) => {
         const userInfo = user;
         if (userInfo) {
@@ -52,7 +51,7 @@ export class ProfileCard extends React.Component<ProfileCardProps, any> {
                     display: 'flex',
                     flexDirection: 'column',
                     p: 2,
-                    mt: 6
+                    mt: 3
                     }}
                 >
                     <Avatar style={{ height: 60, width: 60, marginBottom: 10 }} >{avatar}</Avatar>

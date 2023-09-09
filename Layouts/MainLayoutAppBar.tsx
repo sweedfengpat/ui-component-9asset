@@ -29,7 +29,7 @@ import SearchIcon from '@mui/icons-material/Search';
 // import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { IMenuItem } from "./DrawerMenu";
+
 import { Profile } from "./Profile";
 import { ProfileMenuItem } from "./ProfileMenu";
 import { useTranslation } from "react-i18next";
@@ -40,7 +40,7 @@ import { ButtomMenuBar } from "./ButtomBar";
 import theme from "../theme";
 import { BuyerMenu } from "./BuyerMenu";
 
-export type MainMenuLanguage = 'th' | 'en' | 'cn';
+export type MainMenuLanguage = 'th' | 'en' | 'cn' | string;
 
 export type MenuBar = { text: string, link: string, items?: MenuBar }[];
 
@@ -370,13 +370,13 @@ export const LayoutAppBar = (props: ILayoutProps) => {
                 <div style={{ display: 'flex' }}>
                     <Profile
                         user={user}
-                        t={props.t}
-                        language={props.language}
-                        isAuth={isAuth === 'true'}
-                        menuItems={props.menuProfile}
-                        onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
-                        onMenuClicked={handeProfileMenuClicked}
-                        onLoginRequested={handleLoginRequested}
+                        // t={props.t}
+                        // language={props.language}
+                        // isAuth={isAuth === 'true'}
+                        // menuItems={props.menuProfile}
+                        // onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
+                        // onMenuClicked={handeProfileMenuClicked}
+                        // onLoginRequested={handleLoginRequested}
                     />
                 </div>
                 <div style={{ display: 'flex' }}>
