@@ -1,7 +1,7 @@
 import { Box, Button, CssBaseline, Divider, Drawer, Grid, Toolbar, styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate } from "react-router";
-import { BuyerAppBar as AppBar } from "../components/BuyerAppBar";
+import { BuyerAppBar as AppBar } from "../components/AppBar/BuyerAppBar";
 import ProfileCard from "../components/ProfileCard";
 import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
 import { EmailOutlined, EventNote, FolderSpecialOutlined, PageviewOutlined, History as HistoryIcon, AccountCircleOutlined } from "@mui/icons-material";
