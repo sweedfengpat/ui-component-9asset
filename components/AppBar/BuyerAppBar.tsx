@@ -1,5 +1,5 @@
-import { AppBar, styled, useTheme } from "@mui/material";
-import logoPath from '../assets/images/9asset-logo.png';
+import { AppBar, useTheme } from "@mui/material";
+import logoPath from '../../assets/images/9asset-logo.png';
 import { DesktopToolbar } from "../Toolbar/Desktop";
 import { MobileToolbar } from "../Toolbar/Mobile";
 
