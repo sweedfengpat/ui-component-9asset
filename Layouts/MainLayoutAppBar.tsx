@@ -38,7 +38,6 @@ import { LoginModal } from "../components/LoginModal";
 import { MainMenu } from "./MainMenu";
 import { ButtomMenuBar } from "./ButtomBar";
 import theme from "../theme";
-import { BuyerMenu } from "./BuyerMenu";
 
 export type MainMenuLanguage = 'th' | 'en' | 'cn' | string;
 
@@ -143,13 +142,8 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     const [logoPath, ] = useState<string|undefined>(props.logoPath);
     const [isAuth, setIsAuth] = useState<'true'|'false'>('false');
     
-    const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
-    const [isBuyernModalOpened, setIsBuyerModalOpened] = useState<boolean>(false);
-    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-    
+
     const [menubar, setMenuBar] = useState<MenuBar>(props.menubar || []);
-    const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
-    const [isLoginFromBuyer, setIsLoginFromBuyer] = useState<boolean>(false);
 
     useEffect(() => {
         if (!user) {
@@ -158,20 +152,6 @@ export const LayoutAppBar = (props: ILayoutProps) => {
                 setUser(userVal);
             }
         }
-    }, []);
-
-    const loginRequested = () => {
-        setIsLoginFromBuyer(false);
-        setIsLoginModalOpened(true);
-    };
-
-    useEffect(() => {
-        const unsub = getToken();
-        window.addEventListener('loginrequested', loginRequested);
-        return () => { 
-            unsub && unsub();
-            window.removeEventListener('loginrequested', loginRequested);
-        };
     }, []);
 
     const getToken = () => {
@@ -252,30 +232,14 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     }
 
     const handeMenuClicked = (e: any) => {
-        setElementRef(e.currentTarget as HTMLElement);
-        setIsMenuOpen(true);
+        // setElementRef(e.currentTarget as HTMLElement);
+        // setIsMenuOpen(true);
     }
 
     const handleMenuClosed = () => {
-        setElementRef(null);
-        setIsMenuOpen(false);
+        // setElementRef(null);
+        // setIsMenuOpen(false);
     }
-
-    const handleLoginRequested = () => {
-        if (isAuth !== 'true') {
-            setIsLoginModalOpened(true);
-        }
-    }
-
-    const handleMeMenuRequested = () => {
-        if (isAuth !== 'true') {
-            setIsLoginModalOpened(true);
-            setIsLoginFromBuyer(true);
-        } else {
-            setIsBuyerModalOpened(true);
-        }
-    }
-
 
     const renderMenuBar = () => {
         if(props.menubar) {
@@ -290,23 +254,6 @@ export const LayoutAppBar = (props: ILayoutProps) => {
             onMenuItemClick={(item) => props.onMenuBarItemClick && props.onMenuBarItemClick(item)}
         />);
     }
-
-    const renderMenu = () => {
-        
-        return <MainMenu logo={logoPath} open={isMenuOpen} elementRef={elementRef} onMenuClose={handleMenuClosed} />;
-    }
-
-    const handleLoginClosed = (isLoggedIn: boolean) => {
-        setIsLoginModalOpened(false);
-
-        if (isLoggedIn && isLoginFromBuyer) {
-            setIsBuyerModalOpened(true);
-        }
-    }
-
-    const renderLoginModal = () => {
-        return <LoginModal open={isLoginModalOpened} onLoginClosed={handleLoginClosed} />
-    };
 
     return (
     <ThemeProvider theme={theme}>
@@ -401,10 +348,6 @@ export const LayoutAppBar = (props: ILayoutProps) => {
                 </Grid>
             </Grid>
         </AppBar>
-        { renderLoginModal() }
-        { renderMenu() }
-        <BuyerMenu open={isBuyernModalOpened} onClose={() => setIsBuyerModalOpened(false) } />
-        <ButtomMenuBar onMeRequest={handleMeMenuRequested} onRequirementClick={props.onRequirementClick} />
     </>
     </ThemeProvider>
     );

@@ -1,5 +1,5 @@
 import { AppBar, styled, useTheme } from "@mui/material";
-import Logo from '../assets/images/9asset-logo.png';
+import logoPath from '../assets/images/9asset-logo.png';
 import { DesktopToolbar } from "../Toolbar/Desktop";
 import { MobileToolbar } from "../Toolbar/Mobile";
 
@@ -18,7 +18,7 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
 
   return (
   <AppBar position="fixed" color={'inherit'} style={{ zIndex: theme.zIndex.drawer + 1 }}>
-    <DesktopToolbar namespace={props.namespace} />
+    <DesktopToolbar namespace={props.namespace} logoPath={logoPath} />
     <MobileToolbar
       title={props.title}
       isBackable={props.isBackable}

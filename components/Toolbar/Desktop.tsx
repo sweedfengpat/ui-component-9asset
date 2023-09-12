@@ -1,5 +1,4 @@
 import { Box, Button, Grid, IconButton, Toolbar } from "@mui/material";
-import logoPath from '../../assets/images/9asset-logo.png';
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { AppsRounded } from "@mui/icons-material";
@@ -8,12 +7,14 @@ import { AdvanceSearch } from "../../Layouts/MainLayoutAppBar";
 
 export interface DesktopToolbarProps {
   namespace: string;
+  logoPath?: string;
   onToolbarMenuClick?: (type: string) => void;
 }
 
 export const DesktopToolbar = (props: DesktopToolbarProps) => {
   const { t, i18n } = useTranslation(props.namespace);
   const [user, setUser] = useState<any>(null);
+  const [logoPath, ] = useState<string|undefined>(props.logoPath);
 
   useEffect(() => {
     const userVal = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
