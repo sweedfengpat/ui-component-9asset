@@ -93,7 +93,6 @@ export const BuyerLayout = (props: BuyerLayoutProps) => {
   const navigate = useNavigate();
 
   const getTitle = () => {
-    console.log(location);
     return locationMap.get(location.pathname) || 'Buyer';
   }
 
