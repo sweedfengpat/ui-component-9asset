@@ -7,6 +7,8 @@ import { SellerMobileToolBar as MobileToolbar } from "../Toolbar/SellerMobile";
 export interface SellerAppBarProps {
   namespace: string;
   title: string;
+
+  additionalAction?: React.ReactNode;
 }
 
 export const SellerAppBar = (props: SellerAppBarProps) => {
@@ -18,6 +20,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
     <MobileToolbar
       title={props.title}
       logoPath={logoPath}
+      additionalAction={props.additionalAction}
     />
   </AppBar>
   );

@@ -69,6 +69,9 @@ export const SellerMobileToolBar = (props: SellerMobileToolBarProps) => {
         </Box>
 
         <div style={{ flexGrow: 1 }}></div>
+        <Box sx={{ display: 'flex' }}>
+          { props.additionalAction }
+        </Box>
         <Box component={"div"} sx={{ display: { xs: 'flex', sm: 'none' }}}>
           <IconButton onClick={handleMenuClicked}>
             <Menu fontSize="large" color="primary" />
