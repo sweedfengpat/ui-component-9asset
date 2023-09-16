@@ -9,6 +9,7 @@ const StyledToolbar = styled(Toolbar)(({theme}) => ({
 
 export interface BuyerMobileToolbarProps {
   title: string;
+  logoPath: string;
   isBackable?: boolean;
   additionalAction?: React.ReactNode;
   onBackRequested?: () => void;
@@ -16,6 +17,7 @@ export interface BuyerMobileToolbarProps {
 }
 
 export const BuyerMobileToolbar = (props: BuyerMobileToolbarProps) => {
+
   const closeButton = (
   <IconButton 
     sx={{ position: 'absolute', right: 4, color: (theme) => theme.palette.grey[500] }}
@@ -39,15 +41,18 @@ export const BuyerMobileToolbar = (props: BuyerMobileToolbarProps) => {
     >
       <Box component="div" sx={{ display: 'inline-flex', alignItems: 'center' }}>
         {
-          props.isBackable && (
+          props.isBackable ? (
           <IconButton 
             sx={{ }}
             color="primary"
             onClick={() => { props.onBackRequested?.() }}
           >
             <NavigateBefore />
-          </IconButton>)
+          </IconButton>) : (
+          <img src={props.logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
+          )
         }
+      
         <Box component="span" sx={{ pl: props.isBackable ? 1 : 2, paddingTop: '0px', fontWeight: '600', color: 'black' }}>{props.title}</Box>
       </Box>
       <Box sx={{ display: 'flex' }}>

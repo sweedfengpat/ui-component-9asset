@@ -10,11 +10,19 @@ export interface SellerLayoutProps {
 }
 
 export const SellerLayout = (props: SellerLayoutProps) => {
+
+  const getTitle = () => {
+    return 'Seller Center';
+  }
+
   return (
     <LayoutRoot>
       <CssBaseline />
+      <AppBar
+        namespace={props.namespace || 'common'}
+        title={getTitle()}
+      />
 
-      <AppBar namespace={props.namespace || 'common'} />
     </LayoutRoot>
   );
 }

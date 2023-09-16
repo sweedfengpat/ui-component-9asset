@@ -21,6 +21,7 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
     <DesktopToolbar namespace={props.namespace} logoPath={logoPath} />
     <MobileToolbar
       title={props.title}
+      logoPath={logoPath}
       isBackable={props.isBackable}
       additionalAction={props.additionalAction}
       onBackRequested={props.onBackRequested}
