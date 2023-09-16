@@ -1,11 +1,23 @@
-import { Menu, NavigateBefore } from "@mui/icons-material";
-import { Box, IconButton, Toolbar, styled } from "@mui/material";
+import { Close, Menu, NavigateBefore } from "@mui/icons-material";
+import { Box, Dialog, IconButton, Slide, Toolbar, styled } from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
+import React from "react";
+import { useState } from "react";
 
 const StyledToolbar = styled(Toolbar)(({theme}) => ({
   '@media all': {
     minHeight: 48,
   },
 }));
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="right" ref={ref} {...props} timeout={300} />;
+});
 
 export interface SellerMobileToolBarProps {
   title: string;
@@ -17,11 +29,13 @@ export interface SellerMobileToolBarProps {
 }
 
 export const SellerMobileToolBar = (props: SellerMobileToolBarProps) => {
-  const handleMenuClicked = () => {
+  const [openMenu, setOpenMenu] = useState<boolean>(false);
 
+  const handleMenuClicked = () => {
+    setOpenMenu(true);
   }
 
-  return (
+  return (<>
     <StyledToolbar
       sx={{ display: { xs:'flex', sm: 'none'},
       paddingLeft: { xs: '0px', sm:'16px' },
@@ -62,5 +76,25 @@ export const SellerMobileToolBar = (props: SellerMobileToolBarProps) => {
         </Box>
       </Box>
     </StyledToolbar>
-  );
+    <Dialog
+      open={openMenu}
+      fullScreen
+      TransitionComponent={Transition}
+    >
+      <IconButton
+        edge="start"
+        color="inherit"
+        aria-label="close"
+        sx={{
+            position: 'absolute',
+            right: 4,
+            top: 4,
+            color: (theme) => theme.palette.grey[500],
+        }}
+        onClick={() => setOpenMenu(false)}
+        >
+        <Close />
+        </IconButton>
+    </Dialog>
+  </>);
 }
