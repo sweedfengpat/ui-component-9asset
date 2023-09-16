@@ -49,11 +49,11 @@ export const BuyerMobileToolbar = (props: BuyerMobileToolbarProps) => {
           >
             <NavigateBefore />
           </IconButton>) : (
-          <img src={props.logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
+          <Box component={"img"} src={props.logoPath} sx={{ height: '40px', pl: 1 }} alt="'9Asset Logo'" />
           )
         }
       
-        <Box component="span" sx={{ pl: props.isBackable ? 1 : 2, paddingTop: '0px', fontWeight: '600', color: 'black' }}>{props.title}</Box>
+        <Box component="span" sx={{ pl: 1, paddingTop: '0px', fontWeight: '600', color: 'black' }}>{props.title}</Box>
       </Box>
       <Box sx={{ display: 'flex' }}>
         { props.additionalAction }
