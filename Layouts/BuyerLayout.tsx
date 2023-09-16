@@ -83,7 +83,7 @@ const drawerMenu = [
         link: '/logout',
       },
     ]
-  }
+  },
 ] as DrawerMenuItem[];
 
 export const BuyerLayout = (props: BuyerLayoutProps) => {

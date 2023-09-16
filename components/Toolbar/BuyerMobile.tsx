@@ -58,6 +58,7 @@ export const BuyerMobileToolbar = (props: BuyerMobileToolbarProps) => {
       <Box sx={{ display: 'flex' }}>
         { props.additionalAction }
       </Box>
+      
     </Box>
     { props.onClose ? closeButton : null } 
   </StyledToolbar>

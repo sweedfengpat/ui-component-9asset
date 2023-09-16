@@ -52,9 +52,9 @@ export const MobileToolbar = (props: ToolbarProps) => {
     
     <div style={{ flexGrow: 1 }}></div>
     <Box component={"div"} sx={{ display: { xs: 'flex', sm: 'none' }}}>
-    <IconButton onClick={handleMenuClicked}>
-      <Menu fontSize="large"  />
-    </IconButton>
+      <IconButton onClick={handleMenuClicked}>
+        <Menu fontSize="large"  />
+      </IconButton>
     </Box>
   </Toolbar>
   { renderMenu () }

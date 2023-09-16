@@ -17,6 +17,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
     <DesktopToolbar namespace={props.namespace} logoPath={logoPath} />
     <MobileToolbar
       title={props.title}
+      logoPath={logoPath}
     />
   </AppBar>
   );

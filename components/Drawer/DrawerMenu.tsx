@@ -55,7 +55,7 @@ export const DrawerMenu = (props: DrawerMenuProps) => {
     <React.Fragment key={item.key}>
       <ListItem
         key={item.title}
-        sx={{ paddingLeft: `${(indent*8) + 8}px` }}
+        sx={{ paddingLeft: `${(indent*8) + 8}px`, cursor: 'pointer' }}
         onClick={(e) => handleMenuClick(e, item)}
       >
         <ListItemIcon sx={{ minWidth: `32px` }}>
