@@ -113,7 +113,7 @@ export const BuyerLayout = (props: BuyerLayoutProps) => {
       <Button
         variant="text"
         sx={{ p: 0, textTransform: 'none', fontWeight: '600' }}
-        onClick={() => window.location.href = `${process.env.REACT_APP_BASE_URL}/seller` }
+        onClick={() => window.location.href = `${process.env.REACT_APP_BASE_SELLER_URL}` }
       >
         Seller Center
       </Button>
