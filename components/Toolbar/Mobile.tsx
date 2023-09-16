@@ -5,12 +5,6 @@ import { MainMenu } from "../../Layouts/MainMenu";
 
 export interface ToolbarProps {
   logoPath?: string;
-
-  // title: string;
-  // isBackable?: boolean;
-  // additionalAction?: React.ReactNode;
-  // onBackRequested?: () => void;
-  // onClose?: () => void;
 }
 
 export const MobileToolbar = (props: ToolbarProps) => {
