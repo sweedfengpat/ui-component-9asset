@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { DesktopToolbar } from '../Toolbar/Desktop';
 import { ButtomMenuBar } from "../../Layouts/ButtomBar";
 import { BuyerModal } from "../../Layouts/BuyerModal";
-import { BuyerMobileToolbar as MobileToolbar } from "../Toolbar/BuyerMobile";
+import { MobileToolbar } from "../Toolbar/Mobile";
 
 import natheme from "../../theme";
 import { FirebaseApp } from "firebase/app";

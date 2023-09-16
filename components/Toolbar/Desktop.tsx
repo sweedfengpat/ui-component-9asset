@@ -22,6 +22,10 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
   }, []);
 
   const getUserDisplayName = () => {
+    if (!i18n.language) {
+      return '';
+    }
+
     const lang = i18n.language.toLowerCase();
     if(lang === 'en') {
         return user && user.nameEn ? user.lastnameEn : '' ;

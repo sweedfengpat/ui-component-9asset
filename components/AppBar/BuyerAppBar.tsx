@@ -1,7 +1,7 @@
 import { AppBar, useTheme } from "@mui/material";
 import logoPath from '../../assets/images/9asset-logo.png';
 import { DesktopToolbar } from "../Toolbar/Desktop";
-import { MobileToolbar } from "../Toolbar/Mobile";
+import { BuyerMobileToolbar as MobileToolbar } from "../Toolbar/BuyerMobile";
 
 export interface BuyerAppBarProps {
   namespace: string;

@@ -1,4 +1,4 @@
-import { Avatar, Dialog, DialogContent, 
+import { Avatar, DialogContent, 
     Divider, List, ListItem, ListItemAvatar, 
     ListItemButton, ListItemIcon, ListItemText, 
     ListSubheader, MenuItem, MenuList, 
@@ -8,7 +8,6 @@ import { TFunction } from "react-i18next";
 import { MenuDialogTitle } from "../components/MenuDialogTitle";
 import { MainMenuLanguage } from "./MainLayoutAppBar";
 import { getUserName } from "./Profile";
-import { UserInfo } from "firebase/auth";
 import { ChevronLeft } from "@mui/icons-material";
 import React from "react";
 import { TransitionProps } from "@mui/material/transitions";
@@ -77,7 +76,7 @@ export interface HeaderMenuProps {
 
 export const ProfileMenu = (props: HeaderMenuProps) => {
 
-    const { t, language } = props;
+    const { t } = props;
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));

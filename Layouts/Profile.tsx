@@ -1,29 +1,28 @@
 import { Avatar } from "@mui/material";
 import { UserInfo } from "firebase/auth";
 import { useRef, useState } from "react";
-import { TFunction, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { ProfileMenu, ProfileMenuItem } from "./ProfileMenu";
 import { MainMenuLanguage } from "./MainLayoutAppBar";
-import i18next from "i18next";
 
 const getFirstLetter = (userInfo: UserInfo | null) => {
-    if (userInfo) {
-        if (userInfo.displayName) {
-            return userInfo.displayName[0];
-        } else if (userInfo.email) {
-            return (userInfo.email as string)[0].toUpperCase();
-        }
+  if (userInfo) {
+    if (userInfo.displayName) {
+        return userInfo.displayName[0];
+    } else if (userInfo.email) {
+        return (userInfo.email as string)[0].toUpperCase();
     }
-    return undefined;
+  }
+  return undefined;
 }
 
 export const getUserName = (user: UserInfo | null) => {
-    const username = getFirstLetter(user);
-    if(username){
-        return username;
-    }
+  const username = getFirstLetter(user);
+  if(username){
+    return username;
+  }
 
-    return '9';
+  return '9';
 }
 
 export interface ProfileProps {

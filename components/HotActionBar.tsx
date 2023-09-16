@@ -1,8 +1,7 @@
-import { Button } from "@mui/material";
+import { Box, Button, styled } from "@mui/material";
 import React from "react";
-import styled from "styled-components";
 
-const MainContainer = styled.div({
+const MainContainer = styled(Box)({
     display: 'flex',
     marginTop: '15px',
     width: '100%'
