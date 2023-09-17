@@ -46,7 +46,7 @@ export const BuyerModal = (props: BuyerMenuProps) => {
   >
     <Box
       component="iframe"
-      src={"http://localhost:3000/buyer"}
+      src={process.env.NEXT_PUBLIC_BUYER_URL}
       sx={{ width: '100vw', height: '100vh', overflow: 'unset' }}
     />
   </Dialog>
