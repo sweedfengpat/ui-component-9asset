@@ -1,8 +1,9 @@
+import React from "react";
 import { Avatar } from "@mui/material";
 import { UserInfo } from "firebase/auth";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ProfileMenu, ProfileMenuItem } from "./ProfileMenu";
+import { ProfileMenu } from "../components/ProfileMenu/ProfileMenu";
 import { MainMenuLanguage } from "./MainLayoutAppBar";
 
 const getFirstLetter = (userInfo: UserInfo | null) => {
@@ -35,8 +36,8 @@ export interface ProfileProps {
     // isAuth: boolean;
 
     // onLangChanged?: (lng: MainMenuLanguage) => void;
-    onMenuClicked?: (item: ProfileMenuItem) => void;
-    onLoginRequested?: () => void;
+    // onMenuClicked?: (item: ProfileMenuItem) => void;
+    onMenuClicked?: (item: 'login' | 'register' | 'logout' | string) => void;
 }
 
 export const Profile = (props: ProfileProps) => {
@@ -47,43 +48,49 @@ export const Profile = (props: ProfileProps) => {
 
   const handleLoginRequested = () => {
     setIsMenuOpen(false);
-    props.onLoginRequested?.();
+    props.onMenuClicked?.('login');
   };
 
+  const handleRegisterRequested = () => {
+    setIsMenuOpen(false);
+    props.onMenuClicked?.('register');
+  }
+
   const renderMenu = () => (
-  <ProfileMenu
-    t={t}
-    language={i18n.language}
-    anchorElement={avatarRef.current}
-    user={props.user}
-    isAuth={!!props.user}
-    isOpen={isMenuOpen}
-    items={[]}
+    <ProfileMenu
+      open={isMenuOpen}
+      anchorElement={avatarRef.current}
+      onClose={() => { setIsMenuOpen(false); }}
+      onLoginRequest={handleLoginRequested}
+      onRegisterRequest={handleRegisterRequested}
+  //   user={props.user}
+  //   isAuth={!!props.user}
+  //   items={[]}
     
-    onLoginRequest={handleLoginRequested}
-    onLangChanged={(ln: MainMenuLanguage) => { i18n.changeLanguage(ln); }}
-    onMenuClose={() => { setIsMenuOpen(false); }}
-    onMenuClicked={
-      (item) => {
-        setIsMenuOpen(false);
-        props.onMenuClicked && props.onMenuClicked(item);
-      }
-    }
-  />);
+  //   onLoginRequest={handleLoginRequested}
+  //   onLangChanged={(ln: MainMenuLanguage) => { i18n.changeLanguage(ln); }}
+  //   onMenuClicked={
+  //     (item) => {
+  //       setIsMenuOpen(false);
+  //       props.onMenuClicked && props.onMenuClicked(item);
+  //     }
+  //   }
+    />
+  );
 
   const handleAvatarClicked = (event: React.MouseEvent<HTMLElement>) => {
-      // setIsMenuOpen(!isMenuOpen);
-      // setAvatarRef(event.currentTarget);
-      handleLoginRequested();
+    setIsMenuOpen(true);
   };
 
     return (<>
     <Avatar
-        alt="9 Asset"
-        sx={{ height: '30px', width: '30px', margin: '12px', display: { xs: 'none', sm: 'flex' } }}
-        ref={avatarRef}
-        onClick={handleAvatarClicked}
-    >{ getUserName(props.user) }</Avatar>
-    {/* { renderMenu() } */}
+      alt="9 Asset"
+      sx={{ height: '30px', width: '30px', margin: '12px', display: { xs: 'none', sm: 'flex' } }}
+      ref={avatarRef}
+      onClick={handleAvatarClicked}
+    >
+      { getUserName(props.user) }
+    </Avatar>
+    { renderMenu() }
     </>);
 }

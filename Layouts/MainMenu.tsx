@@ -123,7 +123,17 @@ enum MenuType {
     Country
 }
 
-export const MainMenu = ({ logo, open, elementRef, onMenuClose }: any) => {
+export interface MainMenuProps {
+    logo?: string;
+    open: boolean;
+    elementRef: HTMLElement | null;
+
+    onMenuClicked?: (item: string) => void;
+    onMenuClose?: () => void;
+}
+
+export const MainMenu = (props: MainMenuProps) => {
+    const { logo, open, elementRef, onMenuClose } = props;
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const { t, i18n } = useTranslation();
@@ -161,6 +171,9 @@ export const MainMenu = ({ logo, open, elementRef, onMenuClose }: any) => {
         { label: 'English', onClick: () => onLanguageChanged('en') },
         { label: '中文', onClick: () => onLanguageChanged('cn') }
     ];
+    const loginBasePath = process.env.REACT_APP_DOMAIN
+        || process.env.NEXT_PUBLIC_DOMAIN
+        || 'https://my.9asset.com';
 
     const generateMobileGenericMenu = (item: any, index: number) => {
         return (
@@ -205,12 +218,50 @@ export const MainMenu = ({ logo, open, elementRef, onMenuClose }: any) => {
         )
     }
 
+    const handleLogin = () => {
+        props.onMenuClicked?.('login');
+    }
+
+    const renderNonAuthMenu = () => (
+        <ListItem component="div" disablePadding>
+          <ListItemButton 
+            sx={{ textAlign: 'center', marginRight: '10px' }}
+            onClick={handleLogin}
+            component="a"
+          >
+            <ListItemText
+              primary={t('Sign in')}
+              primaryTypographyProps={{
+                color: '#f4762a',
+                fontWeight: 'medium',
+                variant: 'body1',
+              }}
+            />
+          </ListItemButton>
+            { t('or') }
+          <ListItemButton component="a" 
+            href= {`${loginBasePath}/login/register`}
+            sx={{ textAlign: 'center', marginLeft: '10px' }}
+          >
+            <ListItemText
+              primary={t('Sign up')}
+              primaryTypographyProps={{
+                color: '#f4762a',
+                fontWeight: 'medium',
+                variant: 'body1',
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
+      );
+
     const renderMenuItems = () => {
 
         if (isMobile) {
             if (menuType === MenuType.Default) {
                 return (
                 <List>
+                    {renderNonAuthMenu()}
                     { generalMenu.map(generateMobileGenericMenu) }
                     <Divider sx={{ my: 1 }} />
                     { configurationMenu.map(generateMobileConfigMenu) }

@@ -5,6 +5,8 @@ import { MainMenu } from "../../Layouts/MainMenu";
 
 export interface ToolbarProps {
   logoPath?: string;
+
+  onMenuItemClicked?: (type: string) => void;
 }
 
 export const MobileToolbar = (props: ToolbarProps) => {
@@ -13,14 +15,27 @@ export const MobileToolbar = (props: ToolbarProps) => {
   const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
   const renderMenu = () => {
-    return <MainMenu logo={logoPath} open={isMenuOpen} elementRef={elementRef} onMenuClose={handleMenuClosed} />;
+    return <MainMenu
+      logo={logoPath}
+      open={isMenuOpen}
+      elementRef={elementRef}
+      onMenuClose={handleMenuClosed}
+      onMenuClicked={handleMainMenuItemClicked}
+    />;
+  }
+
+  const handleMainMenuItemClicked = (type: string) => {
+    if (type === 'login') {
+      handleMenuClosed();
+      setTimeout(() => { props.onMenuItemClicked?.(type); }, 400);
+    }
   }
 
   const handleMobileSearchClick = () => {
 
   }
 
-  const handleMenuClosed = (e: MouseEvent) => {
+  const handleMenuClosed = () => {
     setElementRef(null);
     setIsMenuOpen(false);
   }

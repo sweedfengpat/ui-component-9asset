@@ -24,7 +24,6 @@ import {
 import React, { MutableRefObject, RefObject, useEffect, useRef, useState} from "react";
 import { Item, MenuBarItem } from "./MenuBarItem";
 import axios from 'axios';
-import SearchIcon from '@mui/icons-material/Search';
 
 // import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
@@ -34,9 +33,7 @@ import { Profile } from "./Profile";
 import { ProfileMenuItem } from "./ProfileMenu";
 import { useTranslation } from "react-i18next";
 import { TransitionProps } from "@mui/material/transitions";
-import { LoginModal } from "../components/LoginModal";
-import { MainMenu } from "./MainMenu";
-import { ButtomMenuBar } from "./ButtomBar";
+
 import theme from "../theme";
 
 export type MainMenuLanguage = 'th' | 'en' | 'cn' | string;

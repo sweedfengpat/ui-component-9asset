@@ -1,10 +1,9 @@
 import { Avatar, DialogContent, 
-    Divider, List, ListItem, ListItemAvatar, 
-    ListItemButton, ListItemIcon, ListItemText, 
-    ListSubheader, MenuItem, MenuList, 
-    Popover, Typography, styled, useMediaQuery, useTheme, Slide } from "@mui/material";
+  Divider, List, ListItem, ListItemAvatar, 
+  ListItemButton, ListItemIcon, ListItemText, 
+  ListSubheader, MenuItem, MenuList, 
+  Popover, Typography, styled, useMediaQuery, useTheme, Slide } from "@mui/material";
 import { useEffect, useState } from "react";
-import { TFunction } from "react-i18next";
 import { MenuDialogTitle } from "../components/MenuDialogTitle";
 import { MainMenuLanguage } from "./MainLayoutAppBar";
 import { getUserName } from "./Profile";
@@ -12,16 +11,17 @@ import { ChevronLeft } from "@mui/icons-material";
 import React from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { MenuDialog } from "./MainMenu";
+import { useTranslation } from "next-i18next";
 
 type MenuType = 'default' | 'language' | 'currency';
 
 export interface ProfileMenuItem {
-    text: string;
-    disabled?: boolean;
-    link?: string;
-    target?: string;
+  text: string;
+  disabled?: boolean;
+  link?: string;
+  target?: string;
 
-    items?: ProfileMenuItem[];
+  items?: ProfileMenuItem[];
 }
 
 const NMenuItem = styled(MenuItem)(({ theme }) => ({
@@ -58,8 +58,6 @@ const Transition = React.forwardRef(function Transition(
   });
 
 export interface HeaderMenuProps {
-    t: TFunction<string, undefined>;
-    language: MainMenuLanguage;
     items: ProfileMenuItem[];
 
     user: any;
@@ -76,7 +74,7 @@ export interface HeaderMenuProps {
 
 export const ProfileMenu = (props: HeaderMenuProps) => {
 
-    const { t } = props;
+    const { t, i18n } = useTranslation();
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -88,29 +86,29 @@ export const ProfileMenu = (props: HeaderMenuProps) => {
     const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
     const DisplayLanguage: { [index in MainMenuLanguage]: string} = {
-        'en': 'English',
-        'th': 'ไทย',
-        'cn': 'Chinese' 
+      'en': 'English',
+      'th': 'ไทย',
+      'cn': 'Chinese' 
     }
 
     useEffect(() => {
-        setElementRef(props.anchorElement);
+      setElementRef(props.anchorElement);
     }, [props.anchorElement]);
 
     const getName = () => {
-        const currentLanguage = props.language;
-        if (props.user) {
-            if(currentLanguage === 'en') {
-                return `${props.user.nameEn || '' } ${props.user.lastnameEn || '' }`.trim();
-            } else if(currentLanguage === 'cn') {
-                return `${props.user.nameCn || '' } ${props.user.lastnameCn || '' }`.trim();
-            } else {
-                return `${props.user.nameTh || '' } ${props.user.lastnameTh || '' }`.trim();
-            }
+      const currentLanguage = i18n.language || 'th';
+      if (props.user) {
+        if(currentLanguage === 'en') {
+          return `${props.user.nameEn || '' } ${props.user.lastnameEn || '' }`.trim();
+        } else if(currentLanguage === 'cn') {
+          return `${props.user.nameCn || '' } ${props.user.lastnameCn || '' }`.trim();
+        } else {
+          return `${props.user.nameTh || '' } ${props.user.lastnameTh || '' }`.trim();
         }
-        else {
-            return '';
-        }
+      }
+      else {
+        return '';
+      }
     }
 
     const handleLogin = () => {
@@ -134,43 +132,43 @@ export const ProfileMenu = (props: HeaderMenuProps) => {
     }
 
     const renderPopoverLangMenu = () => {
-        return (
-            <List
-                sx={{
-                    width: '100%',
-                    minWidth: 300,
-                    maxWidth: 360,
-                    bgcolor: 'background.paper'
-                }}
-            >
-                
-                <ListItem component="div" disablePadding onClick={(e: any) => handleChangeMenuRequested('default')}>
-                    <ListItemButton>
-                        <ListItemIcon><ChevronLeft /></ListItemIcon>
-                        <ListItemText primaryTypographyProps={{
-                            color: 'default',
-                            variant: 'subtitle2',
-                            fontSize: '1.1em'
-                        }}>{t('Language')}</ListItemText>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem component="div" dense sx={{ py: 0 }}>
-                    <ListItemButton onClick={() => handleChangeLanguage('en')} >
-                        <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['en']}</ListItemText>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem component="div" dense sx={{ py: 0 }}>
-                    <ListItemButton onClick={() => handleChangeLanguage('cn')} >
-                        <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['cn']}</ListItemText>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem component="div" dense sx={{ py: 0 }}>
-                    <ListItemButton onClick={() => handleChangeLanguage('th')} >
-                        <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['th']}</ListItemText>
-                    </ListItemButton>
-                </ListItem>
-            </List>
-        );
+      return (
+        <List
+          sx={{
+              width: '100%',
+              minWidth: 300,
+              maxWidth: 360,
+              bgcolor: 'background.paper'
+          }}
+        >
+            
+          <ListItem component="div" disablePadding onClick={(e: any) => handleChangeMenuRequested('default')}>
+              <ListItemButton>
+                  <ListItemIcon><ChevronLeft /></ListItemIcon>
+                  <ListItemText primaryTypographyProps={{
+                      color: 'default',
+                      variant: 'subtitle2',
+                      fontSize: '1.1em'
+                  }}>{t('Language')}</ListItemText>
+              </ListItemButton>
+          </ListItem>
+          <ListItem component="div" dense sx={{ py: 0 }}>
+            <ListItemButton onClick={() => handleChangeLanguage('en')} >
+              <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['en']}</ListItemText>
+            </ListItemButton>
+          </ListItem>
+          <ListItem component="div" dense sx={{ py: 0 }}>
+            <ListItemButton onClick={() => handleChangeLanguage('cn')} >
+              <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['cn']}</ListItemText>
+            </ListItemButton>
+          </ListItem>
+          <ListItem component="div" dense sx={{ py: 0 }}>
+            <ListItemButton onClick={() => handleChangeLanguage('th')} >
+              <ListItemText primaryTypographyProps={{ fontSize: '1em' }}>{DisplayLanguage['th']}</ListItemText>
+            </ListItemButton>
+          </ListItem>
+        </List>
+      );
     }
 
     const renderPopoverMenuDetail = () => {
@@ -216,7 +214,7 @@ export const ProfileMenu = (props: HeaderMenuProps) => {
         </ListItem>
         );
 
-        const currentLanguage = (props.language || 'th').toUpperCase();
+        const currentLanguage = (i18n.language || 'th').toUpperCase();
 
         const commonMenu = (<>
         <Divider variant="middle" sx={{ mb: '8px' }} />
@@ -288,7 +286,7 @@ export const ProfileMenu = (props: HeaderMenuProps) => {
     }
 
     const renderDialogMenuDetail = () => {
-        const currentLanguage = (props.language || 'th').toUpperCase();
+        const currentLanguage = (i18n.language || 'th').toUpperCase();
 
         const commonMenu = (
         <NMenuItem onClick={(e: any) => handleChangeMenuRequested('language')}>

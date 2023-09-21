@@ -21,6 +21,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
   const theme = useTheme();
   const [isBuyerModalOpen, setIsBuyerModalOpen] = useState<boolean>(false);
   const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
+  const [loginModalMode, setLoginModalMode] = useState<'register'|'login'>('login');
 
   useEffect(() => {
     const unsub = getToken();
@@ -39,10 +40,16 @@ export const MainAppBar = (props: MainAppBarProps) => {
   }
 
   const loginRequested = () => {
+    setLoginModalMode('login');
     setIsLoginModalOpened(true);
   }
 
-  const handleLoginClosed = (isLoggedIn: boolean) => {
+  const registerRequested = () => {
+    setLoginModalMode('register');
+    setIsLoginModalOpened(true);
+  }
+
+  const handleLoginClosed = (isLoggedIn?: boolean) => {
     setIsLoginModalOpened(false);
   }
 
@@ -50,15 +57,48 @@ export const MainAppBar = (props: MainAppBarProps) => {
     setIsBuyerModalOpen(true)
   }
 
+  const handleProfileMenuClicked = (type: string) => {
+    switch (type) {
+      case 'login':
+        loginRequested();
+        break;
+      case 'register':
+        registerRequested();
+        break;
+      default:
+        break;
+    }
+  }
+
+  const handleMenuClicked = (type: string) => {
+    switch (type) {
+      case 'login':
+        loginRequested();
+        break;
+      case 'register':
+        registerRequested();
+        break;
+      default:
+        break;
+    }
+  }
+
   return (
   <ThemeProvider theme={natheme}>
     <AppBar position="fixed" color={'inherit'} style={{ zIndex: theme.zIndex.drawer + 1 }}>
-      <DesktopToolbar namespace="common" logoPath={props.logoPath} />
-      <MobileToolbar logoPath={props.logoPath} />
+      <DesktopToolbar
+        namespace="common"
+        logoPath={props.logoPath}
+        onProfileMenuClick={handleProfileMenuClicked}
+      />
+      <MobileToolbar
+        logoPath={props.logoPath}
+        onMenuItemClicked={handleMenuClicked}
+      />
     </AppBar>
     <BuyerModal open={isBuyerModalOpen} onClose={() => setIsBuyerModalOpen(false)} />
     <ButtomMenuBar onMeRequest={handleMeMenuRequested} onRequirementClick={props.onRequirementClick} />
-    <LoginModal open={isLoginModalOpened} onLoginClosed={handleLoginClosed} />
+    <LoginModal open={isLoginModalOpened} mode={loginModalMode} onLoginClosed={handleLoginClosed} />
   </ThemeProvider>
   );
 }

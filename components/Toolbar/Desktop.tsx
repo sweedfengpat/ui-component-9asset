@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Button, Grid, IconButton, Toolbar } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
@@ -8,6 +9,8 @@ import { AdvanceSearch } from "../../Layouts/MainLayoutAppBar";
 export interface DesktopToolbarProps {
   namespace: string;
   logoPath?: string;
+
+  onProfileMenuClick?: (type: string) => void;
   onToolbarMenuClick?: (type: string) => void;
 }
 
@@ -40,6 +43,17 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
 
   const onMenuClick = (type: 'project' | 'sell' | 'rent') => {
     props.onToolbarMenuClick && props.onToolbarMenuClick(type);
+  }
+
+  const handleMenuClicked = (type: string) => {
+    switch (type) {
+      case 'login':
+        case 'register':
+        props.onProfileMenuClick?.(type);
+        break;
+      default:
+        break;
+    }
   }
 
   return (<>
@@ -80,13 +94,16 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     <Box component={"div"} sx={{ marginRight: '10px' }}>
     { getUserDisplayName() }
     </Box>
-    <Box component={"div"} sx={{ display: 'flex' }}>
+    {/* <Box component={"div"} sx={{ display: 'flex' }}>
       <IconButton>
         <AppsRounded fontSize="large"  />
       </IconButton>
-    </Box>
+    </Box> */}
     <Box component={"div"} sx={{ display: 'flex' }}>
-      <Profile user={user} />
+      <Profile
+        user={user}
+        onMenuClicked={handleMenuClicked}
+      />
     </Box>
   </Toolbar>
   <Grid
