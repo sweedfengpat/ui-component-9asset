@@ -103,6 +103,7 @@ interface ILayoutProps {
     onMenuClick?: (type: 'project' | 'sell' | 'rent') => void;
     onProfileMenuClick?: (item: ProfileMenuItem) => void;
     onMenuBarItemClick?: (item: Item) => void;
+    onRequirementClick?: (isOpen: boolean) => void;
 
     logoPath?: string;
     allowNoLoginAccessSite?: boolean | undefined;
@@ -403,7 +404,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
         { renderLoginModal() }
         { renderMenu() }
         <BuyerMenu open={isBuyernModalOpened} onClose={() => setIsBuyerModalOpened(false) } />
-        <ButtomMenuBar onMeRequest={handleMeMenuRequested} />
+        <ButtomMenuBar onMeRequest={handleMeMenuRequested} onRequirementClick={props.onRequirementClick} />
     </>
     </ThemeProvider>
     );

@@ -9,9 +9,10 @@ import React from "react";
 interface ButtomMenuBarProps {
     onLoginRequest?: () => void;
     onMeRequest?: () => void;
+    onRequirementClick?: (isOpen: boolean) => void;
 }
 
-export const ButtomMenuBar = ({ onLoginRequest, onMeRequest }: ButtomMenuBarProps) => {
+export const ButtomMenuBar = ({ onLoginRequest, onMeRequest, onRequirementClick }: ButtomMenuBarProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     // const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
@@ -27,6 +28,7 @@ export const ButtomMenuBar = ({ onLoginRequest, onMeRequest }: ButtomMenuBarProp
     const handleMeRequested = () => {
         // setIsBuyerModalOpened(true);
         // setIsLoginModalOpened(false);
+        onRequirementClick && onRequirementClick(false);
         onMeRequest?.();
     }
 
@@ -40,7 +42,7 @@ export const ButtomMenuBar = ({ onLoginRequest, onMeRequest }: ButtomMenuBarProp
     <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 4 }} elevation={6}>
         <BottomNavigation showLabels>
             <BottomNavigationAction label="Home" icon={<HomeOutlined />} onClick={() => { window.location.href='/' }} />
-            <BottomNavigationAction label="Requirement" icon={<FormatListBulleted />} onClick={() => { handleSellerRequested(); }} />
+            <BottomNavigationAction label="Requirement" icon={<FormatListBulleted />} onClick={() => { onRequirementClick && onRequirementClick(true) }} />
             <BottomNavigationAction label="Chat" icon={<HomeOutlined />} onClick={() => { handleMeRequested(); }} />
             <BottomNavigationAction label="Me" icon={<Person2Outlined />} onClick={() => { handleMeRequested(); }} />
         </BottomNavigation>
