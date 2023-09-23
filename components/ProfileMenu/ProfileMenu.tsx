@@ -1,15 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, styled, useMediaQuery, useTheme } from "@mui/material";
 import { ChevronLeft } from "@mui/icons-material";
+import { User } from "firebase/auth";
+import { getUserName } from "../../Layouts/Profile";
+import { MenuItem as IMenuItem } from "../Toolbar";
+
+const MenuSubItem = styled(MenuItem)(({ theme }) => ({
+  '.MuiListItemText-primary': {
+    fontSize: '1em',
+
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.1em',
+    }
+  }
+}));
 
 export interface ProfileMenuProps {
   open: boolean;
   anchorElement: HTMLElement | null;
+  user: User | null;
+  userInfo: any | null;
+  items: IMenuItem[];
 
   onClose?: () => void;
-  onLoginRequest?: () => void;
-  onRegisterRequest?: () => void;
+  onMenuClicked?: (key: string, link?: string) => void;
+  onLanguageChanged?: (lang: string) => void;
 }
 
 export const ProfileMenu = (props: ProfileMenuProps) => {
@@ -24,8 +40,9 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
   const DisplayLanguage: { [index in 'th' | 'en' | 'cn' | string]: string} = {
     'en': 'English',
     'th': 'ไทย',
-    'cn': 'Chinese' 
+    'cn': '中文' 
   }
+
   const loginBasePath = process.env.REACT_APP_DOMAIN
         || process.env.NEXT_PUBLIC_DOMAIN
         || 'https://my.9asset.com';
@@ -34,12 +51,40 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
     setElementRef(props.anchorElement);
   }, [props.anchorElement]);
 
+  useEffect(() => {
+    if (isMobile) {
+      props.onClose?.();
+    }
+  }, [isMobile]);
+
+  const getIsAuth = () => {
+    return  props.user !== null;
+  }
+
+  const getName = () => {
+    const currentLanguage = i18n.language || 'th';
+    if (props.userInfo) {
+      if(currentLanguage === 'en') {
+        return `${props.userInfo.nameEn || '' } ${props.userInfo.lastnameEn || '' }`.trim();
+      } else if(currentLanguage === 'cn') {
+        return `${props.userInfo.nameCn || '' } ${props.userInfo.lastnameCn || '' }`.trim();
+      } else {
+        return `${props.userInfo.nameTh || '' } ${props.userInfo.lastnameTh || '' }`.trim();
+      }
+    }
+    else {
+      return props.user?.displayName || '';
+    }
+  }
+
+  
+
   const handleLogin = () => {
-    props.onLoginRequest?.();
+    props.onMenuClicked?.('login');
   }
 
   const handleRegister = () => {
-    props.onRegisterRequest?.();
+    props.onMenuClicked?.('register');
   }
 
   const handleChangeLanguageClicked = () => {
@@ -47,7 +92,36 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
   }
 
   const handleChangeLanguageRequested = (lang: string) => {
+    i18n.changeLanguage(lang);
+    props.onLanguageChanged?.(lang);
+    setMenuType('default');
+  }
 
+  const logoutMenu = (<>
+    <Divider variant="middle" sx={{ mb: '8px' }} />
+    <MenuItem onClick={() => props.onMenuClicked?.('logout')}>
+      <ListItemText>{t('Logout')}</ListItemText>
+    </MenuItem>
+  </>);
+
+  const renderLoggedInMenu = () => {
+    return (<>{
+      (props.items || []).map((item, index) => (<React.Fragment key={item.key || index}>
+        <MenuItem
+          disabled={!!item.items}
+          onClick={() => props.onMenuClicked?.(item.key, item.link)}
+        >
+          <ListItemText>{ t(item.text) }</ListItemText>
+        </MenuItem>
+        {
+          (item.items || []).map((s) => (
+            <MenuSubItem key={s.key} onClick={() => props.onMenuClicked?.(s.key, s.link)}>
+              <ListItemText inset>{ t(s.text) }</ListItemText>
+            </MenuSubItem>
+          ))
+        }
+      </React.Fragment>))
+    }</>);
   }
 
   const renderNonAuthMenu = () => (
@@ -82,8 +156,19 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
     </ListItem>
   );
 
+  const renderAuthMenu = () => {
+    return (
+    <ListItem alignItems="flex-start">
+      <ListItemAvatar sx={{ m:0 }}>
+        <Avatar>{ getUserName(props.user) }</Avatar>
+      </ListItemAvatar>
+      <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
+    </ListItem>
+    );
+  }
+
   const renderCommonMenu = () => {
-    const currentLanguage = (i18n.language || 'th').toUpperCase();
+    const currentLanguage = DisplayLanguage[i18n.language || 'th'];
 
     return (<>
       <Divider variant="middle" sx={{ mb: '8px' }} />
@@ -95,6 +180,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
   }
 
   const renderMenuDetail = () => {
+    const isAuth = getIsAuth();
     return menuType === 'default' ? (
     <List
       sx={{
@@ -110,8 +196,10 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
           {t('My Account')}
       </ListSubheader>}
     >
-      { renderNonAuthMenu() }
+      { isAuth ? renderAuthMenu() : renderNonAuthMenu() }
       { renderCommonMenu() }
+      { isAuth && renderLoggedInMenu() }
+      { isAuth && logoutMenu }
     </List>
     ) : (
     <List
@@ -156,7 +244,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
     props.onClose && props.onClose();
   }
 
-  const renderDesktopMenu = () => {
+  const renderMenu = () => {
     return (
     <Popover
       open={elementRef !== null && props.open}
@@ -170,5 +258,5 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
     </Popover>);
   }
 
-  return (<>{ renderDesktopMenu() }</>);
+  return (<>{ renderMenu() }</>);
 }

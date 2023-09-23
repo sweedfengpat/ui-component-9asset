@@ -1,34 +1,36 @@
 import React from "react";
 import { Box, Button, Grid, IconButton, Toolbar } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppsRounded } from "@mui/icons-material";
 import { Profile } from "../../Layouts/Profile";
 import { AdvanceSearch } from "../../Layouts/MainLayoutAppBar";
+import { User } from "firebase/auth";
+import { MenuItem } from ".";
 
 export interface DesktopToolbarProps {
   namespace: string;
   logoPath?: string;
+  menuItems: MenuItem[];
 
-  onProfileMenuClick?: (type: string) => void;
+  user: User | null;
+  userInfo: any | null;
+
+  onProfileMenuClick?: (type: string, link?: string) => void;
   onToolbarMenuClick?: (type: string) => void;
+  onLanguageChanged?: (ln: string) => void;
 }
 
 export const DesktopToolbar = (props: DesktopToolbarProps) => {
   const { t, i18n } = useTranslation(props.namespace);
-  const [user, setUser] = useState<any>(null);
   const [logoPath, ] = useState<string|undefined>(props.logoPath);
-
-  useEffect(() => {
-    const userVal = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
-    setUser(userVal);
-  }, []);
 
   const getUserDisplayName = () => {
     if (!i18n.language) {
       return '';
     }
 
+    const user = props.userInfo;
     const lang = i18n.language.toLowerCase();
     if(lang === 'en') {
         return user && user.nameEn ? user.lastnameEn : '' ;
@@ -45,11 +47,12 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     props.onToolbarMenuClick && props.onToolbarMenuClick(type);
   }
 
-  const handleMenuClicked = (type: string) => {
+  const handleMenuClicked = (type: string, link?: string) => {
     switch (type) {
       case 'login':
-        case 'register':
-        props.onProfileMenuClick?.(type);
+      case 'register':
+      case 'logout':
+        props.onProfileMenuClick?.(type, link);
         break;
       default:
         break;
@@ -101,8 +104,11 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     </Box> */}
     <Box component={"div"} sx={{ display: 'flex' }}>
       <Profile
-        user={user}
+        user={props.user}
+        userInfo={props.userInfo}
+        menuItems={props.menuItems}
         onMenuClicked={handleMenuClicked}
+        onLanguageChanged={props.onLanguageChanged}
       />
     </Box>
   </Toolbar>

@@ -1,10 +1,17 @@
-import { AppBar, Box, Button, Dialog, DialogContent, DialogTitle, Divider, Fade, IconButton, List, ListItem, ListItemButton, ListItemText, MenuList, Popover, Slide, Toolbar, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
+import { AppBar, Avatar, Box, Button, Dialog, DialogContent, DialogTitle, Divider, Fade, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, MenuList, Popover, Slide, Toolbar, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import React from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close, NavigateBefore } from "@mui/icons-material";
 import logoImage from '../assets/images/9asset-logo.png'
 import { useTranslation } from "react-i18next";
+import { MenuItem as IMenuItem } from "../components/Toolbar";
+import { User } from "firebase/auth";
+import { getUserName } from "./Profile";
+
+type MenuItem = IMenuItem & {
+    onClick?: () => void;
+}
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -23,6 +30,16 @@ export const MenuDialog = styled(Dialog)(({ theme }) => ({
         width: '100%',
         margin: '0'
     },
+}));
+
+const MenuSubItem = styled(MenuItem)(({ theme }) => ({
+    '.MuiListItemText-primary': {
+        fontSize: '1em',
+    
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '1.1em',
+        }
+    }
 }));
 
 
@@ -128,16 +145,47 @@ export interface MainMenuProps {
     open: boolean;
     elementRef: HTMLElement | null;
 
-    onMenuClicked?: (item: string) => void;
+    loggedInItems: IMenuItem[];
+    user: User | null;
+    userInfo: any | null;
+
+    onMenuClicked?: (item: string, link?: string) => void;
+    onLanguageChanged?: (ln: string) => void;
     onMenuClose?: () => void;
 }
 
 export const MainMenu = (props: MainMenuProps) => {
+    const DisplayLanguage: { [index in 'th' | 'en' | 'cn' | string]: string} = {
+        'en': 'English',
+        'th': 'ไทย',
+        'cn': '中文' 
+    }
+
     const { logo, open, elementRef, onMenuClose } = props;
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const { t, i18n } = useTranslation();
     const [ menuType, setMenuType ] = useState<MenuType>(MenuType.Default);
+
+    const getIsAuth = () => {
+        return  props.user !== null;
+    }
+
+    const getName = () => {
+        const currentLanguage = i18n.language || 'th';
+        if (props.userInfo) {
+            if(currentLanguage === 'en') {
+                return `${props.userInfo.nameEn || '' } ${props.userInfo.lastnameEn || '' }`.trim();
+            } else if(currentLanguage === 'cn') {
+                return `${props.userInfo.nameCn || '' } ${props.userInfo.lastnameCn || '' }`.trim();
+            } else {
+                return `${props.userInfo.nameTh || '' } ${props.userInfo.lastnameTh || '' }`.trim();
+            }
+        }
+        else {
+            return props.user?.displayName || '';
+        }
+    }
 
     const handleMenuClose = () => {
         setMenuType(MenuType.Default);
@@ -151,37 +199,37 @@ export const MainMenu = (props: MainMenuProps) => {
     const onLanguageChanged = (language: 'en' | 'th' | 'cn') => {
         i18n.changeLanguage(language);
         setMenuType(MenuType.Default);
-        onMenuClose?.();
+        props.onLanguageChanged?.(language);
     }
 
     const generalMenu = [
-        { label: "ซื้อ" },
-        { label: "เช่า" },
-        { label: "โครงการ" },
-        { label: "เซ้ง" },
-    ];
+        { key: 'project', text: "โครงการ", onClick: () => props.onMenuClicked?.('project') },
+        { key: 'sale', text: "ขาย", onClick: () => props.onMenuClicked?.('sale') },
+        { key: 'rent', text: "เช่า", onClick: () => props.onMenuClicked?.('rent') },
+    ] as MenuItem[];
 
     const configurationMenu = [
-        { key: 'language', label: 'ภาษา', onClick: onLanguageChangeRequested },
-        { key: 'country', label: 'ประเทศ' }
-    ];
+        { key: 'language', text: 'ภาษา', onClick: onLanguageChangeRequested },
+        { key: 'country', text: 'ประเทศ' }
+    ] as MenuItem[];
 
     const languagesMenu = [
-        { label: 'ภาษาไทย', onClick: () => onLanguageChanged('th') },
-        { label: 'English', onClick: () => onLanguageChanged('en') },
-        { label: '中文', onClick: () => onLanguageChanged('cn') }
-    ];
+        { text: 'ภาษาไทย', onClick: () => onLanguageChanged('th') },
+        { text: 'English', onClick: () => onLanguageChanged('en') },
+        { text: '中文', onClick: () => onLanguageChanged('cn') }
+    ] as MenuItem[];
+
     const loginBasePath = process.env.REACT_APP_DOMAIN
         || process.env.NEXT_PUBLIC_DOMAIN
         || 'https://my.9asset.com';
 
-    const generateMobileGenericMenu = (item: any, index: number) => {
+    const generateMobileGenericMenu = (item: MenuItem, index: number) => {
         return (
         <ListItem disablePadding key={index}>
             <ListItemButton sx={{ py: "2px" }} onClick={item.onClick}>
                 <ListItemText 
                     primary={
-                        <Typography component="span" color="text.primary" sx={{ fontSize: '1.1em' }}>{ item.label }</Typography>
+                        <Typography component="span" color="text.primary" sx={{ fontSize: '1.1em' }}>{ item.text }</Typography>
                     }
                 />
             </ListItemButton>
@@ -191,7 +239,7 @@ export const MainMenu = (props: MainMenuProps) => {
 
     const getValue = (key: string) => {
         if (key === 'language') {
-            return (i18n.language || 'th').toUpperCase();
+            return DisplayLanguage[(i18n.language || 'th')];
         } else if (key === 'country') {
             return 'ไทย'
         }
@@ -210,7 +258,7 @@ export const MainMenu = (props: MainMenuProps) => {
             <ListItemButton sx={{ py: "2px" }} onClick={item.onClick}>
                 <ListItemText 
                     primary={
-                        <Typography component="span" color="text.primary" sx={{ fontSize: '1.1em' }}>{ item.label }</Typography>
+                        <Typography component="span" color="text.primary" sx={{ fontSize: '1.1em' }}>{ item.text }</Typography>
                     }
                 />
             </ListItemButton>
@@ -218,15 +266,22 @@ export const MainMenu = (props: MainMenuProps) => {
         )
     }
 
-    const handleLogin = () => {
-        props.onMenuClicked?.('login');
+    const renderAuthMenu = () => {
+        return (
+        <ListItem alignItems="flex-start">
+            <ListItemAvatar sx={{ m:0 }}>
+                <Avatar>{ getUserName(props.user) }</Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
+        </ListItem>
+        );
     }
 
     const renderNonAuthMenu = () => (
         <ListItem component="div" disablePadding>
           <ListItemButton 
             sx={{ textAlign: 'center', marginRight: '10px' }}
-            onClick={handleLogin}
+            onClick={() => props.onMenuClicked?.('login')}
             component="a"
           >
             <ListItemText
@@ -240,7 +295,7 @@ export const MainMenu = (props: MainMenuProps) => {
           </ListItemButton>
             { t('or') }
           <ListItemButton component="a" 
-            href= {`${loginBasePath}/login/register`}
+            onClick={() => props.onMenuClicked?.('register')}
             sx={{ textAlign: 'center', marginLeft: '10px' }}
           >
             <ListItemText
@@ -253,16 +308,39 @@ export const MainMenu = (props: MainMenuProps) => {
             />
           </ListItemButton>
         </ListItem>
-      );
+    );
+
+    const renderLoggedInMenu = () => {
+        const items = (props.loggedInItems || []).map((item, index) => (
+                <React.Fragment key={item.key || index}>
+                    <MenuItem
+                        disabled={!!item.items}
+                        onClick={() => props.onMenuClicked?.(item.key, item.link)}
+                    >
+                        <ListItemText>{ t(item.text) }</ListItemText>
+                    </MenuItem>
+                    {
+                        (item.items || []).map((s) => (
+                            <MenuSubItem key={s.key} onClick={() => props.onMenuClicked?.(s.key, s.link)}>
+                                <ListItemText inset>{ t(s.text) }</ListItemText>
+                            </MenuSubItem>
+                        ))
+                    }
+                </React.Fragment>
+            ))
+
+        return items.length > 0 ? <><Divider sx={{ my: 1 }} />{items}</> : <></>;
+    }
 
     const renderMenuItems = () => {
-
+        const isAuth = getIsAuth();
         if (isMobile) {
             if (menuType === MenuType.Default) {
                 return (
                 <List>
-                    {renderNonAuthMenu()}
+                    { isAuth ? renderAuthMenu() : renderNonAuthMenu()}
                     { generalMenu.map(generateMobileGenericMenu) }
+                    { isAuth && renderLoggedInMenu() }
                     <Divider sx={{ my: 1 }} />
                     { configurationMenu.map(generateMobileConfigMenu) }
                 </List>

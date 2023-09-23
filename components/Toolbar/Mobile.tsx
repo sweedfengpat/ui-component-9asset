@@ -2,14 +2,23 @@ import React, { MouseEvent, useState } from "react";
 import { Box, Button, IconButton, Toolbar } from "@mui/material";
 import { Menu, SearchOutlined } from "@mui/icons-material";
 import { MainMenu } from "../../Layouts/MainMenu";
+import { User } from "firebase/auth";
+import { MenuItem } from ".";
 
 export interface ToolbarProps {
   logoPath?: string;
+  menuItems: MenuItem[];
 
-  onMenuItemClicked?: (type: string) => void;
+  user: User | null;
+  userInfo: any | null;
+
+  onMenuItemClicked?: (type: string, link?: string) => void;
+  onLanguageChanged?: (ln: string) => void;
+  onSearchClicked?: () => void;
 }
 
 export const MobileToolbar = (props: ToolbarProps) => {
+
   const [logoPath, ] = useState<string|undefined>(props.logoPath);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
@@ -19,20 +28,30 @@ export const MobileToolbar = (props: ToolbarProps) => {
       logo={logoPath}
       open={isMenuOpen}
       elementRef={elementRef}
+
+      loggedInItems={props.menuItems}
+      user={props.user}
+      userInfo={props.userInfo}
+
       onMenuClose={handleMenuClosed}
       onMenuClicked={handleMainMenuItemClicked}
+      onLanguageChanged={handleLanguageChanged}
     />;
   }
 
-  const handleMainMenuItemClicked = (type: string) => {
-    if (type === 'login') {
-      handleMenuClosed();
-      setTimeout(() => { props.onMenuItemClicked?.(type); }, 400);
-    }
+  const handleLanguageChanged = (ln: string) => {
+    props.onLanguageChanged?.(ln);
+    handleMenuClosed();
   }
 
-  const handleMobileSearchClick = () => {
-
+  const handleMainMenuItemClicked = (type: string, link?: string) => {
+    if (type === 'login' || type === 'register') {
+      handleMenuClosed();
+      setTimeout(() => { props.onMenuItemClicked?.(type); }, 400);
+    } else {
+      props.onMenuItemClicked?.(type, link);
+      handleMenuClosed();
+    }
   }
 
   const handleMenuClosed = () => {
@@ -59,7 +78,7 @@ export const MobileToolbar = (props: ToolbarProps) => {
               minWidth: '24px',
               width: '34px !important'
           }}
-          onClick={handleMobileSearchClick}
+          onClick={() => props.onSearchClicked?.()}
       >
         <SearchOutlined fontSize="medium" />
       </Button>

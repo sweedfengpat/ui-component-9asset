@@ -30,11 +30,12 @@ import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import { Profile } from "./Profile";
-import { ProfileMenuItem } from "./ProfileMenu";
+
 import { useTranslation } from "react-i18next";
 import { TransitionProps } from "@mui/material/transitions";
 
 import theme from "../theme";
+import ProfileMenuItem from "./ProfileMenuItem";
 
 export type MainMenuLanguage = 'th' | 'en' | 'cn' | string;
 
@@ -231,11 +232,6 @@ export const LayoutAppBar = (props: ILayoutProps) => {
     const handeMenuClicked = (e: any) => {
         // setElementRef(e.currentTarget as HTMLElement);
         // setIsMenuOpen(true);
-    }
-
-    const handleMenuClosed = () => {
-        // setElementRef(null);
-        // setIsMenuOpen(false);
     }
 
     const renderMenuBar = () => {

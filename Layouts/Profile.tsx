@@ -1,10 +1,11 @@
 import React from "react";
 import { Avatar } from "@mui/material";
-import { UserInfo } from "firebase/auth";
+import { User, UserInfo } from "firebase/auth";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ProfileMenu } from "../components/ProfileMenu/ProfileMenu";
 import { MainMenuLanguage } from "./MainLayoutAppBar";
+import { MenuItem } from "../components/Toolbar";
 
 const getFirstLetter = (userInfo: UserInfo | null) => {
   if (userInfo) {
@@ -14,7 +15,7 @@ const getFirstLetter = (userInfo: UserInfo | null) => {
         return (userInfo.email as string)[0].toUpperCase();
     }
   }
-  return undefined;
+  return '9';
 }
 
 export const getUserName = (user: UserInfo | null) => {
@@ -28,16 +29,12 @@ export const getUserName = (user: UserInfo | null) => {
 
 export interface ProfileProps {
     namespace?: string;
-    user: UserInfo;
-    // menuItems?: ProfileMenuItem[];
-    // t: TFunction<string, undefined>;
-    // language: MainMenuLanguage;
+    user: User | null;
+    userInfo: any | null;
+    menuItems?: MenuItem[];
 
-    // isAuth: boolean;
-
-    // onLangChanged?: (lng: MainMenuLanguage) => void;
-    // onMenuClicked?: (item: ProfileMenuItem) => void;
-    onMenuClicked?: (item: 'login' | 'register' | 'logout' | string) => void;
+    onLanguageChanged?: (ln: MainMenuLanguage) => void;
+    onMenuClicked?: (item: 'login' | 'register' | 'logout' | string, link?: string) => void;
 }
 
 export const Profile = (props: ProfileProps) => {
@@ -46,14 +43,15 @@ export const Profile = (props: ProfileProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const avatarRef = useRef<HTMLDivElement | null>(null);
 
-  const handleLoginRequested = () => {
+  const handleMenuClicked = (key: string) => {
     setIsMenuOpen(false);
-    props.onMenuClicked?.('login');
-  };
+    props.onMenuClicked?.(key);
+  }
 
-  const handleRegisterRequested = () => {
+  const handleLanguageChanged = (ln: string) => {
+    i18n.changeLanguage(ln);
     setIsMenuOpen(false);
-    props.onMenuClicked?.('register');
+    props.onLanguageChanged?.(ln);
   }
 
   const renderMenu = () => (
@@ -61,14 +59,14 @@ export const Profile = (props: ProfileProps) => {
       open={isMenuOpen}
       anchorElement={avatarRef.current}
       onClose={() => { setIsMenuOpen(false); }}
-      onLoginRequest={handleLoginRequested}
-      onRegisterRequest={handleRegisterRequested}
-  //   user={props.user}
-  //   isAuth={!!props.user}
-  //   items={[]}
+      onMenuClicked={handleMenuClicked}
+      onLanguageChanged={handleLanguageChanged}
+
+      user={props.user}
+      userInfo={props.userInfo}
+      items={props.menuItems || []}
     
   //   onLoginRequest={handleLoginRequested}
-  //   onLangChanged={(ln: MainMenuLanguage) => { i18n.changeLanguage(ln); }}
   //   onMenuClicked={
   //     (item) => {
   //       setIsMenuOpen(false);
