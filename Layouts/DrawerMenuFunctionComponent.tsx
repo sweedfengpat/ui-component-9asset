@@ -16,7 +16,7 @@ import {
 } from '@mui/icons-material'
 import React, { useState } from 'react'
 import { WithTranslation } from 'react-i18next'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 export interface MenuSection {
   key: string
@@ -65,7 +65,7 @@ export interface DrawerMenuProps {
 
 export function DrawerMenuFunctionComponent({ ...props }) {
   // react hook to query path params
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
   const { pathname } = location
   const [open, setOpen] = useState(
@@ -92,7 +92,7 @@ export function DrawerMenuFunctionComponent({ ...props }) {
                         return newState
                       })
                     } else {
-                      history.push(menu.link)
+                      navigate(menu.link);
                     }
                   }}
                   selected={pathname.includes(menu.link)}
@@ -132,7 +132,7 @@ export function DrawerMenuFunctionComponent({ ...props }) {
                             button
                             key={item.title}
                             onClick={() => {
-                              history.push(item.link)
+                              navigate(item.link)
                             }}
                             selected={pathname.includes(item.link)}
                             sx={{

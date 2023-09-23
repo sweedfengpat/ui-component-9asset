@@ -9,7 +9,6 @@ interface ProfileCardProps {
 
 export class ProfileCard extends React.Component<ProfileCardProps, any> {
 
-   
     getFirstLetter = (user: any) => {
         const userInfo = user;
         if (userInfo) {
@@ -34,7 +33,7 @@ export class ProfileCard extends React.Component<ProfileCardProps, any> {
     getPhoneNo = () => {
         
         if(this.props.user){
-            return this.props.user.phoneNumber;
+            return this.props.user?.phoneNumber || '';
         }
 
         return null;
@@ -52,13 +51,13 @@ export class ProfileCard extends React.Component<ProfileCardProps, any> {
                     display: 'flex',
                     flexDirection: 'column',
                     p: 2,
-                    mt: 6
+                    mt: 3
                     }}
                 >
                     <Avatar style={{ height: 60, width: 60, marginBottom: 10 }} >{avatar}</Avatar>
-                    <Typography color="textPrimary" variant="subtitle1" className="profile-text">{this.props.user.displayName}</Typography>
+                    <Typography color="textPrimary" variant="subtitle1" className="profile-text">{this.props.user?.displayName || '9'}</Typography>
                     { phoneNo ? <Typography color="textPrimary" variant="body2" className="profile-text">{phoneNo}</Typography> : <></> }
-                    <Typography color="textPrimary" variant="body2" className="profile-text">{this.props.user.email}</Typography>
+                    <Typography color="textPrimary" variant="body2" className="profile-text">{this.props.user?.email || ''}</Typography>
                 </Box>
             </div>
         );

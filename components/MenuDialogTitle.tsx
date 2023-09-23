@@ -1,6 +1,5 @@
 import { Close } from "@mui/icons-material";
 import { DialogTitle, IconButton } from "@mui/material";
-import theme from "../../theme";
 
 export interface MenuDialogTitleProps {
     id: string;

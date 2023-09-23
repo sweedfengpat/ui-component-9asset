@@ -1,89 +1,94 @@
+import React from "react";
 import { Avatar } from "@mui/material";
-import { UserInfo } from "firebase/auth";
+import { User, UserInfo } from "firebase/auth";
 import { useRef, useState } from "react";
-import { TFunction } from "react-i18next";
-import { ProfileMenu, ProfileMenuItem } from "./ProfileMenu";
+import { useTranslation } from "react-i18next";
+import { ProfileMenu } from "../components/ProfileMenu/ProfileMenu";
 import { MainMenuLanguage } from "./MainLayoutAppBar";
+import { MenuItem } from "../components/Toolbar";
 
 const getFirstLetter = (userInfo: UserInfo | null) => {
-    if (userInfo) {
-        if (userInfo.displayName) {
-            return userInfo.displayName[0];
-        } else if (userInfo.email) {
-            return (userInfo.email as string)[0].toUpperCase();
-        }
+  if (userInfo) {
+    if (userInfo.displayName) {
+        return userInfo.displayName[0];
+    } else if (userInfo.email) {
+        return (userInfo.email as string)[0].toUpperCase();
     }
-    return undefined;
+  }
+  return '9';
 }
 
 export const getUserName = (user: UserInfo | null) => {
-    const username = getFirstLetter(user);
-    if(username){
-        return username;
-    }
+  const username = getFirstLetter(user);
+  if(username){
+    return username;
+  }
 
-    return '9';
+  return '9';
 }
 
 export interface ProfileProps {
-    user: UserInfo;
-    menuItems?: ProfileMenuItem[];
-    t: TFunction<string, undefined>;
-    language: MainMenuLanguage;
+    namespace?: string;
+    user: User | null;
+    userInfo: any | null;
+    menuItems?: MenuItem[];
 
-    isAuth: boolean;
-
-    onLangChanged?: (lng: MainMenuLanguage) => void;
-    onMenuClicked?: (item: ProfileMenuItem) => void;
-
-    onLoginRequested?: () => void;
+    onLanguageChanged?: (ln: MainMenuLanguage) => void;
+    onMenuClicked?: (item: 'login' | 'register' | 'logout' | string, link?: string) => void;
 }
 
 export const Profile = (props: ProfileProps) => {
-    const { t, language, user } = props;
-    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-    const avatarRef = useRef<HTMLDivElement | null>(null);
+  const { user } = props;
+  const { t, i18n } = useTranslation(props.namespace || 'common');
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const avatarRef = useRef<HTMLDivElement | null>(null);
 
-    const handleLoginRequested = () => {
-        setIsMenuOpen(false);
-        props.onLoginRequested?.();
-    };
+  const handleMenuClicked = (key: string) => {
+    setIsMenuOpen(false);
+    props.onMenuClicked?.(key);
+  }
 
-    const renderMenu = () => (<>
+  const handleLanguageChanged = (ln: string) => {
+    i18n.changeLanguage(ln);
+    setIsMenuOpen(false);
+    props.onLanguageChanged?.(ln);
+  }
+
+  const renderMenu = () => (
     <ProfileMenu
-        t={props.t}
-        language={props.language}
-        anchorElement={avatarRef.current}
-        user={props.user}
-        isAuth={props.isAuth}
-        isOpen={isMenuOpen}
-        items={ props.menuItems|| [] }
-        
-        onLoginRequest={handleLoginRequested}
-        onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
-        onMenuClose={() => { setIsMenuOpen(false); }}
-        onMenuClicked={
-            (item) => {
-                setIsMenuOpen(false);
-                props.onMenuClicked && props.onMenuClicked(item);
-            }
-        }
-    />
-    </>);
+      open={isMenuOpen}
+      anchorElement={avatarRef.current}
+      onClose={() => { setIsMenuOpen(false); }}
+      onMenuClicked={handleMenuClicked}
+      onLanguageChanged={handleLanguageChanged}
 
-    const handleAvatarClicked = (event: React.MouseEvent<HTMLElement>) => {
-        // setIsMenuOpen(!isMenuOpen);
-        // setAvatarRef(event.currentTarget);
-        handleLoginRequested();
-    };
+      user={props.user}
+      userInfo={props.userInfo}
+      items={props.menuItems || []}
+    
+  //   onLoginRequest={handleLoginRequested}
+  //   onMenuClicked={
+  //     (item) => {
+  //       setIsMenuOpen(false);
+  //       props.onMenuClicked && props.onMenuClicked(item);
+  //     }
+  //   }
+    />
+  );
+
+  const handleAvatarClicked = (event: React.MouseEvent<HTMLElement>) => {
+    setIsMenuOpen(true);
+  };
 
     return (<>
     <Avatar
-        alt="9 Asset"
-        sx={{ height: '30px', width: '30px', margin: '12px', display: { xs: 'none', sm: 'flex' } }}
-        ref={avatarRef}
-        onClick={handleAvatarClicked}
-    >{ getUserName(props.user) }</Avatar>
-    {/* { renderMenu() } */}
+      alt="9 Asset"
+      sx={{ height: '30px', width: '30px', margin: '12px', display: { xs: 'none', sm: 'flex' } }}
+      ref={avatarRef}
+      onClick={handleAvatarClicked}
+    >
+      { getUserName(props.user) }
+    </Avatar>
+    { renderMenu() }
     </>);
 }

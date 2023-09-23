@@ -1,10 +1,6 @@
-import { BottomNavigation, BottomNavigationAction, Paper, useMediaQuery, useTheme } from "@mui/material";
-import { useState } from "react";
-import { LoginModal } from "../components/LoginModal";
-import { BuyerMenu } from "./BuyerMenu";
-import { SellerMenu } from "./SellerMenu";
-import { HomeOutlined, FormatListBulleted, Person2Outlined } from "@mui/icons-material";
 import React from "react";
+import { BottomNavigation, BottomNavigationAction, Paper, useMediaQuery, useTheme } from "@mui/material";
+import { HomeOutlined, FormatListBulleted, Person2Outlined } from "@mui/icons-material";
 
 interface ButtomMenuBarProps {
     onLoginRequest?: () => void;
