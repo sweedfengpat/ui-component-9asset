@@ -10,6 +10,7 @@ import { FirebaseApp } from "firebase/app";
 import { Auth, User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { LoginModal } from "../LoginModal";
 import { MenuItem } from "../Toolbar";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 const loggedMenuItems = [
   {
@@ -50,7 +51,8 @@ export const MainAppBar = (props: MainAppBarProps) => {
   const [isBuyerModalOpen, setIsBuyerModalOpen] = useState<boolean>(false);
   const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
   const [loginModalMode, setLoginModalMode] = useState<'register'|'login'>('login');
-
+  const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
+  
   const [state, setState] = useState<AppBarState>({
     user: null,
     userInfo: null
@@ -65,26 +67,33 @@ export const MainAppBar = (props: MainAppBarProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    console.log(userInfo);
+    setState({ ...state, userInfo: userInfo });
+  }, [userInfo]);
+
   const getToken = () => {
     setState({ ...state, user: props.auth.currentUser });
     return onAuthStateChanged(props.auth || getAuth(props.app), async (user: User | null) => {
-      if (user) {
-        const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
-        if (userInfo && (state.user?.uid && userInfo.firebaseId === state.user?.uid)) {
-          setState({ ...state, userInfo: userInfo });
-        } else {
-          setState({ ...state, userInfo: null });
-          console.log('set interval!')
-          const interval = setInterval(() => {
-            const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
-            if (userInfo && (state.user?.uid && userInfo.firebaseId === state.user?.uid)) {
-              setState({ ...state, userInfo: userInfo });
-              clearInterval(interval);
+      console.log(user);
 
-              console.log('interval cleared!')
-            }
-          }, 500);
-        }
+      if (user) {
+      //   const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
+      //   if (userInfo && (state.user?.uid && userInfo.firebaseId === state.user?.uid)) {
+        setState({ ...state, user: user });
+      //   } else {
+      //     setState({ ...state, userInfo: null });
+      //     console.log('set interval!')
+      //     const interval = setInterval(() => {
+      //       const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
+      //       if (userInfo && (state.user?.uid && userInfo.firebaseId === state.user?.uid)) {
+      //         setState({ ...state, userInfo: userInfo });
+      //         clearInterval(interval);
+
+      //         console.log('interval cleared!')
+      //       }
+      //     }, 500);
+      //   }
       } else {
         setState({ user: null, userInfo: null });
       }
