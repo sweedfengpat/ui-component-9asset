@@ -1,12 +1,12 @@
 import React from "react";
-import { Box, Button, Grid, IconButton, Toolbar } from "@mui/material";
+import { Box, Button, Grid, IconButton, Link, Toolbar } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { AppsRounded } from "@mui/icons-material";
 import { Profile } from "../../Layouts/Profile";
 import { AdvanceSearch } from "../../Layouts/MainLayoutAppBar";
 import { User } from "firebase/auth";
-import { MenuItem } from ".";
+import { MenuItem, menubar } from ".";
 
 export interface DesktopToolbarProps {
   namespace: string;
@@ -59,35 +59,46 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     }
   }
 
+  const getUrl = (type: string) => {
+    return i18n.language === 'th' ? `/${t(type)}/${t('estate')}` : `/${i18n.language}/${t(type)}/${t('estate')}`;
+  }
+
+  const linkComponent = (type: string) => (
+    <Link
+      sx={{ fontSize: '1rem', pl: 0, pr: 3 }}
+      color={"#5e5e5e"}
+      underline="none"
+      href={getUrl(type)}
+    >
+      {t(type)}
+    </Link>
+  );
+
+  const renderMenuBar = () => {
+    const items = menubar(t, i18n.language);
+    return items.map((item, index) => (
+      <Link
+        color="#fff"
+        underline="hover"
+        href={item.link}
+        sx={{ mx:'10px', fontSize: '0.95rem' }}
+      >
+        {item.text}
+      </Link>
+    ));
+  }
+
   return (<>
   <Toolbar sx={{ display: { xs: 'none', sm: 'flex' } }}>
     <a href ={ '/' }>
         <img src={logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
     </a>
 
-    <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
-      <Button
-          color="info"
-          style={{ color: '#5e5e5e'}}
-          onClick={()=> onMenuClick('project')}
-      >
-          {`${t('project')}`}
-      </Button>
-      <Button
-          color="primary"
-          style={{ color: '#5e5e5e' }}
-          onClick={()=> onMenuClick('sell')}
-      >
-          {`${t('sell')}`}
-      </Button>
-      <Button
-          color="primary"
-          style={{ color: '#5e5e5e' }}
-          onClick={()=> onMenuClick('rent')}
-      >
-          {`${t('rent')}`}
-      </Button>
-      <Box component={"div"} sx={{ marginTop: '-4px', position: 'absolute', left: '275px', width: '450px' }}>
+    <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' }, pl: 2 }}>
+      { linkComponent('sell') }
+      { linkComponent('rent') }
+      { linkComponent('project') }
+      <Box component={"div"} sx={{ marginTop: '-10px', position: 'absolute', left: '275px', width: '450px' }}>
         <AdvanceSearch />
       </Box>
     </Box>
@@ -124,7 +135,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     justifyContent='center'
     alignItems='center'   
   >
-
+    { renderMenuBar() }
   </Grid>
   </>);
 }
