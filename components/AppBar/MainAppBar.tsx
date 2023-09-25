@@ -55,7 +55,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
   
   const [state, setState] = useState<AppBarState>({
     user: null,
-    userInfo: null
+    userInfo: userInfo
   });
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
   }, []);
 
   useEffect(() => {
-    console.log(userInfo);
+    console.log(`User Info:`, userInfo);
     setState({ ...state, userInfo: userInfo });
   }, [userInfo]);
 
