@@ -63,6 +63,8 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
 
   const getName = () => {
     const currentLanguage = i18n.language || 'th';
+    console.log(currentLanguage);
+    console.log(props.userInfo)
     if (props.userInfo) {
       if(currentLanguage === 'en') {
         return `${props.userInfo.nameEn || '' } ${props.userInfo.lastnameEn || '' }`.trim();
@@ -159,7 +161,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
   const renderAuthMenu = () => {
     return (
     <ListItem alignItems="flex-start">
-      <ListItemAvatar sx={{ m:0 }}>
+      <ListItemAvatar sx={{ }}>
         <Avatar>{ getUserName(props.user) }</Avatar>
       </ListItemAvatar>
       <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>

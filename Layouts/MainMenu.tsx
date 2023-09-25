@@ -269,7 +269,7 @@ export const MainMenu = (props: MainMenuProps) => {
     const renderAuthMenu = () => {
         return (
         <ListItem alignItems="flex-start">
-            <ListItemAvatar sx={{ m:0 }}>
+            <ListItemAvatar sx={{ }}>
                 <Avatar>{ getUserName(props.user) }</Avatar>
             </ListItemAvatar>
             <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
