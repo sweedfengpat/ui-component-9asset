@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { Avatar, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, styled, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, Stack, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
 import { ChevronLeft } from "@mui/icons-material";
 import { User } from "firebase/auth";
 import { getUserName } from "../../Layouts/Profile";
@@ -160,11 +160,22 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
 
   const renderAuthMenu = () => {
     return (
-    <ListItem alignItems="flex-start">
-      <ListItemAvatar sx={{ }}>
+    <ListItem alignItems="center" sx={{ py: 0 }}>
+      <ListItemAvatar sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar>{ getUserName(props.user) }</Avatar>
       </ListItemAvatar>
-      <ListItemText primary={getName()} secondary={props.user && props.user.email ? props.user.email : ''}></ListItemText>
+      <ListItemText
+        primary={getName()}
+        // secondary={props.user && props.user.email ? props.user.email : ''}
+        secondary={
+        <Stack direction="column" sx={{ p:0 }}>
+          <Box sx={{ display: 'inline-flex' }}>
+            <Typography sx={{ fontSize: '12px'  }}>{props.userInfo && props.userInfo.email ? props.userInfo.email : ''}</Typography>
+            <Typography sx={{ fontSize: '12px', pl: 1 }} color="green">{'Verified'}</Typography> 
+          </Box>
+          <Typography component="span" sx={{ fontSize: '10px' }} color="primary">150 Coins</Typography>
+        </Stack>}
+      />
     </ListItem>
     );
   }

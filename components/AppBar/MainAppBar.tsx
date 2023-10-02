@@ -75,7 +75,6 @@ export const MainAppBar = (props: MainAppBarProps) => {
   const getToken = () => {
     setState({ ...state, user: props.auth.currentUser });
     return onAuthStateChanged(props.auth || getAuth(props.app), async (user: User | null) => {
-      console.log(user);
 
       if (user) {
       //   const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
@@ -95,7 +94,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
       //     }, 500);
       //   }
       } else {
-        setState({ user: null, userInfo: null });
+        setState({ ...state, user: null });
       }
     });
   }
