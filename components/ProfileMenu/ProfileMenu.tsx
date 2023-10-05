@@ -210,8 +210,8 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
       </ListSubheader>}
     >
       { isAuth ? renderAuthMenu() : renderNonAuthMenu() }
-      { renderCommonMenu() }
       { isAuth && renderLoggedInMenu() }
+      { renderCommonMenu() }
       { isAuth && logoutMenu }
     </List>
     ) : (

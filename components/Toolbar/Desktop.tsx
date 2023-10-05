@@ -55,6 +55,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
         props.onProfileMenuClick?.(type, link);
         break;
       default:
+        props.onProfileMenuClick?.(type, link);
         break;
     }
   }
