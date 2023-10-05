@@ -14,19 +14,35 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 const loggedMenuItems = [
   {
-    key: 'listing',
-    text: 'menu.listing',
-    link: '/listing',
+    key: 'requirements',
+    text: 'menu.myRequirement',
+    link: '/requirements',
   },
   {
-    key: 'my-account',
-    text: 'menu.myAccount',
-    items: [
-      { key: 'profile', text: 'menu.profile', link: '/myprofile' },
-      { key: 'company-profile', text: 'menu.companyProfile', link: '/company-profile' },
-      { key: 'affiliate-agent', text: 'menu.affiliateAgent', link: '/affiliate-agent' }
-    ]
-}
+    key: 'interested',
+    text: 'menu.interested',
+    link: '/interested',
+  },
+  {
+    key: 'recently',
+    text: 'menu.recently',
+    link: '/recently',
+  },
+  {
+    key: 'appointment',
+    text: 'menu.appointment',
+    link: '/appointment',
+  },
+  {
+    key: 'inquiry',
+    text: 'menu.inquiry',
+    link: '/inquiry',
+  },
+  {
+    key: 'seller',
+    text: 'menu.sellerCenter',
+    link: '/'
+  }
 ] as MenuItem[];
 
 export interface AppBarState {
@@ -121,7 +137,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
     props.onMobileSearchClicked?.();
   }
 
-  const handleProfileMenuClicked = (type: string, link?: string) => {console.log(link)
+  const handleProfileMenuClicked = (type: string, link?: string) => {
     switch (type) {
       case 'login':
         loginRequested();
@@ -132,7 +148,15 @@ export const MainAppBar = (props: MainAppBarProps) => {
       case 'logout':
         window.location.href = `${process.env.NEXT_PUBLIC_LOGIN_URL_BASE}/logout`
         break;
-      case 'profile':
+      case 'appointment':
+      case 'requirements':
+      case 'interested':
+      case 'recently':
+        if (link) {
+          window.location.href = `${process.env.NEXT_PUBLIC_BUYER_URL}${link}`
+        }
+        break;
+      case 'seller':
       case 'company-profile':
       case 'affiliate-agent':
       case 'listing':

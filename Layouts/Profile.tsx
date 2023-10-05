@@ -43,9 +43,9 @@ export const Profile = (props: ProfileProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const avatarRef = useRef<HTMLDivElement | null>(null);
 
-  const handleMenuClicked = (key: string) => {
+  const handleMenuClicked = (key: string, link?: string) => {
     setIsMenuOpen(false);
-    props.onMenuClicked?.(key);
+    props.onMenuClicked?.(key, link);
   }
 
   const handleLanguageChanged = (ln: string) => {
