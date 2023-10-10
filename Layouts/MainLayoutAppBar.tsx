@@ -308,16 +308,16 @@ export const LayoutAppBar = (props: ILayoutProps) => {
                     </IconButton>
                 </div>
                 <div style={{ display: 'flex' }}>
-                    <Profile
+                    {/* <Profile
                         user={user}
-                        // t={props.t}
-                        // language={props.language}
-                        // isAuth={isAuth === 'true'}
-                        // menuItems={props.menuProfile}
-                        // onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
-                        // onMenuClicked={handeProfileMenuClicked}
-                        // onLoginRequested={handleLoginRequested}
-                    />
+                        t={props.t}
+                        language={props.language}
+                        isAuth={isAuth === 'true'}
+                        menuItems={props.menuProfile}
+                        onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
+                        onMenuClicked={handeProfileMenuClicked}
+                        onLoginRequested={handleLoginRequested}
+                    /> */}
                 </div>
                 <div style={{ display: 'flex' }}>
                     <IconButton onClick={handeMenuClicked}>
