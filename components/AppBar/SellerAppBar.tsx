@@ -16,7 +16,13 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
 
   return (
   <AppBar position="fixed" color={'inherit'} style={{ zIndex: theme.zIndex.drawer + 1 }}>
-    <DesktopToolbar namespace={props.namespace} logoPath={logoPath} />
+    <DesktopToolbar
+      namespace={props.namespace}
+      logoPath={logoPath}
+      menuItems={[]}
+      user={null}
+      userInfo={undefined}
+    />
     <MobileToolbar
       title={props.title}
       logoPath={logoPath}
