@@ -11,6 +11,7 @@ import { Auth, User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { LoginModal } from "../LoginModal";
 import { MenuItem } from "../Toolbar";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import axios from "axios";
 
 const loggedMenuItems = [
   {
@@ -96,6 +97,11 @@ export const MainAppBar = (props: MainAppBarProps) => {
       //   const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
       //   if (userInfo && (state.user?.uid && userInfo.firebaseId === state.user?.uid)) {
         setState({ ...state, user: user });
+        const token = await user.getIdToken();
+        console.log('my token: ', token);
+        const uInfo = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
+        console.log('user-info')
+        setUserInfo(uInfo);
       //   } else {
       //     setState({ ...state, userInfo: null });
       //     console.log('set interval!')
