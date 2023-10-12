@@ -10,7 +10,7 @@ const LayoutRoot = styled(Box)({
   display: 'flex'
 });
 
-const MainContainer = styled(Box)({
+const MainContainer = styled('main')({
   backgroundColor: '#f4f6f8',
   minHeight: '100vh',
   paddingTop: 0,
@@ -161,7 +161,7 @@ export const BuyerLayout = (props: BuyerLayoutProps) => {
       <DrawerMenu menu={drawerMenu} />
     </Drawer>
     
-    <MainContainer component="main" sx={{ p: { xs: 1, sm: 2 } }}>
+    <MainContainer sx={{ p: { xs: 1, sm: 2 } }}>
       <Toolbar />
       <Grid container sx={{ height: '42px', display: { xs: 'none', sm: 'block' } }}></Grid>
       <Outlet />
