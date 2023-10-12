@@ -99,7 +99,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
         setState({ ...state, user: user });
         const token = await user.getIdToken();
         console.log('my token: ', token);
-        const uInfo = (await axios.get(`${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
+        const uInfo = (await axios.get(`${process.env.NEXT_PUBLIC_USER_SERVICE_API_BASE || process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
         console.log('user-info')
         setUserInfo(uInfo);
       //   } else {
