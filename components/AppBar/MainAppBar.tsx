@@ -127,10 +127,18 @@ export const MainAppBar = (props: MainAppBarProps) => {
 
   const handleLoginClosed = (isLoggedIn?: boolean) => {
     setIsLoginModalOpened(false);
+
+    if (isLoggedIn) {
+      setIsBuyerModalOpen(true);
+    }
   }
 
   const handleMeMenuRequested = () => {
-    setIsBuyerModalOpen(true)
+    if (state.user) {
+      setIsBuyerModalOpen(true);
+    } else {
+      setIsLoginModalOpened(true);
+    }
   }
 
   const handleSearchClicked = () => {
