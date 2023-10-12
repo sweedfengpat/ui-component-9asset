@@ -195,7 +195,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
         namespace="common"
         logoPath={props.logoPath}
         user={state.user}
-        userInfo={state.userInfo}
+        userInfo={state.userInfo || userInfo}
         menuItems={loggedMenuItems}
         onProfileMenuClick={handleProfileMenuClicked}
         onLanguageChanged={props.onLanguageChanged}
@@ -203,7 +203,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
       <MobileToolbar
         logoPath={props.logoPath}
         user={state.user}
-        userInfo={state.userInfo}
+        userInfo={state.userInfo || userInfo}
         menuItems={loggedMenuItems}
         onMenuItemClicked={handleProfileMenuClicked}
         onLanguageChanged={props.onLanguageChanged}
