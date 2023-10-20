@@ -1,13 +1,12 @@
 import React, { MouseEvent, useState } from "react";
 import { Box, Button, IconButton, Toolbar } from "@mui/material";
 import { Menu, SearchOutlined } from "@mui/icons-material";
-import { MainMenu } from "../../Layouts/MainMenu";
+import { MainMenu } from "../Menu/MainMenu";
 import { User } from "firebase/auth";
 import { MenuItem } from ".";
 
 export interface ToolbarProps {
   logoPath?: string;
-  menuItems: MenuItem[];
 
   user: User | null;
   userInfo: any | null;
@@ -29,7 +28,7 @@ export const MobileToolbar = (props: ToolbarProps) => {
       open={isMenuOpen}
       elementRef={elementRef}
 
-      loggedInItems={props.menuItems}
+      loggedInItems={[]}
       user={props.user}
       userInfo={props.userInfo}
 

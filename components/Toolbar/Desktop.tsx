@@ -11,7 +11,10 @@ import { MenuItem, menubar } from ".";
 export interface DesktopToolbarProps {
   namespace: string;
   logoPath?: string;
-  menuItems: MenuItem[];
+  menuItems: {
+    auth: MenuItem[];
+    nonauth: MenuItem[];
+  };
 
   user: User | null;
   userInfo: any | null;
@@ -24,6 +27,10 @@ export interface DesktopToolbarProps {
 export const DesktopToolbar = (props: DesktopToolbarProps) => {
   const { t, i18n } = useTranslation(props.namespace);
   const [logoPath, ] = useState<string|undefined>(props.logoPath);
+
+  const isAuth = () => {
+    return !!props.user;
+  }
 
   const getUserDisplayName = () => {
     if (!i18n.language) {
@@ -106,8 +113,11 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
 
     <Box component={"div"} sx={{ flexGrow: 1 }} />
 
+    <Box component={"div"}>
+      <Button variant="text" sx={{ textTransform: 'none' }} onClick={() => handleMenuClicked('seller')}>Seller Center</Button>
+    </Box>
     <Box component={"div"} sx={{ marginRight: '10px' }}>
-    { getUserDisplayName() }
+    { isAuth() && getUserDisplayName() }
     </Box>
     {/* <Box component={"div"} sx={{ display: 'flex' }}>
       <IconButton>

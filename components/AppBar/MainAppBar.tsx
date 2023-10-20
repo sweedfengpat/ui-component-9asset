@@ -12,6 +12,7 @@ import { LoginModal } from "../LoginModal";
 import { MenuItem } from "../Toolbar";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import axios from "axios";
+import { MeMenu } from "../Menu/MeMenu";
 
 const loggedMenuItems = [
   {
@@ -39,11 +40,6 @@ const loggedMenuItems = [
     text: 'menu.inquiry',
     link: '/inquiry',
   },
-  {
-    key: 'seller',
-    text: 'menu.sellerCenter',
-    link: '/'
-  }
 ] as MenuItem[];
 
 export interface AppBarState {
@@ -63,12 +59,16 @@ export interface MainAppBarProps {
   onRequirementClicked?: (isOpen: boolean) => void;
 }
 
+// export type LoginFor = 'buyer' | null;
+
 export const MainAppBar = (props: MainAppBarProps) => {
   const theme = useTheme();
   const [isBuyerModalOpen, setIsBuyerModalOpen] = useState<boolean>(false);
   const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
   const [loginModalMode, setLoginModalMode] = useState<'register'|'login'>('login');
   const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
+  const [isMeMenuOpened, setIsMeMenuOpened] = useState<boolean>(false);
+  // const [loginFor, setLoginFor] = useState<LoginFor>(null);
   
   const [state, setState] = useState<AppBarState>({
     user: null,
@@ -121,9 +121,23 @@ export const MainAppBar = (props: MainAppBarProps) => {
     });
   }
 
+  const isAuth = () => {
+    return !!state.user;
+  }
+
   const loginRequested = () => {
-    setLoginModalMode('login');
-    setIsLoginModalOpened(true);
+    if (isMeMenuOpened) {
+      setTimeout(() => {
+        setLoginModalMode('login');
+        setIsLoginModalOpened(true);
+      }, 400);
+      setIsMeMenuOpened(false);
+    } else {
+      
+      setLoginModalMode('login');
+      setIsLoginModalOpened(true);
+    }
+    
   }
 
   const registerRequested = () => {
@@ -134,16 +148,17 @@ export const MainAppBar = (props: MainAppBarProps) => {
   const handleLoginClosed = (isLoggedIn?: boolean) => {
     setIsLoginModalOpened(false);
 
-    if (isLoggedIn) {
-      setIsBuyerModalOpen(true);
-    }
+    // if (isLoggedIn) {
+    //   setIsBuyerModalOpen(true);
+    // }
   }
 
   const handleMeMenuRequested = () => {
     if (state.user) {
       setIsBuyerModalOpen(true);
     } else {
-      setIsLoginModalOpened(true);
+      setIsMeMenuOpened(true);
+      // setIsLoginModalOpened(true);
     }
   }
 
@@ -171,6 +186,8 @@ export const MainAppBar = (props: MainAppBarProps) => {
         }
         break;
       case 'seller':
+        window.location.href = `${process.env.NEXT_PUBLIC_SELLER_URL}`
+        break;
       case 'company-profile':
       case 'affiliate-agent':
       case 'listing':
@@ -196,7 +213,10 @@ export const MainAppBar = (props: MainAppBarProps) => {
         logoPath={props.logoPath}
         user={state.user}
         userInfo={state.userInfo || userInfo}
-        menuItems={loggedMenuItems}
+        menuItems={{
+          auth: loggedMenuItems,
+          nonauth: loggedMenuItems,
+        }}
         onProfileMenuClick={handleProfileMenuClicked}
         onLanguageChanged={props.onLanguageChanged}
       />
@@ -204,15 +224,22 @@ export const MainAppBar = (props: MainAppBarProps) => {
         logoPath={props.logoPath}
         user={state.user}
         userInfo={state.userInfo || userInfo}
-        menuItems={loggedMenuItems}
+       
         onMenuItemClicked={handleProfileMenuClicked}
         onLanguageChanged={props.onLanguageChanged}
         onSearchClicked={handleSearchClicked}
       />
     </AppBar>
-    <BuyerModal open={isBuyerModalOpen} onClose={() => setIsBuyerModalOpen(false)} />
     <ButtomMenuBar onMeRequest={handleMeMenuRequested} onRequirementClick={props.onRequirementClicked} />
+    <BuyerModal open={isBuyerModalOpen} onClose={() => setIsBuyerModalOpen(false)} />
     <LoginModal open={isLoginModalOpened} mode={loginModalMode} onLoginClosed={handleLoginClosed} />
+    <MeMenu
+      open={isMeMenuOpened}
+      logo={props.logoPath}
+      items={loggedMenuItems}
+      onClose={() => setIsMeMenuOpened(false)}
+      onMenuClicked={handleProfileMenuClicked}
+    />
   </ThemeProvider>
   );
 }
