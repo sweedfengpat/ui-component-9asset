@@ -167,7 +167,13 @@ export const MainAppBar = (props: MainAppBarProps) => {
     props.onMobileSearchClicked?.();
   }
 
-  const onLoginMessage = () => {
+  const onLoginMessage = (msgEvent: MessageEvent) => {
+    
+    const { source, type } = msgEvent.data;
+    if (source !== 'login' || (type !== 'logged-in' || type === 'registered')) {
+      return;
+    }
+
     console.log('app bar >>>> logged')
     window.removeEventListener('message', onLoginMessage);
     if (isMobile) {
