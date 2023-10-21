@@ -14,6 +14,7 @@ const Transition = React.forwardRef(function Transition(
 
 interface BuyerMenuProps {
   open: boolean;
+  path?: string | null;
   onClose?: () => void;
 }
 
@@ -46,7 +47,7 @@ export const BuyerModal = (props: BuyerMenuProps) => {
   >
     <Box
       component="iframe"
-      src={process.env.NEXT_PUBLIC_BUYER_URL}
+      src={`${process.env.NEXT_PUBLIC_BUYER_URL}/${props.path || ''}`}
       sx={{ width: '100vw', height: '100vh', overflow: 'unset' }}
     />
   </Dialog>
