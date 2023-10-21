@@ -275,7 +275,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
     <BuyerModal
       open={isBuyerModalOpen}
       path={path}
-      onClose={() => setIsBuyerModalOpen(false)}
+      onClose={() => { setIsBuyerModalOpen(false); setPath(null); }}
     />
     <LoginModal open={isLoginModalOpened} mode={loginModalMode} onLoginClosed={handleLoginClosed} />
     <MeMenu
