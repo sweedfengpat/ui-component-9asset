@@ -170,7 +170,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
   const onLoginMessage = (msgEvent: MessageEvent) => {
     
     const { source, type } = msgEvent.data;
-    if (source !== 'login' || (type !== 'logged-in' || type === 'registered')) {
+    if (source !== 'login' || (type !== 'logged-in' && type !== 'registered')) {
       return;
     }
 
