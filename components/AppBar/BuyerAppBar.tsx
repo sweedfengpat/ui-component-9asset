@@ -2,8 +2,8 @@ import { AppBar, useTheme } from "@mui/material";
 import logoPath from '../../assets/images/9asset-logo.png';
 import { DesktopToolbar } from "../Toolbar/Desktop";
 import { BuyerMobileToolbar as MobileToolbar } from "../Toolbar/BuyerMobile";
-import { useState } from "react";
-import { User } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { Auth, User, onAuthStateChanged } from "firebase/auth";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { MenuItem } from "../Toolbar";
 
@@ -41,8 +41,7 @@ const loggedMenuItems = [
 ] as MenuItem[];
 
 export interface AppBarState {
-  user: User | null;
-  userInfo: any | null;
+
 }
 
 export interface BuyerAppBarProps {
@@ -50,6 +49,7 @@ export interface BuyerAppBarProps {
   title: string;
   additionalAction?: React.ReactNode;
   isBackable?: boolean;
+  auth: Auth;
 
   onBackRequested?: () => void;
   onClose?: () => void;
@@ -57,12 +57,26 @@ export interface BuyerAppBarProps {
 
 export const BuyerAppBar = (props: BuyerAppBarProps) => {
   const theme = useTheme();
+
+  const [user, setUser] = useState<User|null>(null);
   const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
 
-  const [state, setState] = useState<AppBarState>({
-    user: null,
-    userInfo: userInfo
-  });
+  useEffect(() => {
+    const unsub = getUser();
+    return () => { 
+      unsub && unsub();
+    }
+  }, []);
+
+  const getUser = () => {
+    if (props.auth) {
+      setUser(props.auth.currentUser)
+      return onAuthStateChanged(props.auth, () => {
+        setUser(props.auth.currentUser)
+      });
+    }
+    return null;
+  }
 
   const handleProfileMenuClicked = (type: string, link?: string) => {
     switch (type) {
@@ -92,8 +106,8 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
       namespace={props.namespace}
       logoPath={logoPath}
       
-      user={state.user}
-      userInfo={state.userInfo}
+      user={user}
+      userInfo={userInfo}
       menuItems={{
         auth: loggedMenuItems,
         nonauth: []

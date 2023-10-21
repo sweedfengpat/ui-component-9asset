@@ -5,6 +5,7 @@ import { BuyerAppBar as AppBar } from "../components/AppBar/BuyerAppBar";
 import ProfileCard from "../components/ProfileCard";
 import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
 import { EmailOutlined, EventNote, FolderSpecialOutlined, PageviewOutlined, History as HistoryIcon, AccountCircleOutlined } from "@mui/icons-material";
+import { Auth } from "@firebase/auth";
 
 const LayoutRoot = styled(Box)({
   display: 'flex'
@@ -21,6 +22,7 @@ const MainContainer = styled('main')({
 });
 
 export interface BuyerLayoutProps {
+  auth: Auth;
   namespace?: string;
 }
 
@@ -132,6 +134,7 @@ export const BuyerLayout = (props: BuyerLayoutProps) => {
     <CssBaseline />
     <AppBar
       namespace={props.namespace || 'common'}
+      auth={props.auth}
       title={getTitle()}
       additionalAction={getAdditionalAction()}
       isBackable={location.pathname !== '/'}
