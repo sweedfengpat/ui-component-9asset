@@ -214,7 +214,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
   }
 
   const renderMenuDetail = () => {
-    const isAuth = false; // getIsAuth();
+    const isAuth = getIsAuth();
     return menuType === 'default' ? (
     <List
       sx={{
