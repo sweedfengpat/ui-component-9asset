@@ -94,7 +94,10 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
       
       user={state.user}
       userInfo={state.userInfo}
-      menuItems={loggedMenuItems}
+      menuItems={{
+        auth: loggedMenuItems,
+        nonauth: []
+      }}
       onProfileMenuClick={handleProfileMenuClicked}
       onLanguageChanged={onLanguageChanged}
     />
