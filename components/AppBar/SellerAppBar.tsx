@@ -19,7 +19,10 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
     <DesktopToolbar
       namespace={props.namespace}
       logoPath={logoPath}
-      menuItems={[]}
+      menuItems={{
+        auth: [],
+        nonauth: []
+      }}
       user={null}
       userInfo={undefined}
     />
