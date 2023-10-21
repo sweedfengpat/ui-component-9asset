@@ -1,5 +1,5 @@
 import { AppBar, ThemeProvider, useMediaQuery, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DesktopToolbar } from '../Toolbar/Desktop';
 import { ButtomMenuBar } from "../../Layouts/ButtomBar";
 import { BuyerModal } from "../../Layouts/BuyerModal";
@@ -70,7 +70,8 @@ export const MainAppBar = (props: MainAppBarProps) => {
   const [loginModalMode, setLoginModalMode] = useState<'register'|'login'>('login');
   const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
   const [isMeMenuOpened, setIsMeMenuOpened] = useState<boolean>(false);
-  const [loginFor, setLoginFor] = useState<{ type: LoginFor, link?: string }>({ type: null });
+  const [loginFor, setLoginFor] = useState<string|undefined>(undefined);
+  const loginForRef = useRef(loginFor);
   
   const [state, setState] = useState<AppBarState>({
     user: null,
@@ -85,6 +86,11 @@ export const MainAppBar = (props: MainAppBarProps) => {
       window.removeEventListener('loginrequested', loginRequested);
     };
   }, []);
+
+  useEffect(() => {
+    console.log(loginFor)
+    loginForRef.current = loginFor;
+  }, [loginFor]);
 
   useEffect(() => {
     console.log(`User Info:`, userInfo);
@@ -128,6 +134,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
   }
 
   const loginRequested = () => {
+    setLoginFor(undefined);
     if (isMeMenuOpened) {
       setTimeout(() => {
         setLoginModalMode('login');
@@ -173,20 +180,16 @@ export const MainAppBar = (props: MainAppBarProps) => {
     if (source !== 'login' || (type !== 'logged-in' && type !== 'registered')) {
       return;
     }
-
+    console.log(loginForRef.current);
     console.log('app bar >>>> logged')
     window.removeEventListener('message', onLoginMessage);
     if (isMobile) {
       setIsBuyerModalOpen(true);
+      
     } else {
-      window.location.href = `${process.env.NEXT_PUBLIC_BUYER_URL}/${loginFor?.link}`
+      window.location.href = `${process.env.NEXT_PUBLIC_BUYER_URL}${loginForRef.current || ''}`
     }
-    setLoginFor({ type: null });
-  }
-
-  const handleAfterLogged = (type: string, link?: string) => {
-    setLoginFor({ type: type as LoginFor, link });
-    window.addEventListener('message', onLoginMessage);
+    
   }
 
   const handleBuyerMenuClicked = (type: string, link?: string) => {
@@ -199,7 +202,8 @@ export const MainAppBar = (props: MainAppBarProps) => {
       setLoginModalMode('login');
       setIsLoginModalOpened(true);
       
-      handleAfterLogged(type, link);
+      setLoginFor(link);
+      window.addEventListener('message', onLoginMessage);
     }
   }
 
