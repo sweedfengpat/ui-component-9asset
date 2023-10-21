@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, Stack, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, Button, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, Stack, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
 import { ChevronLeft } from "@mui/icons-material";
 import { User } from "firebase/auth";
 import { getUserName } from "../../Layouts/Profile";
@@ -21,7 +21,10 @@ export interface ProfileMenuProps {
   anchorElement: HTMLElement | null;
   user: User | null;
   userInfo: any | null;
-  items: IMenuItem[];
+  items: {
+    auth: IMenuItem[],
+    nonauth: IMenuItem [],
+  };
 
   onClose?: () => void;
   onMenuClicked?: (key: string, link?: string) => void;
@@ -79,8 +82,6 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
     }
   }
 
-  
-
   const handleLogin = () => {
     props.onMenuClicked?.('login');
   }
@@ -108,7 +109,27 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
 
   const renderLoggedInMenu = () => {
     return (<>{
-      (props.items || []).map((item, index) => (<React.Fragment key={item.key || index}>
+      (props.items.auth || []).map((item, index) => (<React.Fragment key={item.key || index}>
+        <MenuItem
+          disabled={!!item.items}
+          onClick={() => props.onMenuClicked?.(item.key, item.link)}
+        >
+          <ListItemText>{ t(item.text) }</ListItemText>
+        </MenuItem>
+        {
+          (item.items || []).map((s) => (
+            <MenuSubItem key={s.key} onClick={() => props.onMenuClicked?.(s.key, s.link)}>
+              <ListItemText inset>{ t(s.text) }</ListItemText>
+            </MenuSubItem>
+          ))
+        }
+      </React.Fragment>))
+    }</>);
+  }
+
+  const renderNonLoggedInMenu = () => {
+    return (<>{
+      (props.items.nonauth || []).map((item, index) => (<React.Fragment key={item.key || index}>
         <MenuItem
           disabled={!!item.items}
           onClick={() => props.onMenuClicked?.(item.key, item.link)}
@@ -193,7 +214,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
   }
 
   const renderMenuDetail = () => {
-    const isAuth = getIsAuth();
+    const isAuth = false; // getIsAuth();
     return menuType === 'default' ? (
     <List
       sx={{
@@ -203,14 +224,20 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
         bgcolor: theme.palette.background.paper
       }}
       subheader={
-        <ListSubheader
-          sx={{ lineHeight: '30px', marginTop: '10px' }}
-        >
-          {t('My Account')}
-      </ListSubheader>}
+        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1} sx={{ marginTop: '5px', px: 1 }}>
+          <ListSubheader sx={{ lineHeight: '30px', px: 0 }}>
+            {t('My Account')}
+          </ListSubheader>
+          {/* <Button
+            variant="text"
+            sx={{ textTransform: 'none', fontWeight: '600' }}
+            onClick={() => props.onMenuClicked?.('seller')}
+          >Seller Center</Button> */}
+        </Stack>
+      }
     >
       { isAuth ? renderAuthMenu() : renderNonAuthMenu() }
-      { isAuth && renderLoggedInMenu() }
+      { isAuth ? renderLoggedInMenu() : renderNonLoggedInMenu() }
       { renderCommonMenu() }
       { isAuth && logoutMenu }
     </List>

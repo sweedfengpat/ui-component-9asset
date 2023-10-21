@@ -3,11 +3,11 @@ import { useState } from "react";
 import React from "react";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close, NavigateBefore } from "@mui/icons-material";
-import logoImage from '../assets/images/9asset-logo.png'
+import logoImage from '../assets/images/9asset-logo.png';
 import { useTranslation } from "react-i18next";
-import { MenuItem as IMenuItem } from "../components/Toolbar";
+import { MenuItem as IMenuItem } from "../Toolbar";
 import { User } from "firebase/auth";
-import { getUserName } from "./Profile";
+import { getUserName } from "../../Layouts/Profile";
 
 type MenuItem = IMenuItem & {
     onClick?: () => void;
@@ -86,7 +86,7 @@ export const MenuDialogTitle = (props: MenuDialogTitleProps) => {
                             fontWeight: '600',
                             color: 'black'
                         }}>
-                        9Asset
+                        9asset
                     </Box>
                 </Box>
             </Box>
@@ -338,7 +338,7 @@ export const MainMenu = (props: MainMenuProps) => {
             if (menuType === MenuType.Default) {
                 return (
                 <List>
-                    { isAuth ? renderAuthMenu() : renderNonAuthMenu()}
+                    {/* { isAuth ? renderAuthMenu() : renderNonAuthMenu()} */}
                     { generalMenu.map(generateMobileGenericMenu) }
                     { isAuth && renderLoggedInMenu() }
                     <Divider sx={{ my: 1 }} />

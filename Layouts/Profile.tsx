@@ -3,7 +3,7 @@ import { Avatar } from "@mui/material";
 import { User, UserInfo } from "firebase/auth";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ProfileMenu } from "../components/ProfileMenu/ProfileMenu";
+import { ProfileMenu } from "../components/Menu/ProfileMenu";
 import { MainMenuLanguage } from "./MainLayoutAppBar";
 import { MenuItem } from "../components/Toolbar";
 
@@ -31,7 +31,10 @@ export interface ProfileProps {
     namespace?: string;
     user: User | null;
     userInfo: any | null;
-    menuItems?: MenuItem[];
+    menuItems?: {
+      auth: MenuItem[];
+      nonauth: MenuItem[];
+    };
 
     onLanguageChanged?: (ln: MainMenuLanguage) => void;
     onMenuClicked?: (item: 'login' | 'register' | 'logout' | string, link?: string) => void;
@@ -64,7 +67,7 @@ export const Profile = (props: ProfileProps) => {
 
       user={props.user}
       userInfo={props.userInfo}
-      items={props.menuItems || []}
+      items={props.menuItems || { auth: [], nonauth: [] }}
     
   //   onLoginRequest={handleLoginRequested}
   //   onMenuClicked={

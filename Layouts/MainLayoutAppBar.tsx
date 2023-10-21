@@ -254,7 +254,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
         <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
             <Toolbar>
                 <a href ={props.homeUrl || '/' }>
-                    <img src={logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
+                    <img src={logoPath} style={{ height: '40px' }} alt="'9asset Logo'" />
                 </a>
                 
                 <Box sx={{ flexGrow: 1, pl: 4, display: { xs: 'flex', md: 'none' } }}>
