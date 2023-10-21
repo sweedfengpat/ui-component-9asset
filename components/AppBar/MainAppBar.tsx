@@ -1,4 +1,4 @@
-import { AppBar, ThemeProvider, useTheme } from "@mui/material";
+import { AppBar, ThemeProvider, useMediaQuery, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { DesktopToolbar } from '../Toolbar/Desktop';
 import { ButtomMenuBar } from "../../Layouts/ButtomBar";
@@ -59,16 +59,18 @@ export interface MainAppBarProps {
   onRequirementClicked?: (isOpen: boolean) => void;
 }
 
-// export type LoginFor = 'buyer' | null;
+export type LoginFor = 'appointment' | 'requirements' | 'interested' | 'recently' | null;
 
 export const MainAppBar = (props: MainAppBarProps) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
   const [isBuyerModalOpen, setIsBuyerModalOpen] = useState<boolean>(false);
   const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
   const [loginModalMode, setLoginModalMode] = useState<'register'|'login'>('login');
   const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
   const [isMeMenuOpened, setIsMeMenuOpened] = useState<boolean>(false);
-  // const [loginFor, setLoginFor] = useState<LoginFor>(null);
+  const [loginFor, setLoginFor] = useState<{ type: LoginFor, link?: string }>({ type: null });
   
   const [state, setState] = useState<AppBarState>({
     user: null,
@@ -133,7 +135,6 @@ export const MainAppBar = (props: MainAppBarProps) => {
       }, 400);
       setIsMeMenuOpened(false);
     } else {
-      
       setLoginModalMode('login');
       setIsLoginModalOpened(true);
     }
@@ -166,6 +167,36 @@ export const MainAppBar = (props: MainAppBarProps) => {
     props.onMobileSearchClicked?.();
   }
 
+  const onLoginMessage = () => {
+    console.log('app bar >>>> logged')
+    window.removeEventListener('message', onLoginMessage);
+    if (isMobile) {
+      setIsBuyerModalOpen(true);
+    } else {
+      window.location.href = `${process.env.NEXT_PUBLIC_BUYER_URL}/${loginFor?.link}`
+    }
+    setLoginFor({ type: null });
+  }
+
+  const handleAfterLogged = (type: string, link?: string) => {
+    setLoginFor({ type: type as LoginFor, link });
+    window.addEventListener('message', onLoginMessage);
+  }
+
+  const handleBuyerMenuClicked = (type: string, link?: string) => {
+    const logged = isAuth();
+    if (logged) {
+
+    } else {
+      setIsMeMenuOpened(false);
+
+      setLoginModalMode('login');
+      setIsLoginModalOpened(true);
+      
+      handleAfterLogged(type, link);
+    }
+  }
+
   const handleProfileMenuClicked = (type: string, link?: string) => {
     switch (type) {
       case 'login':
@@ -181,9 +212,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
       case 'requirements':
       case 'interested':
       case 'recently':
-        if (link) {
-          window.location.href = `${process.env.NEXT_PUBLIC_BUYER_URL}${link}`
-        }
+        handleBuyerMenuClicked(type, link);
         break;
       case 'seller':
         window.location.href = `${process.env.NEXT_PUBLIC_SELLER_URL}`

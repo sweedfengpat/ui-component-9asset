@@ -86,7 +86,7 @@ export const MenuDialogTitle = (props: MenuDialogTitleProps) => {
                             fontWeight: '600',
                             color: 'black'
                         }}>
-                        9Asset
+                        9asset
                     </Box>
                 </Box>
             </Box>
