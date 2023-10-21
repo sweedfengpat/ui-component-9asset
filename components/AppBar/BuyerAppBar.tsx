@@ -15,22 +15,22 @@ const loggedMenuItems = [
   },
   {
     key: 'interested',
-    text: 'menu.interested',
+    text: 'menu.interestedListing.title',
     link: '/interested',
   },
   {
     key: 'recently',
-    text: 'menu.recently',
+    text: 'menu.recentlyViews.title',
     link: '/recently',
   },
   {
     key: 'appointment',
-    text: 'menu.appointment',
+    text: 'menu.appointment.title',
     link: '/appointment',
   },
   {
     key: 'inquiry',
-    text: 'menu.inquiry',
+    text: 'menu.inquiry.title',
     link: '/inquiry',
   },
   {
