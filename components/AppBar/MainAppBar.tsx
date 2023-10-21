@@ -72,6 +72,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
   const [isMeMenuOpened, setIsMeMenuOpened] = useState<boolean>(false);
   const [loginFor, setLoginFor] = useState<string|undefined>(undefined);
   const loginForRef = useRef(loginFor);
+  const [path, setPath] = useState<string|null>(null);
   
   const [state, setState] = useState<AppBarState>({
     user: null,
@@ -184,8 +185,8 @@ export const MainAppBar = (props: MainAppBarProps) => {
     console.log('app bar >>>> logged')
     window.removeEventListener('message', onLoginMessage);
     if (isMobile) {
+      setPath(loginForRef.current || null);
       setIsBuyerModalOpen(true);
-      
     } else {
       window.location.href = `${process.env.NEXT_PUBLIC_BUYER_URL}${loginForRef.current || ''}`
     }
@@ -195,7 +196,8 @@ export const MainAppBar = (props: MainAppBarProps) => {
   const handleBuyerMenuClicked = (type: string, link?: string) => {
     const logged = isAuth();
     if (logged) {
-
+      setPath(null);
+      setIsBuyerModalOpen(true);
     } else {
       setIsMeMenuOpened(false);
 
@@ -270,7 +272,11 @@ export const MainAppBar = (props: MainAppBarProps) => {
       />
     </AppBar>
     <ButtomMenuBar onMeRequest={handleMeMenuRequested} onRequirementClick={props.onRequirementClicked} />
-    <BuyerModal open={isBuyerModalOpen} onClose={() => setIsBuyerModalOpen(false)} />
+    <BuyerModal
+      open={isBuyerModalOpen}
+      path={path}
+      onClose={() => setIsBuyerModalOpen(false)}
+    />
     <LoginModal open={isLoginModalOpened} mode={loginModalMode} onLoginClosed={handleLoginClosed} />
     <MeMenu
       open={isMeMenuOpened}
