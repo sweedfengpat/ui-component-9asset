@@ -200,7 +200,12 @@ export const MainAppBar = (props: MainAppBarProps) => {
     const logged = isAuth();
     if (logged) {
       setPath(null);
-      setIsBuyerModalOpen(true);
+      if (isMobile) {
+        setIsBuyerModalOpen(true);
+      } else {
+        window.location.href = `${process.env.NEXT_PUBLIC_BUYER_URL}${link || ''}`
+      }
+      
     } else {
       setIsMeMenuOpened(false);
 
