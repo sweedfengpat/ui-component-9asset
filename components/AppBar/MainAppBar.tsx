@@ -13,6 +13,7 @@ import { MenuItem } from "../Toolbar";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import axios from "axios";
 import { MeMenu } from "../Menu/MeMenu";
+import { LeaveYourRequirementModal } from "../../../components/LeaveYourRequirement/LeaveYourRequirementModal";
 
 const loggedMenuItems = [
   {
@@ -70,6 +71,8 @@ export const MainAppBar = (props: MainAppBarProps) => {
   const [loginModalMode, setLoginModalMode] = useState<'register'|'login'>('login');
   const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
   const [isMeMenuOpened, setIsMeMenuOpened] = useState<boolean>(false);
+  const [isRequirementMenuOpened, setIsRequirementMenuOpened] = useState<boolean>(false);
+
   const [loginFor, setLoginFor] = useState<string|undefined>(undefined);
   const loginForRef = useRef(loginFor);
   const [path, setPath] = useState<string|null>(null);
@@ -246,6 +249,11 @@ export const MainAppBar = (props: MainAppBarProps) => {
     }
   }
 
+  const handleRequirementClicked = () => {
+    setIsRequirementMenuOpened(true);
+    props.onRequirementClicked?.(true);
+  }
+
   return (
   <ThemeProvider theme={natheme}>
     <AppBar position="fixed" color={'inherit'} style={{ zIndex: theme.zIndex.drawer + 1 }}>
@@ -271,7 +279,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
         onSearchClicked={handleSearchClicked}
       />
     </AppBar>
-    <ButtomMenuBar onMeRequest={handleMeMenuRequested} onRequirementClick={props.onRequirementClicked} />
+    <ButtomMenuBar onMeRequest={handleMeMenuRequested} onRequirementClick={handleRequirementClicked} />
     <BuyerModal
       open={isBuyerModalOpen}
       path={path}
@@ -284,6 +292,11 @@ export const MainAppBar = (props: MainAppBarProps) => {
       items={loggedMenuItems}
       onClose={() => setIsMeMenuOpened(false)}
       onMenuClicked={handleProfileMenuClicked}
+    />
+    <LeaveYourRequirementModal
+      open={isRequirementMenuOpened}
+      logo={props.logoPath}
+      onClose={() => setIsRequirementMenuOpened(false)}
     />
   </ThemeProvider>
   );

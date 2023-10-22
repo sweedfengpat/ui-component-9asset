@@ -5,42 +5,21 @@ import { HomeOutlined, FormatListBulleted, Person2Outlined } from "@mui/icons-ma
 interface ButtomMenuBarProps {
     onLoginRequest?: () => void;
     onMeRequest?: () => void;
-    onRequirementClick?: (isOpen: boolean) => void;
+    onRequirementClick?: () => void;
+    onChatClick?: () => void;
 }
 
-export const ButtomMenuBar = ({ onLoginRequest, onMeRequest, onRequirementClick }: ButtomMenuBarProps) => {
+export const ButtomMenuBar = ({ onLoginRequest, onMeRequest, onRequirementClick, onChatClick }: ButtomMenuBarProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    // const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
-    // const [isBuyernModalOpened, setIsBuyerModalOpened] = useState<boolean>(false);
-    // const [isSellerModalOpened, setIsSellerModalOpened] = useState<boolean>(false);
-
-    const handleLoginRequested = () => {
-        // setIsLoginModalOpened(true);
-        // setIsBuyerModalOpened(false);
-        onLoginRequest?.();
-    }
-
-    const handleMeRequested = () => {
-        // setIsBuyerModalOpened(true);
-        // setIsLoginModalOpened(false);
-        onRequirementClick && onRequirementClick(false);
-        onMeRequest?.();
-    }
-
-    const handleSellerRequested = () => {
-        // setIsSellerModalOpened(true);
-        // setIsLoginModalOpened(false);
-        // onBuyerRequest?.();
-    }
 
     return isMobile ? (<>
     <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 4 }} elevation={6}>
         <BottomNavigation showLabels>
             <BottomNavigationAction label="Home" icon={<HomeOutlined />} onClick={() => { window.location.href='/' }} />
-            <BottomNavigationAction label="Requirement" icon={<FormatListBulleted />} onClick={() => { onRequirementClick && onRequirementClick(true) }} />
-            <BottomNavigationAction label="Chat" icon={<HomeOutlined />} onClick={() => { handleMeRequested(); }} />
-            <BottomNavigationAction label="Me" icon={<Person2Outlined />} onClick={() => { handleMeRequested(); }} />
+            <BottomNavigationAction label="Requirement" icon={<FormatListBulleted />} onClick={() => { onRequirementClick?.() }} />
+            <BottomNavigationAction label="Chat" icon={<HomeOutlined />} onClick={() => { onChatClick?.(); }} />
+            <BottomNavigationAction label="Me" icon={<Person2Outlined />} onClick={() => { onMeRequest?.(); }} />
         </BottomNavigation>
     </Paper>
     {/* <LoginModal open={isLoginModalOpened} onLoginClosed={() => setIsLoginModalOpened(false)} />
