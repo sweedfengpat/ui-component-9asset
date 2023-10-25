@@ -1,9 +1,10 @@
 import React, { MouseEvent, useState } from "react";
-import { Box, Button, IconButton, Toolbar } from "@mui/material";
+import { Avatar, Box, Button, IconButton, Toolbar } from "@mui/material";
 import { Menu, SearchOutlined } from "@mui/icons-material";
 import { MainMenu } from "../Menu/MainMenu";
 import { User } from "firebase/auth";
 import { MenuItem } from ".";
+import { getUserName } from "../../Layouts/Profile";
 
 export interface ToolbarProps {
   logoPath?: string;
@@ -84,6 +85,11 @@ export const MobileToolbar = (props: ToolbarProps) => {
     </Box>
     
     <div style={{ flexGrow: 1 }}></div>
+    <Box component={"div"} sx={{ display: { xs: 'flex', sm: 'none' }, mr: '10px'}}>
+      <Avatar sx={{ width: 34, height: 34 }}>
+      { getUserName(props.user) }
+      </Avatar>
+    </Box>
     <Box component={"div"} sx={{ display: { xs: 'flex', sm: 'none' }}}>
       <IconButton onClick={handleMenuClicked}>
         <Menu fontSize="large"  />
