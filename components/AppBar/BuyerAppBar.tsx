@@ -6,8 +6,14 @@ import { useEffect, useState } from "react";
 import { Auth, User, onAuthStateChanged } from "firebase/auth";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { MenuItem } from "../Toolbar";
+import { useNavigate } from "react-router";
 
 const loggedMenuItems = [
+  {
+    key: 'dashboard',
+    text: 'menu.dashboard',
+    link: '/',
+  },
   {
     key: 'requirements',
     text: 'menu.myRequirement',
@@ -33,11 +39,6 @@ const loggedMenuItems = [
     text: 'menu.inquiry.title',
     link: '/inquiry',
   },
-  {
-    key: 'seller',
-    text: 'menu.sellerCenter',
-    link: '/'
-  }
 ] as MenuItem[];
 
 export interface AppBarState {
@@ -57,6 +58,7 @@ export interface BuyerAppBarProps {
 
 export const BuyerAppBar = (props: BuyerAppBarProps) => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState<User|null>(null);
   const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
@@ -81,15 +83,14 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
   const handleProfileMenuClicked = (type: string, link?: string) => {
     switch (type) {
       case 'logout':
-        window.location.href = `${process.env.NEXT_PUBLIC_LOGIN_URL_BASE}/logout`
+        window.location.href = `${process.env.REACT_APP_BASE_URL}/logout`
         break;
+      case 'dashboard':
       case 'appointment':
       case 'requirements':
       case 'interested':
       case 'recently':
-        if (link) {
-          window.location.href = `${process.env.NEXT_PUBLIC_BUYER_URL}${link}`
-        }
+        link && navigate(link);
         break;
       default:
         break;

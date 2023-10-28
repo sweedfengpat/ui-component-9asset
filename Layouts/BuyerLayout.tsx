@@ -4,7 +4,7 @@ import { Outlet, useLocation, useNavigate } from "react-router";
 import { BuyerAppBar as AppBar } from "../components/AppBar/BuyerAppBar";
 import ProfileCard from "../components/ProfileCard";
 import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
-import { EmailOutlined, EventNote, FolderSpecialOutlined, PageviewOutlined, History as HistoryIcon, AccountCircleOutlined } from "@mui/icons-material";
+import { EmailOutlined, EventNote, FolderSpecialOutlined, PageviewOutlined, History as HistoryIcon, AccountCircleOutlined, DashboardOutlined } from "@mui/icons-material";
 import { Auth } from "@firebase/auth";
 
 const LayoutRoot = styled(Box)({
@@ -37,6 +37,12 @@ const locationMap = new Map([
   ['/appointment', 'Appointments']
 ]);
 const drawerMenu = [
+  {
+    key: 'dashboard',
+    title: 'dashboard',
+    icon: DashboardOutlined,
+    link: '/',
+  },
   {
     key: 'requirement',
     title: 'myRequirement',
