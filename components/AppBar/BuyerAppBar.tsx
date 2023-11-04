@@ -83,13 +83,14 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
   const handleProfileMenuClicked = (type: string, link?: string) => {
     switch (type) {
       case 'logout':
-        window.location.href = `${process.env.REACT_APP_BASE_URL}/logout`
+        window.location.href = `${process.env.REACT_APP_LOGIN_BASE_URL}/logout`
         break;
       case 'dashboard':
       case 'appointment':
       case 'requirements':
       case 'interested':
       case 'recently':
+      case 'inquiry':
         link && navigate(link);
         break;
       default:
