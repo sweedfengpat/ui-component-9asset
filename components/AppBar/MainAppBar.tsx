@@ -287,7 +287,15 @@ export const MainAppBar = (props: MainAppBarProps) => {
     <BuyerModal
       open={isBuyerModalOpen}
       path={path}
-      onClose={() => { setIsBuyerModalOpen(false); setPath(null); }}
+      onClose={() => { 
+        setIsBuyerModalOpen(false);
+        setPath(null);
+      }}
+      onLogoutRequested={() => { 
+        setIsBuyerModalOpen(false);
+        setPath(null);
+        window.location.href = `${process.env.NEXT_PUBLIC_LOGIN_URL_BASE}/logout`
+      }}
     />
     <LoginModal open={isLoginModalOpened} mode={loginModalMode} onLoginClosed={handleLoginClosed} />
     <MeMenu

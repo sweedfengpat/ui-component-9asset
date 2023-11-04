@@ -16,6 +16,7 @@ interface BuyerMenuProps {
   open: boolean;
   path?: string | null;
   onClose?: () => void;
+  onLogoutRequested?:() => void;
 }
 
 
@@ -26,8 +27,18 @@ export const BuyerModal = (props: BuyerMenuProps) => {
 
   const onMessageReceived = (e: MessageEvent) => {
     const { source, type } = e.data;
-    if (source === 'buyer' && type === 'close-window') {
-      props.onClose?.();
+    if (source === 'buyer') {
+      switch(type) {
+        case 'close-window':
+          props.onClose?.();
+          break;
+        case 'log-out-request':
+          props.onLogoutRequested?.();
+          break;
+        default: 
+          console.log(`event >> ${type}`)
+          break;
+      }
     }
   };
 
