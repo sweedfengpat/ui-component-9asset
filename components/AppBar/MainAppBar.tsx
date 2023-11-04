@@ -231,6 +231,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
       case 'requirements':
       case 'interested':
       case 'recently':
+      case 'inquiry':
         handleBuyerMenuClicked(type, link);
         break;
       case 'seller':

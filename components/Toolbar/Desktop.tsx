@@ -68,6 +68,9 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
   }
 
   const getUrl = (type: string) => {
+    if (type === 'article') {
+      return `${i18n.language === 'th' ? '' : i18n.language}/article`;
+    }
     return i18n.language === 'th' ? `/${t(type)}/${t('estate')}` : `/${i18n.language}/${t(type)}/${t('estate')}`;
   }
 
@@ -106,7 +109,8 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
       { linkComponent('sell') }
       { linkComponent('rent') }
       { linkComponent('project') }
-      <Box component={"div"} sx={{ marginTop: '-10px', position: 'absolute', left: '275px', width: '450px' }}>
+      { linkComponent('article') }
+      <Box component={"div"} sx={{ marginTop: '-10px', position: 'absolute', left: '320px', width: '450px' }}>
         <AdvanceSearch />
       </Box>
     </Box>
