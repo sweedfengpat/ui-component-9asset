@@ -140,13 +140,15 @@ export const MeMenu = (props: MenuProps) => {
               </Box>
               
             </Box>
-            <Button
-              variant="text"
-              sx={{ pr: 5, textTransform: 'none', fontWeight: '600' }}
-              onClick={() => window.location.href = `${process.env.REACT_APP_BASE_SELLER_URL}` }
-            >
-              Seller Center
-            </Button>
+            <Box>
+              <Button
+                variant="text"
+                sx={{ pr: 5, textTransform: 'none', fontWeight: '600' }}
+                onClick={() => window.location.href = `${process.env.REACT_APP_BASE_SELLER_URL}` }
+              >
+                Seller Center
+              </Button>
+            </Box>
           </Box>
           { closeButton }
         </Toolbar>

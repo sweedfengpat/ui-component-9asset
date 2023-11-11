@@ -2,9 +2,11 @@ import { AddHomeOutlined, Apps, HomeOutlined, Person2Outlined } from "@mui/icons
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 
 export interface SellerBottomBarProps {
+  onMeRequest?: () => void;
 }
 
 export const SellerBottomBar = (props: SellerBottomBarProps) => {
+
   return (
     <Paper
       sx={{ 
@@ -22,7 +24,7 @@ export const SellerBottomBar = (props: SellerBottomBarProps) => {
         <BottomNavigationAction label="Order" icon={<AddHomeOutlined />} onClick={() => { }} />
         <BottomNavigationAction label="Tools" icon={<Apps />} onClick={() => { }} />
         <BottomNavigationAction label="Chat" icon={<HomeOutlined />} onClick={() => { }} />
-        <BottomNavigationAction label="Me" icon={<Person2Outlined />} onClick={() => { }} />
+        <BottomNavigationAction label="Me" icon={<Person2Outlined />} onClick={() => { props.onMeRequest?.() }} />
       </BottomNavigation>
     </Paper>
   );
