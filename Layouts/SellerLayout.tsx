@@ -5,6 +5,7 @@ import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
 import { SellerBottomBar as BottomBar } from '../Layouts/SellerButtomBar';
 import { AccountCircleOutlined, AdsClickOutlined, LocalMallOutlined, PageviewOutlined, QueryStatsOutlined, Search, ViewListOutlined } from "@mui/icons-material";
 import { Outlet, useLocation } from "react-router-dom";
+import { Auth } from "firebase/auth";
 
 const LayoutRoot = styled(Box)({
   display: 'flex'
@@ -122,6 +123,7 @@ const drawerMenu = [
 ] as DrawerMenuItem[];
 
 export interface SellerLayoutProps {
+  auth: Auth;
   namespace?: string;
 }
 
@@ -151,7 +153,7 @@ export const SellerLayout = (props: SellerLayoutProps) => {
         namespace={props.namespace || 'common'}
         title={getTitle()}
         additionalAction={getAdditionalAction()}
-      />
+        auth={props.auth}      />
 
       <Drawer
         sx={{
