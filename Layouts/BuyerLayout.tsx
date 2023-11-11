@@ -6,6 +6,7 @@ import ProfileCard from "../components/ProfileCard";
 import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
 import { EmailOutlined, EventNote, FolderSpecialOutlined, PageviewOutlined, History as HistoryIcon, AccountCircleOutlined, DashboardOutlined } from "@mui/icons-material";
 import { Auth } from "@firebase/auth";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const LayoutRoot = styled(Box)({
   display: 'flex'
@@ -96,9 +97,10 @@ const drawerMenu = [
 
 export const BuyerLayout = (props: BuyerLayoutProps) => {
   const { t, i18n } = useTranslation();
-  const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
+  // const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
   const location = useLocation();
   const navigate = useNavigate();
+  const [user, setUser] = useLocalStorage<any>(`9asset.userinfo`);
 
   const getTitle = () => {
     return locationMap.get(location.pathname) || 'Buyer';
