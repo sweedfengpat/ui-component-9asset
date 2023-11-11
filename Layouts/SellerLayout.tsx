@@ -1,4 +1,4 @@
-import { Box, CssBaseline, Divider, Drawer, Grid, IconButton, Toolbar, styled } from "@mui/material";
+import { Box, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Toolbar, styled } from "@mui/material";
 import { SellerAppBar as AppBar } from '../components/AppBar/SellerAppBar';
 import ProfileCard from "../components/ProfileCard";
 import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
@@ -194,6 +194,7 @@ export const SellerLayout = (props: SellerLayoutProps) => {
       />
       <MeMenu
         open={isMeMenuOpened}
+        
         onClose={() => { setIsMeMenuOpened(false); }}
       />
     </LayoutRoot>

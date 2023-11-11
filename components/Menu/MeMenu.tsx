@@ -28,6 +28,7 @@ export interface MenuProps {
   open: boolean;
   logo?: string;
   items?: IMenuItem[];
+  additionalActions?: React.ReactNode;
 
   onClose: () => void;
   onMenuClicked?: (type: string, link?: string) => void;
@@ -140,15 +141,9 @@ export const MeMenu = (props: MenuProps) => {
               </Box>
               
             </Box>
-            <Box>
-              <Button
-                variant="text"
-                sx={{ pr: 5, textTransform: 'none', fontWeight: '600' }}
-                onClick={() => window.location.href = `${process.env.REACT_APP_BASE_SELLER_URL}` }
-              >
-                Seller Center
-              </Button>
-            </Box>
+            {
+              props.additionalActions
+            }
           </Box>
           { closeButton }
         </Toolbar>
