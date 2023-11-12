@@ -7,6 +7,7 @@ import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
 import { EmailOutlined, EventNote, FolderSpecialOutlined, PageviewOutlined, History as HistoryIcon, AccountCircleOutlined, DashboardOutlined } from "@mui/icons-material";
 import { Auth } from "@firebase/auth";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useState } from "react";
 
 const LayoutRoot = styled(Box)({
   display: 'flex'
@@ -25,6 +26,8 @@ const MainContainer = styled('main')({
 export interface BuyerLayoutProps {
   auth: Auth;
   namespace?: string;
+
+  onCurrentMenuChanged?: (key: string) => void;
 }
 
 const drawerWidth = 255;
@@ -101,6 +104,7 @@ export const BuyerLayout = (props: BuyerLayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useLocalStorage<any>(`9asset.userinfo`);
+  const [currentMenu, setCurrentMenu] = useState<string|null>(null);
 
   const getTitle = () => {
     return locationMap.get(location.pathname) || 'Buyer';
@@ -136,6 +140,10 @@ export const BuyerLayout = (props: BuyerLayoutProps) => {
   const handleBackRequested = () => {
     navigate('/');
   }
+
+  const handleDrawerMenuClicked = (key: string) => {
+    setCurrentMenu(key);
+  }
   
   return (
   <LayoutRoot>
@@ -169,13 +177,17 @@ export const BuyerLayout = (props: BuyerLayoutProps) => {
       </Grid>
       <ProfileCard user={user}></ProfileCard>
       <Divider variant="middle"></Divider>
-      <DrawerMenu menu={drawerMenu} />
+      <DrawerMenu
+        menu={drawerMenu}
+        multiActive={true}
+        onMenuItemClick={handleDrawerMenuClicked}
+      />
     </Drawer>
     
     <MainContainer sx={{ p: { xs: 1, sm: 2 } }}>
       <Toolbar />
       <Grid container sx={{ height: '42px', display: { xs: 'none', sm: 'block' } }}></Grid>
-      <Outlet />
+      <Outlet context={[currentMenu, setCurrentMenu]} />
     </MainContainer>
   </LayoutRoot>
   );
