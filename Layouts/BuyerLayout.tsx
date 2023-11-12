@@ -187,7 +187,7 @@ export const BuyerLayout = (props: BuyerLayoutProps) => {
     <MainContainer sx={{ p: { xs: 1, sm: 2 } }}>
       <Toolbar />
       <Grid container sx={{ height: '42px', display: { xs: 'none', sm: 'block' } }}></Grid>
-      <Outlet context={[currentMenu, setCurrentMenu]} />
+      <Outlet context={[currentMenu]} />
     </MainContainer>
   </LayoutRoot>
   );
