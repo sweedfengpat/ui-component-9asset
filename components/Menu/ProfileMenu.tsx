@@ -61,7 +61,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
   }, [isMobile]);
 
   const getIsAuth = () => {
-    return  props.user !== null;
+    return  true; // props.user !== null;
   }
 
   const getName = () => {

@@ -1,4 +1,4 @@
-import { Box, CssBaseline, Divider, Drawer, Grid, IconButton, Toolbar, styled } from "@mui/material";
+import { Box, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Toolbar, styled } from "@mui/material";
 import { SellerAppBar as AppBar } from '../components/AppBar/SellerAppBar';
 import ProfileCard from "../components/ProfileCard";
 import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
@@ -6,6 +6,8 @@ import { SellerBottomBar as BottomBar } from '../Layouts/SellerButtomBar';
 import { AccountCircleOutlined, AdsClickOutlined, LocalMallOutlined, PageviewOutlined, QueryStatsOutlined, Search, ViewListOutlined } from "@mui/icons-material";
 import { Outlet, useLocation } from "react-router-dom";
 import { Auth } from "firebase/auth";
+import { useState } from "react";
+import { MeMenu } from "../components/Menu/MeMenu";
 
 const LayoutRoot = styled(Box)({
   display: 'flex'
@@ -130,6 +132,7 @@ export interface SellerLayoutProps {
 export const SellerLayout = (props: SellerLayoutProps) => {
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
+  const [isMeMenuOpened, setIsMeMenuOpened] = useState<boolean>(false);
 
   const getTitle = () => {
     return 'Seller Center';
@@ -137,6 +140,10 @@ export const SellerLayout = (props: SellerLayoutProps) => {
 
   const handleSearchClicked = () => {
     
+  }
+
+  const handleMeMenuRequested = () => {
+    setIsMeMenuOpened(true);
   }
 
   const getAdditionalAction = () => {
@@ -153,7 +160,8 @@ export const SellerLayout = (props: SellerLayoutProps) => {
         namespace={props.namespace || 'common'}
         title={getTitle()}
         additionalAction={getAdditionalAction()}
-        auth={props.auth}      />
+        auth={props.auth}
+      />
 
       <Drawer
         sx={{
@@ -181,7 +189,14 @@ export const SellerLayout = (props: SellerLayoutProps) => {
         <Grid container sx={{ height: '42px', display: { xs: 'none', sm: 'block' } }}></Grid>
         <Outlet />
       </MainContainer>
-      <BottomBar />
+      <BottomBar
+        onMeRequest={handleMeMenuRequested}
+      />
+      <MeMenu
+        open={isMeMenuOpened}
+        
+        onClose={() => { setIsMeMenuOpened(false); }}
+      />
     </LayoutRoot>
   );
 }

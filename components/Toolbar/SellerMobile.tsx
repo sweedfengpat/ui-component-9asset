@@ -31,6 +31,15 @@ export interface SellerMobileToolBarProps {
 export const SellerMobileToolBar = (props: SellerMobileToolBarProps) => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
 
+  const closeButton = (
+    <IconButton 
+      sx={{ position: 'absolute', right: 4, color: (theme) => theme.palette.grey[500] }}
+      onClick={() => { props.onClose && props.onClose() }}
+    >
+      <Close />
+    </IconButton>
+  );
+
   const handleMenuClicked = () => {
     setOpenMenu(true);
   }
@@ -39,7 +48,7 @@ export const SellerMobileToolBar = (props: SellerMobileToolBarProps) => {
     <StyledToolbar
       sx={{ display: { xs:'flex', sm: 'none'},
       paddingLeft: { xs: '0px', sm:'16px' },
-      paddingRight: props.onClose ? '50px' : '8px' }}
+      paddingRight: props.onClose ? '50px' : '16px' }}
     >
       <Box
         component="div" 
@@ -72,11 +81,12 @@ export const SellerMobileToolBar = (props: SellerMobileToolBarProps) => {
         <Box sx={{ display: 'flex' }}>
           { props.additionalAction }
         </Box>
-        <Box component={"div"} sx={{ display: { xs: 'flex', sm: 'none' }}}>
+        {/* <Box component={"div"} sx={{ display: { xs: 'flex', sm: 'none' }}}>
           <IconButton onClick={handleMenuClicked}>
             <Menu fontSize="large" color="primary" />
           </IconButton>
-        </Box>
+        </Box> */}
+        { props.onClose ? closeButton : null } 
       </Box>
     </StyledToolbar>
     <Dialog

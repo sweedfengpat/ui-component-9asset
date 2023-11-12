@@ -6,6 +6,83 @@ import { SellerMobileToolBar as MobileToolbar } from "../Toolbar/SellerMobile";
 import { Auth, User, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { useNavigate } from "react-router";
+
+const menuItems = [
+  {
+    key: 'requirement',
+    text: 'menu.requirement',
+    link: '/buyer-requirement',
+  },
+  {
+    key: 'listing',
+    text: 'menu.listing',
+    link: '/listing'
+  },
+  {
+    key: 'lead',
+    text: 'menu.lead.title',
+    items: [
+      {
+        key: 'prospect',
+        text: 'menu.prospect.title',
+        link: '/prospect'
+      },
+      {
+        key: 'inquiry',
+        text: 'menu.inquiry.title',
+        link: '/inquiry'
+      },
+      {
+        key: 'appointment',
+        text: 'menu.appointment.title',
+        link: '/appointment'
+      }
+    ]
+  },
+  {
+    key: 'package',
+    text: 'menu.package',
+    items: [
+      {
+        key: 'topup',
+        text: 'menu.topup.title',
+        link: '/topup'
+      },
+      {
+        key: 'transfer-point',
+        text: 'menu.transferPoint.title',
+        link: '/transfer-point'
+      },
+      {
+        key: 'my-package',
+        text: 'menu.myPackage.title',
+        link: '/my-package'
+      }
+    ]
+  },
+  {
+    key: 'account',
+    text: 'menu.myAccount',
+    items: [
+      {
+        key: 'myprofile',
+        text: 'menu.profile',
+        link: '/myprofile'
+      },
+      {
+        key: 'company-profile',
+        text: 'menu.companyProfile',
+        link: '/myprofile'
+      },
+      {
+        key: 'affiliate-agent',
+        text: 'menu.affiliateAgent',
+        link: '/affiliate-agent'
+      }
+    ]
+  }
+];
 
 export interface SellerAppBarProps {
   namespace: string;
@@ -16,6 +93,7 @@ export interface SellerAppBarProps {
 
 export const SellerAppBar = (props: SellerAppBarProps) => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState<User|null>(null);
   const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
@@ -42,9 +120,19 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
       case 'logout':
         window.location.href = `${process.env.REACT_APP_LOGIN_BASE_URL}/logout`
         break;
+      case 'requirement':
+      case 'listing':
+      case 'prospect':
+      case 'inquiry':
+      case 'appointment':
       default:
+        link && navigate(link);
         break;
     }
+  }
+
+  const handleOnClose = () => {
+    window.location.href = `${process.env.REACT_APP_DOMAIN}`;
   }
 
   return (
@@ -54,7 +142,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
       logoPath={logoPath}
 
       menuItems={{
-        auth: [],
+        auth: menuItems,
         nonauth: []
       }}
 
@@ -67,6 +155,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
       title={props.title}
       logoPath={logoPath}
       additionalAction={props.additionalAction}
+      onClose={handleOnClose}
     />
   </AppBar>
   );

@@ -23,28 +23,47 @@ export const VersionBox = () => {
 }
 
 export interface DrawerMenuItem {
-  key: string
-  title: string
-  icon?: any
-  link?: string
+  key: string;
+  title: string;
+  icon?: any;
+  link?: string;
 
-  items?: DrawerMenuItem[]
+  items?: DrawerMenuItem[];
 }
 
 export interface DrawerMenuProps {
   menu: DrawerMenuItem[];
+  multiActive?: boolean;
+
+  onMenuItemClick?: (key: string) => void;
 }
 
 export const DrawerMenu = (props: DrawerMenuProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // Change to array to support heiracial menu
-  const [expanded, setExpanded] = useState<string|null>(null);
+  const [expanded, setExpanded] = useState<number[]>([]);
 
-  const handleMenuClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, item: DrawerMenuItem) => {
+  const toggleExpanding = (index: number) => {
+    if (expanded.includes(index)) {
+      if (props.multiActive === true) {
+        setExpanded(expanded.filter(i => i !== index))
+      } else {
+        setExpanded([]);
+      }
+    } else {
+      if (props.multiActive === true) {
+        setExpanded([ ...expanded, index]);
+      } else {
+        setExpanded([index]);
+      }
+    }
+  }
+
+  const handleMenuClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, item: DrawerMenuItem, index: number) => {
     if (item.items && item.items.length > 0) {
-      setExpanded(item.key === expanded ? null : item.key);
+      toggleExpanding(index)
+      // setExpanded(item.key === expanded ? null : item.key);
     } else {
       item.link && navigate(item.link);
     }
@@ -56,7 +75,10 @@ export const DrawerMenu = (props: DrawerMenuProps) => {
       <ListItem
         key={item.title}
         sx={{ paddingLeft: `${(indent*8) + 8}px`, cursor: 'pointer' }}
-        onClick={(e) => handleMenuClick(e, item)}
+        onClick={(e) => {
+          handleMenuClick(e, item, index);
+          props.onMenuItemClick?.(item.key);
+        }}
       >
         <ListItemIcon sx={{ minWidth: `32px` }}>
           {item.icon ? <item.icon /> : <></>}
@@ -71,13 +93,13 @@ export const DrawerMenu = (props: DrawerMenuProps) => {
         />
         {
           item.items && item.items.length > 0  ?
-          (expanded === item.key ? <ExpandLess /> : <ExpandMore />) : <></>
+          (expanded.includes(index) ? <ExpandLess /> : <ExpandMore />) : <></>
         }
       </ListItem>
       {
         item.items && item.items.length > 0 &&
         (
-          <Collapse in={item.key === expanded} timeout="auto" unmountOnExit>
+          <Collapse in={expanded.includes(index)} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               { item.items.map((item: DrawerMenuItem, index: number) => renderMenuItem(item, index, indent + 1)) }
             </List>
