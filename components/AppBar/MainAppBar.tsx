@@ -1,4 +1,4 @@
-import { AppBar, ThemeProvider, useMediaQuery, useTheme } from "@mui/material";
+import { AppBar, Box, Button, ThemeProvider, useMediaQuery, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { DesktopToolbar } from '../Toolbar/Desktop';
 import { ButtomMenuBar } from "../../Layouts/ButtomBar";
@@ -302,6 +302,17 @@ export const MainAppBar = (props: MainAppBarProps) => {
       open={isMeMenuOpened}
       logo={props.logoPath}
       items={loggedMenuItems}
+      additionalActions={
+        <Box>
+          <Button
+            variant="text"
+            sx={{ pr: 5, textTransform: 'none', fontWeight: '600' }}
+            onClick={() => window.location.href = `${process.env.REACT_APP_BASE_SELLER_URL}` }
+          >
+            Seller Center
+          </Button>
+        </Box>
+      }
       onClose={() => setIsMeMenuOpened(false)}
       onMenuClicked={handleProfileMenuClicked}
     />

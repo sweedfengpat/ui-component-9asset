@@ -1,14 +1,24 @@
-import { AppBar, useTheme } from "@mui/material";
+import { AppBar, IconButton, useTheme } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
+
 import { DesktopToolbar } from "../Toolbar/Desktop";
 
 import logoPath from '../../assets/images/9asset-logo.png';
 import { SellerMobileToolBar as MobileToolbar } from "../Toolbar/SellerMobile";
 import { Auth, User, onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState } from "react";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { useNavigate } from "react-router";
 
-const menuItems = [
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+
+
+import { SellerBottomBar as BottomBar } from '../../Layouts/SellerButtomBar';
+import { MeMenu } from "../../components/Menu/MeMenu";
+import logo from '../../assets/images/9asset-logo.png';
+import { Search } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
+import { namespaces } from "../../../i18n/i18n.constants";
+
+export const menuItems = [
   {
     key: 'requirement',
     text: 'menu.requirement',
@@ -87,16 +97,20 @@ const menuItems = [
 export interface SellerAppBarProps {
   namespace: string;
   title: string;
-  additionalAction?: React.ReactNode;
   auth: Auth;
 }
 
 export const SellerAppBar = (props: SellerAppBarProps) => {
   const theme = useTheme();
+  const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
 
   const [user, setUser] = useState<User|null>(null);
   const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
+
+  const [isMeMenuOpened, setIsMeMenuOpened] = useState<boolean>(false);
 
   useEffect(() => {
     const unsub = getUser();
@@ -131,11 +145,56 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
     }
   }
 
+  const handleMeMenuRequested = () => {
+    navigate('/');
+    // if (user) {
+    //   navigate('/');
+    // } else {
+    //   setIsMeMenuOpened(true);
+    // }
+  }
+
   const handleOnClose = () => {
     window.location.href = `${process.env.REACT_APP_DOMAIN}`;
   }
 
-  return (
+  const handleSearchClicked = () => {
+
+  }
+
+  const handleBackRequested = () => {
+    navigate('/');
+  }
+
+  const getAdditionalActions = () => {
+    if (['/listing', '/buyer-requirement'].includes(location.pathname)) {
+      return (
+      <IconButton onClick={handleSearchClicked}>
+        <Search fontSize="large" color="primary" />
+      </IconButton>
+      );
+    }
+    return (<></>);
+  }
+
+  const getTitle = () => {
+    const title = new Map([
+      ['/buyer-requirement', 'menu.buyerRequirement'],
+      ['/listing', 'menu.listing'],
+      ['/prospect', 'menu.prospect.title'],
+      ['/appointment', 'menu.appointment.title'],
+      ['/inquiry', 'menu.inquiry.title']
+    ]);
+    if (location.pathname === '/property') {
+      return t(query.has('id') ? 'header.edit' : 'header.new', { ns: namespaces.pages.property });
+    }
+    if (title.has(location.pathname)) {
+      return t(title.get(location.pathname) as string)
+    }
+    return props.title;
+  }
+
+  return (<>
   <AppBar position="fixed" color={'inherit'} style={{ zIndex: theme.zIndex.drawer + 1 }}>
     <DesktopToolbar
       namespace={props.namespace}
@@ -152,11 +211,22 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
       onProfileMenuClick={handleProfileMenuClicked}
     />
     <MobileToolbar
-      title={props.title}
+      title={getTitle()}
       logoPath={logoPath}
-      additionalAction={props.additionalAction}
+      isBackable={location.pathname !== '/'}
+      additionalAction={getAdditionalActions()}
+      onBackRequested={handleBackRequested}
       onClose={handleOnClose}
     />
   </AppBar>
-  );
+  <BottomBar
+    onMeRequest={handleMeMenuRequested}
+  />
+  <MeMenu
+    open={isMeMenuOpened}
+    logo={logo}
+    items={menuItems}
+    onClose={() => { setIsMeMenuOpened(false); }}
+  />
+  </>);
 }

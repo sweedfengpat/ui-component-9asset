@@ -1,13 +1,10 @@
-import { Box, Button, CssBaseline, Divider, Drawer, Grid, IconButton, Toolbar, styled } from "@mui/material";
+import { Box, CssBaseline, Divider, Drawer, Grid, IconButton, Toolbar, styled } from "@mui/material";
 import { SellerAppBar as AppBar } from '../components/AppBar/SellerAppBar';
 import ProfileCard from "../components/ProfileCard";
 import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
-import { SellerBottomBar as BottomBar } from '../Layouts/SellerButtomBar';
-import { AccountCircleOutlined, AdsClickOutlined, LocalMallOutlined, PageviewOutlined, QueryStatsOutlined, Search, ViewListOutlined } from "@mui/icons-material";
+import { AccountCircleOutlined, AdsClickOutlined, DashboardOutlined, LocalMallOutlined, PageviewOutlined, QueryStatsOutlined, Search, ViewListOutlined } from "@mui/icons-material";
 import { Outlet, useLocation } from "react-router-dom";
 import { Auth } from "firebase/auth";
-import { useState } from "react";
-import { MeMenu } from "../components/Menu/MeMenu";
 
 const LayoutRoot = styled(Box)({
   display: 'flex'
@@ -24,6 +21,12 @@ const MainContainer = styled('main')({
 const drawerWidth = 255;
 
 const drawerMenu = [
+  {
+    key: 'dashboard',
+    title: 'dashboard',
+    icon: DashboardOutlined,
+    link: '/',
+  },
   {
     key: 'buyer-requirement',
     title: 'requirement',
@@ -130,9 +133,7 @@ export interface SellerLayoutProps {
 }
 
 export const SellerLayout = (props: SellerLayoutProps) => {
-  const location = useLocation();
   const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
-  const [isMeMenuOpened, setIsMeMenuOpened] = useState<boolean>(false);
 
   const getTitle = () => {
     return 'Seller Center';
@@ -142,24 +143,12 @@ export const SellerLayout = (props: SellerLayoutProps) => {
     
   }
 
-  const handleMeMenuRequested = () => {
-    setIsMeMenuOpened(true);
-  }
-
-  const getAdditionalAction = () => {
-    if (location.pathname === '/listing') {
-      return <IconButton onClick={handleSearchClicked}><Search fontSize="large" color="primary" /></IconButton>;
-    }
-    return (<></>);
-  }
-
   return (
     <LayoutRoot>
       <CssBaseline />
       <AppBar
         namespace={props.namespace || 'common'}
         title={getTitle()}
-        additionalAction={getAdditionalAction()}
         auth={props.auth}
       />
 
@@ -184,19 +173,11 @@ export const SellerLayout = (props: SellerLayoutProps) => {
         <DrawerMenu menu={drawerMenu} />
       </Drawer>
 
-      <MainContainer sx={{ p: { xs: 1, sm: 2 } }}>
+      <MainContainer sx={{ p: { xs: 1, sm: 2 }, paddingBottom: { xs: '70px' } }}>
         <Toolbar />
         <Grid container sx={{ height: '42px', display: { xs: 'none', sm: 'block' } }}></Grid>
         <Outlet />
       </MainContainer>
-      <BottomBar
-        onMeRequest={handleMeMenuRequested}
-      />
-      <MeMenu
-        open={isMeMenuOpened}
-        
-        onClose={() => { setIsMeMenuOpened(false); }}
-      />
     </LayoutRoot>
   );
 }
