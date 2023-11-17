@@ -1,10 +1,13 @@
-import { Box, CssBaseline, Divider, Drawer, Grid, IconButton, Toolbar, styled } from "@mui/material";
+import { Backdrop, Box, CircularProgress, CssBaseline, Divider, Drawer, Grid, IconButton, Toolbar, styled, useTheme } from "@mui/material";
 import { SellerAppBar as AppBar } from '../components/AppBar/SellerAppBar';
 import ProfileCard from "../components/ProfileCard";
 import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
 import { AccountCircleOutlined, AdsClickOutlined, DashboardOutlined, LocalMallOutlined, PageviewOutlined, QueryStatsOutlined, Search, ViewListOutlined } from "@mui/icons-material";
 import { Outlet, useLocation } from "react-router-dom";
-import { Auth } from "firebase/auth";
+import { Auth, User, onAuthStateChanged } from "firebase/auth";
+import { LoginModal } from "../components/LoginModal";
+import { useEffect, useState } from "react";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const LayoutRoot = styled(Box)({
   display: 'flex'
@@ -133,14 +136,44 @@ export interface SellerLayoutProps {
 }
 
 export const SellerLayout = (props: SellerLayoutProps) => {
-  const user = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
+  const theme = useTheme();
 
+  const [user, setUser] = useLocalStorage<any>(`9asset.userinfo`);
+  const [firebaseUser, setFirebaseUser] = useState<User|null>(props.auth.currentUser);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(process.env.NODE_ENV === 'development' || props.auth.currentUser !== null);
+
+  useEffect(() => {
+    setIsLoading(true);
+    if (props.auth.currentUser) {
+      setIsLoading(false);
+    }
+    const unsub = onAuthStateChanged(props.auth, (currentUser) => {
+      setFirebaseUser(currentUser);
+      setTimeout(() => { setIsLoading(false) }, 500);
+    });
+    
+    return () => { 
+      unsub && unsub();
+    }
+  }, []);
+
+  useEffect(() => {
+    setIsLoggedIn(process.env.NODE_ENV === 'development' || firebaseUser !== null);
+  }, [firebaseUser]);
+  
   const getTitle = () => {
     return 'Seller Center';
   }
 
   const handleSearchClicked = () => {
     
+  }
+
+  const handleLoginClosed = () => {
+    if (!isLoggedIn) {
+      window.location.href = `${process.env.REACT_APP_DOMAIN}`;
+    }
   }
 
   return (
@@ -152,6 +185,7 @@ export const SellerLayout = (props: SellerLayoutProps) => {
         auth={props.auth}
       />
 
+      { !isLoading && (
       <Drawer
         sx={{
           width: drawerWidth,
@@ -170,14 +204,30 @@ export const SellerLayout = (props: SellerLayoutProps) => {
         <Grid container sx={{ height: '42px' }}></Grid>
         <ProfileCard user={user}></ProfileCard>
         <Divider variant="middle" />
-        <DrawerMenu menu={drawerMenu} />
-      </Drawer>
+        { isLoggedIn && (<DrawerMenu menu={drawerMenu} />) }
+      </Drawer>) }
 
       <MainContainer sx={{ p: { xs: 1, sm: 2 }, paddingBottom: { xs: '70px' } }}>
         <Toolbar />
         <Grid container sx={{ height: '42px', display: { xs: 'none', sm: 'block' } }}></Grid>
-        <Outlet />
+        { !isLoading &&  isLoggedIn && (<Outlet /> ) }
       </MainContainer>
+
+      <Backdrop
+        sx={{
+          color: '#fff',
+          zIndex: (theme: any) => theme.zIndex.drawer + 1,
+        }}
+        open={isLoading}
+      >
+        <CircularProgress color="primary" />
+      </Backdrop>
+      <LoginModal
+        open={!isLoading && !isLoggedIn && !firebaseUser}
+        mode={"login"}
+        onLoginClosed={handleLoginClosed}
+      />
+
     </LayoutRoot>
   );
 }
