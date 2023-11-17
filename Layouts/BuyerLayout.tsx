@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, CircularProgress, CssBaseline, Divider, Drawer, Grid, Toolbar, styled } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, CssBaseline, Divider, Drawer, Grid, Toolbar, styled, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { BuyerAppBar as AppBar } from "../components/AppBar/BuyerAppBar";
@@ -9,7 +9,6 @@ import { Auth } from "@firebase/auth";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
-import { useTheme } from "styled-components";
 import { LoginModal } from "../components/LoginModal";
 
 const LayoutRoot = styled(Box)({
@@ -237,7 +236,7 @@ export const BuyerLayout = (props: BuyerLayoutProps) => {
     <LoginModal
       open={!isLoading && !isLoggedIn && !firebaseUser}
       mode={"login"}
-      onLoginClosed={handleClosed}
+      onLoginClosed={handleLoginClosed}
     />
   </LayoutRoot>
   );
