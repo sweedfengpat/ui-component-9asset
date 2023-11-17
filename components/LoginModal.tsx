@@ -93,7 +93,7 @@ export const LoginModal = ({ open, mode, onLoginClosed }: LoginModalProps) => {
         title="search-component"
         ref={iFrameRef}
         component="iframe"
-        src={`${process.env.NEXT_PUBLIC_LOGIN_URL_BASE}${mode === 'register' ? '/register' : ''}?isHeadlessMode=true`}
+        src={`${process.env.NEXT_PUBLIC_LOGIN_URL_BASE || process.env.REACT_APP_LOGIN_BASE_URL}${mode === 'register' ? '/register' : ''}?isHeadlessMode=true`}
         style={{ 
           border: 'none',
           height: isMobile ? '100%' : '570px',
