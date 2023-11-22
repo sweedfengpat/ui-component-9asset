@@ -47,10 +47,10 @@ export interface AppBarState {
 
 export interface BuyerAppBarProps {
   namespace: string;
-  title: string;
+  title?: string;
   additionalAction?: React.ReactNode;
   isBackable?: boolean;
-  auth: Auth;
+  auth?: Auth;
 
   onBackRequested?: () => void;
   onClose?: () => void;
@@ -73,8 +73,8 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
   const getUser = () => {
     if (props.auth) {
       setUser(props.auth.currentUser)
-      return onAuthStateChanged(props.auth, () => {
-        setUser(props.auth.currentUser)
+      return onAuthStateChanged(props.auth, (currentUser) => {
+        setUser(currentUser)
       });
     }
     return null;
@@ -118,7 +118,7 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
       onLanguageChanged={onLanguageChanged}
     />
     <MobileToolbar
-      title={props.title}
+      title={props.title || '9asset'}
       logoPath={logoPath}
       isBackable={props.isBackable}
       additionalAction={props.additionalAction}
