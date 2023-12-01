@@ -65,12 +65,6 @@ const drawerMenu = [
     ],
   },
   {
-    key: 'prospect',
-    title: 'prospect.title',
-    icon: AdsClickOutlined,
-    link: '/prospect',
-  },
-  {
     key: 'package',
     title: 'package',
     icon: LocalMallOutlined,
