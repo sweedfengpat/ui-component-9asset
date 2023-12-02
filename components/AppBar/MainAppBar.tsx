@@ -260,7 +260,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
 
   return (
   <ThemeProvider theme={natheme}>
-    <AppBar position="fixed" color={'inherit'} style={{ zIndex: theme.zIndex.drawer + 1 }}>
+    <AppBar position="fixed" color={'inherit'} style={{ zIndex: 999 }}>
       <DesktopToolbar
         namespace="common"
         logoPath={props.logoPath}
