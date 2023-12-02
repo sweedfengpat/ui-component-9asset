@@ -188,14 +188,16 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
       <ListItemText
         primary={getName()}
         // secondary={props.user && props.user.email ? props.user.email : ''}
+        secondaryTypographyProps={{ component: 'div' }}
         secondary={
         <Stack direction="column" sx={{ p:0 }}>
           <Box sx={{ display: 'inline-flex' }}>
-            <Typography sx={{ fontSize: '12px'  }}>{props.userInfo && props.userInfo.email ? props.userInfo.email : ''}</Typography>
-            <Typography sx={{ fontSize: '12px', pl: 1 }} color="green">{'Verified'}</Typography> 
+            <Typography component="span" sx={{ fontSize: '12px'  }}>{props.userInfo && props.userInfo.email ? props.userInfo.email : ''}</Typography>
+            <Typography component="span" sx={{ fontSize: '12px', pl: 1 }} color="green">{'Verified'}</Typography> 
           </Box>
           <Typography component="span" sx={{ fontSize: '10px' }} color="primary">150 Coins</Typography>
-        </Stack>}
+        </Stack>
+        }
       />
     </ListItem>
     );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Grid, IconButton, Link, Toolbar } from "@mui/material";
+import { Box, Button, Grid, Link, Toolbar } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { AppsRounded } from "@mui/icons-material";
@@ -18,6 +18,8 @@ export interface DesktopToolbarProps {
 
   user: User | null;
   userInfo: any | null;
+
+  hideSellerCenter?: boolean;
 
   onProfileMenuClick?: (type: string, link?: string) => void;
   onToolbarMenuClick?: (type: string) => void;
@@ -89,6 +91,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     const items = menubar(t, i18n.language);
     return items.map((item, index) => (
       <Link
+        key={index}
         color="#fff"
         underline="hover"
         href={item.link}
@@ -118,7 +121,10 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     <Box component={"div"} sx={{ flexGrow: 1 }} />
 
     <Box component={"div"}>
-      <Button variant="text" sx={{ textTransform: 'none' }} onClick={() => handleMenuClicked('seller')}>Seller Center</Button>
+      { !props.hideSellerCenter && <Button
+        variant="text"
+        sx={{ textTransform: 'none' }}
+        href="/seller">Seller Center</Button> }
     </Box>
     <Box component={"div"} sx={{ marginRight: '10px' }}>
     { isAuth() && getUserDisplayName() }

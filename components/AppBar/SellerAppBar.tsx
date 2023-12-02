@@ -208,6 +208,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
       user={user}
       userInfo={userInfo}
 
+      hideSellerCenter={true}
       onProfileMenuClick={handleProfileMenuClicked}
     />
     <MobileToolbar
