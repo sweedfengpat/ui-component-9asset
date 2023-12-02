@@ -113,13 +113,18 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
         <MenuItem
           disabled={!!item.items}
           onClick={() => props.onMenuClicked?.(item.key, item.link)}
+          sx={{
+            '&.Mui-disabled': {
+              opacity: 1,
+            }
+          }}
         >
           <ListItemText>{ t(item.text) }</ListItemText>
         </MenuItem>
         {
           (item.items || []).map((s) => (
             <MenuSubItem key={s.key} onClick={() => props.onMenuClicked?.(s.key, s.link)}>
-              <ListItemText inset>{ t(s.text) }</ListItemText>
+              <ListItemText inset sx={{ fontSize: '.95rem' }}>{ t(s.text) }</ListItemText>
             </MenuSubItem>
           ))
         }
