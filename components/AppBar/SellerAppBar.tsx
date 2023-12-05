@@ -98,6 +98,8 @@ export interface SellerAppBarProps {
   namespace: string;
   title: string;
   auth: Auth;
+
+  onSearchClicked?: () => void;
 }
 
 export const SellerAppBar = (props: SellerAppBarProps) => {
@@ -159,7 +161,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   }
 
   const handleSearchClicked = () => {
-
+    props.onSearchClicked?.();
   }
 
   const handleBackRequested = () => {

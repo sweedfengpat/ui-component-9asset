@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Avatar, Box, Button, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, Stack, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
-import { ChevronLeft } from "@mui/icons-material";
+import { Avatar, Box, Collapse, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, Stack, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
+import { ChevronLeft, ExpandLess, ExpandMore } from "@mui/icons-material";
 import { User } from "firebase/auth";
 import { getUserName } from "../../Layouts/Profile";
 import { MenuItem as IMenuItem } from "../Toolbar";
@@ -39,6 +39,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
 
   const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
   const [menuType, setMenuType] = useState<'default'|'language'>('default');
+  const [opened, setOpened] = useState<string|null>(null);
 
   const DisplayLanguage: { [index in 'th' | 'en' | 'cn' | string]: string} = {
     'en': 'English',
@@ -107,49 +108,60 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
     </MenuItem>
   </>);
 
-  const renderLoggedInMenu = () => {
+  const renderSubMenuItems = (key: string, items?: IMenuItem[]) => {
+    if (!items) {
+      return null;
+    }
+
+    const open = key === opened;
+
+    return (<Collapse in={open} timeout="auto" unmountOnExit>
+    {
+      items.map((s) => (
+        <MenuSubItem key={s.key} onClick={() => props.onMenuClicked?.(s.key, s.link)}>
+          <ListItemText inset sx={{ fontSize: '.95rem' }}>{ t(s.text) }</ListItemText>
+        </MenuSubItem>
+      ))
+    }
+    </Collapse>);
+  }
+
+  const handleMenuItemClicked = (item: IMenuItem) => {
+    if (item.items) {
+      setOpened(item.key === opened ? null : item.key);
+    } else {
+      props.onMenuClicked?.(item.key, item.link)
+    }
+  }
+
+  const renderMenuItems = (items: IMenuItem[]) => {
     return (<>{
-      (props.items.auth || []).map((item, index) => (<React.Fragment key={item.key || index}>
-        <MenuItem
-          disabled={!!item.items}
-          onClick={() => props.onMenuClicked?.(item.key, item.link)}
-          sx={{
-            '&.Mui-disabled': {
-              opacity: 1,
-            }
-          }}
-        >
-          <ListItemText>{ t(item.text) }</ListItemText>
-        </MenuItem>
-        {
-          (item.items || []).map((s) => (
-            <MenuSubItem key={s.key} onClick={() => props.onMenuClicked?.(s.key, s.link)}>
-              <ListItemText inset sx={{ fontSize: '.95rem' }}>{ t(s.text) }</ListItemText>
-            </MenuSubItem>
-          ))
-        }
-      </React.Fragment>))
+      items.map((item, index) => {
+        const open = item.key === opened;
+        return (
+        <React.Fragment key={item.key || index}>
+          <MenuItem
+            onClick={() => handleMenuItemClicked(item)}
+            sx={{
+              '&.Mui-disabled': {
+                opacity: 1,
+              }
+            }}
+          >
+            <ListItemText>{ t(item.text) }</ListItemText>
+            { item.items && item.items.length > 0 ? (open ? <ExpandLess /> : <ExpandMore />) : <></> }
+          </MenuItem>
+          { renderSubMenuItems(item.key, item.items) }
+        </React.Fragment>);})
     }</>);
   }
 
+  const renderLoggedInMenu = () => {
+    return (<>{renderMenuItems(props.items.auth)}</>);
+  }
+
   const renderNonLoggedInMenu = () => {
-    return (<>{
-      (props.items.nonauth || []).map((item, index) => (<React.Fragment key={item.key || index}>
-        <MenuItem
-          disabled={!!item.items}
-          onClick={() => props.onMenuClicked?.(item.key, item.link)}
-        >
-          <ListItemText>{ t(item.text) }</ListItemText>
-        </MenuItem>
-        {
-          (item.items || []).map((s) => (
-            <MenuSubItem key={s.key} onClick={() => props.onMenuClicked?.(s.key, s.link)}>
-              <ListItemText inset>{ t(s.text) }</ListItemText>
-            </MenuSubItem>
-          ))
-        }
-      </React.Fragment>))
-    }</>);
+    return (<>{renderMenuItems(props.items.nonauth)}</>);;
   }
 
   const renderNonAuthMenu = () => (
