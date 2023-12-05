@@ -6,7 +6,7 @@ import { AccountCircleOutlined, AdsClickOutlined, DashboardOutlined, LocalMallOu
 import { Outlet, useLocation } from "react-router-dom";
 import { Auth, User, onAuthStateChanged } from "firebase/auth";
 import { LoginModal } from "../components/LoginModal";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const LayoutRoot = styled(Box)({
@@ -124,6 +124,11 @@ const drawerMenu = [
   },
 ] as DrawerMenuItem[];
 
+export interface SellerLayoutContext {
+  openedModal: string | null;
+  closeModal: () => void;
+}
+
 export interface SellerLayoutProps {
   auth: Auth;
   namespace?: string;
@@ -136,6 +141,7 @@ export const SellerLayout = (props: SellerLayoutProps) => {
   const [firebaseUser, setFirebaseUser] = useState<User|null>(props.auth.currentUser);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(process.env.NODE_ENV === 'development' || props.auth.currentUser !== null);
+  const [openedModal, setOpenedModal] = useState<string|null>(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -161,13 +167,17 @@ export const SellerLayout = (props: SellerLayoutProps) => {
   }
 
   const handleSearchClicked = () => {
-    
+    setOpenedModal('search');
   }
 
   const handleLoginClosed = () => {
     if (!isLoggedIn) {
       window.location.href = `${process.env.REACT_APP_DOMAIN}`;
     }
+  }
+
+  const closeModal = () => {
+    setOpenedModal(null);
   }
 
   return (
@@ -177,6 +187,7 @@ export const SellerLayout = (props: SellerLayoutProps) => {
         namespace={props.namespace || 'common'}
         title={getTitle()}
         auth={props.auth}
+        onSearchClicked={handleSearchClicked}
       />
 
       { !isLoading && (
@@ -204,7 +215,11 @@ export const SellerLayout = (props: SellerLayoutProps) => {
       <MainContainer sx={{ p: { xs: 1, sm: 2 }, paddingBottom: { xs: '70px' } }}>
         <Toolbar />
         <Grid container sx={{ height: '42px', display: { xs: 'none', sm: 'block' } }}></Grid>
-        { !isLoading &&  isLoggedIn && (<Outlet /> ) }
+        {
+          !isLoading &&
+          isLoggedIn &&
+          <Outlet context={{openedModal, closeModal}} /> 
+        }
       </MainContainer>
 
       <Backdrop
