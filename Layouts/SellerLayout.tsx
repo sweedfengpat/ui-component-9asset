@@ -143,6 +143,10 @@ export const SellerLayout = (props: SellerLayoutProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(process.env.NODE_ENV === 'development' || props.auth.currentUser !== null);
   const [openedModal, setOpenedModal] = useState<string|null>(null);
 
+  const [state, setState] = useState<{ userInfo: any}>({
+    userInfo: user
+  });
+
   useEffect(() => {
     setIsLoading(true);
     if (props.auth.currentUser) {
@@ -161,6 +165,11 @@ export const SellerLayout = (props: SellerLayoutProps) => {
   useEffect(() => {
     setIsLoggedIn(process.env.NODE_ENV === 'development' || firebaseUser !== null);
   }, [firebaseUser]);
+
+  useEffect(() => {
+    console.log(`User Info:`, user);
+    setState({ userInfo: user });
+  }, [user]);
   
   const getTitle = () => {
     return 'Seller Center';
@@ -207,7 +216,7 @@ export const SellerLayout = (props: SellerLayoutProps) => {
       >
         <Toolbar />
         <Grid container sx={{ height: '42px' }}></Grid>
-        <ProfileCard user={user}></ProfileCard>
+        <ProfileCard user={state.userInfo}></ProfileCard>
         <Divider variant="middle" />
         { isLoggedIn && (<DrawerMenu menu={drawerMenu} />) }
       </Drawer>) }
