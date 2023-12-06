@@ -1,12 +1,12 @@
-import { Backdrop, Box, CircularProgress, CssBaseline, Divider, Drawer, Grid, IconButton, Toolbar, styled, useTheme } from "@mui/material";
+import { Backdrop, Box, CircularProgress, CssBaseline, Divider, Drawer, Grid, Toolbar, styled, useTheme } from "@mui/material";
 import { SellerAppBar as AppBar } from '../components/AppBar/SellerAppBar';
 import ProfileCard from "../components/ProfileCard";
 import DrawerMenu, { DrawerMenuItem } from "../components/Drawer/DrawerMenu";
-import { AccountCircleOutlined, AdsClickOutlined, DashboardOutlined, LocalMallOutlined, PageviewOutlined, QueryStatsOutlined, Search, ViewListOutlined } from "@mui/icons-material";
-import { Outlet, useLocation } from "react-router-dom";
+import { AccountCircleOutlined, DashboardOutlined, LocalMallOutlined, PageviewOutlined, QueryStatsOutlined, ViewListOutlined } from "@mui/icons-material";
+import { Outlet } from "react-router-dom";
 import { Auth, User, onAuthStateChanged } from "firebase/auth";
 import { LoginModal } from "../components/LoginModal";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const LayoutRoot = styled(Box)({
@@ -137,7 +137,7 @@ export interface SellerLayoutProps {
 export const SellerLayout = (props: SellerLayoutProps) => {
   const theme = useTheme();
 
-  const [user, setUser] = useLocalStorage<any>(`9asset.userinfo`);
+  const [user,] = useLocalStorage<any>(`9asset.userinfo`);
   const [firebaseUser, setFirebaseUser] = useState<User|null>(props.auth.currentUser);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(process.env.NODE_ENV === 'development' || props.auth.currentUser !== null);
