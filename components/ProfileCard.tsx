@@ -5,7 +5,7 @@ import './ProfileCard.less';
 import { UserInfo } from "../store/users/reducer";
 
 interface ProfileCardProps {
-    user: UserInfo;
+    user: UserInfo | null;
 }
 
 export class ProfileCard extends React.Component<ProfileCardProps, any> {
