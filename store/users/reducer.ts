@@ -1,8 +1,40 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { User } from "firebase/auth";
 
-interface UserInfo {
+export enum USERINFO_STATUS {
+  ok = 'OK',
+  nouserrecord = 'NO_USER_RECORD',
+  noFid = 'NO_FB_ID',
+}
 
+export interface UserInfo {
+  displayName: string;
+
+  photoUrl: string;
+  email: string;
+  emailVerified: boolean;
+  phoneNumber: string;
+  mobileCode: string;
+  mobile: string;
+  mobileVerified: boolean;
+  titleTh: string | null;
+  titleEn: string | null;
+  titleCn: string | null;
+  nameTh: string | null;
+  nameEn: string | null;
+  nameCn: string | null;
+  lastnameTh: string | null;
+  lastnameEn: string | null;
+  lastnameCn: string | null;
+  personalId: number;
+  dob: Date,
+  gender: string | null;
+  line: string | null;
+  wechat: string | null;
+  profileId: number;
+
+  mandatoryInfo: boolean;
+  status:  USERINFO_STATUS;
 }
 
 export interface UserState {
