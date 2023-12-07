@@ -8,6 +8,7 @@ export enum USERINFO_STATUS {
 }
 
 export interface UserInfo {
+  id: number;
   displayName: string;
 
   photoUrl: string;
