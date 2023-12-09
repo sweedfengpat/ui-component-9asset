@@ -4,9 +4,9 @@ import { DesktopToolbar } from "../Toolbar/Desktop";
 import { BuyerMobileToolbar as MobileToolbar } from "../Toolbar/BuyerMobile";
 import { useEffect, useState } from "react";
 import { Auth, User, onAuthStateChanged } from "firebase/auth";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { MenuItem } from "../Toolbar";
 import { useNavigate } from "react-router";
+import { UserInfo } from "../../store/users/reducer";
 
 const loggedMenuItems = [
   {
@@ -51,6 +51,7 @@ export interface BuyerAppBarProps {
   additionalAction?: React.ReactNode;
   isBackable?: boolean;
   auth?: Auth;
+  user: UserInfo | null;
 
   onBackRequested?: () => void;
   onClose?: () => void;
@@ -61,7 +62,6 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState<User|null>(null);
-  const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
 
   useEffect(() => {
     const unsub = getUser();
@@ -109,7 +109,8 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
       logoPath={logoPath}
       
       user={user}
-      userInfo={userInfo}
+      userInfo={props.user}
+
       menuItems={{
         auth: loggedMenuItems,
         nonauth: []
