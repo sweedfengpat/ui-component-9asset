@@ -15,7 +15,7 @@ export const DefaultAppBar = () => {
         }}
         logoPath={logoPath}
         user={null}
-        userInfo={undefined}
+        userInfo={null}
       />
 
      
