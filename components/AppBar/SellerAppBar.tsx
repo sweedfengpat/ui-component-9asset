@@ -8,9 +8,6 @@ import logoPath from '../../assets/images/9asset-logo.png';
 import { SellerMobileToolBar as MobileToolbar } from "../Toolbar/SellerMobile";
 import { Auth, User, onAuthStateChanged } from "firebase/auth";
 
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-
-
 import { SellerBottomBar as BottomBar } from '../../Layouts/SellerButtomBar';
 import { MeMenu } from "../../components/Menu/MeMenu";
 import logo from '../../assets/images/9asset-logo.png';

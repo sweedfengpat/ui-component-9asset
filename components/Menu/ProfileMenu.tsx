@@ -79,7 +79,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
       }
     }
     else {
-      return props.user?.displayName || '';
+      return props.user?.displayName || '9asset';
     }
   }
 
@@ -209,7 +209,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
         secondary={
         <Stack direction="column" sx={{ p:0 }}>
           <Box sx={{ display: 'inline-flex' }}>
-            <Typography component="span" sx={{ fontSize: '12px'  }}>{props.userInfo && props.userInfo.email ? props.userInfo.email : ''}</Typography>
+            <Typography component="span" sx={{ fontSize: '12px'  }}>{props.userInfo && props.userInfo.email ? props.userInfo.email : 'user@9asset.com '}</Typography>
             <Typography component="span" sx={{ fontSize: '12px', pl: 1 }} color="green">{'Verified'}</Typography> 
           </Box>
           <Typography component="span" sx={{ fontSize: '10px' }} color="primary">150 Coins</Typography>
