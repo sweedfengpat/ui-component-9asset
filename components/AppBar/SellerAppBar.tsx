@@ -17,6 +17,7 @@ import logo from '../../assets/images/9asset-logo.png';
 import { Search } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { namespaces } from "../../../i18n/i18n.constants";
+import { UserInfo } from "../../store/users/reducer";
 
 export const menuItems = [
   {
@@ -98,6 +99,7 @@ export interface SellerAppBarProps {
   namespace: string;
   title: string;
   auth: Auth;
+  user: UserInfo | null;
 
   onSearchClicked?: () => void;
 }
@@ -110,7 +112,6 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
 
   const [user, setUser] = useState<User|null>(null);
-  const [userInfo, setUserInfo] = useLocalStorage<any>(`9asset.userinfo`);
 
   const [isMeMenuOpened, setIsMeMenuOpened] = useState<boolean>(false);
 
@@ -208,7 +209,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
       }}
 
       user={user}
-      userInfo={userInfo}
+      userInfo={props.user}
 
       hideSellerCenter={true}
       onProfileMenuClick={handleProfileMenuClicked}

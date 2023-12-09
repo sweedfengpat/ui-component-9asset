@@ -2,11 +2,11 @@ import React from "react";
 import { Box, Button, Grid, Link, Toolbar } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { AppsRounded } from "@mui/icons-material";
 import { Profile } from "../../Layouts/Profile";
 import { AdvanceSearch } from "../../Layouts/MainLayoutAppBar";
 import { User } from "firebase/auth";
 import { MenuItem, menubar } from ".";
+import { UserInfo } from "../../store/users/reducer";
 
 export interface DesktopToolbarProps {
   namespace: string;
@@ -17,7 +17,7 @@ export interface DesktopToolbarProps {
   };
 
   user: User | null;
-  userInfo: any | null;
+  userInfo: UserInfo | null;
 
   hideSellerCenter?: boolean;
 
@@ -50,10 +50,6 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     } else {
         return user && user.displayName ? user.displayName : '' ;
     }
-  }
-
-  const onMenuClick = (type: 'project' | 'sell' | 'rent') => {
-    props.onToolbarMenuClick && props.onToolbarMenuClick(type);
   }
 
   const handleMenuClicked = (type: string, link?: string) => {

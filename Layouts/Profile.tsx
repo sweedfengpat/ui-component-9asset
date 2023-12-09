@@ -41,7 +41,6 @@ export interface ProfileProps {
 }
 
 export const Profile = (props: ProfileProps) => {
-  const { user } = props;
   const { t, i18n } = useTranslation(props.namespace || 'common');
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const avatarRef = useRef<HTMLDivElement | null>(null);
