@@ -105,7 +105,6 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  location.pathname
   const { t } = useTranslation();
 
 
