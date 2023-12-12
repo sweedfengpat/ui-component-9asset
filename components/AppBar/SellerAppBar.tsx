@@ -105,7 +105,10 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  location.pathname
   const { t } = useTranslation();
+
+
   const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
 
   const [user, setUser] = useState<User|null>(null);
@@ -155,7 +158,11 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   }
 
   const handleOnClose = () => {
-    window.location.href = `${process.env.REACT_APP_DOMAIN}`;
+    if (location.pathname === '/') {
+      window.location.href = `${process.env.REACT_APP_DOMAIN}`;
+    } else {
+      navigate('/');
+    }
   }
 
   const handleSearchClicked = () => {
