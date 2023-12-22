@@ -71,7 +71,7 @@ export const SellerMobileToolBar = (props: SellerMobileToolBarProps) => {
             >
               <NavigateBefore />
             </IconButton>) : (
-            <Box component={"img"} src={props.logoPath} sx={{ height: '40px', pl: 1 }} alt="'9Asset Logo'" />
+            <Box component={"img"} src={props.logoPath} sx={{ height: '40px', pl: 1, width: '34px' }} alt="'9Asset Logo'" />
             )
           }
           <Box component="span" sx={{ pl: 1, paddingTop: '0px', fontWeight: '600', color: 'black' }}>{props.title}</Box>

@@ -67,7 +67,7 @@ export const MobileToolbar = (props: ToolbarProps) => {
   return (<>
   <Toolbar sx={{ display: { xs:'flex', sm: 'none'} }}>
     <a href ={ '/' }>
-      <img src={logoPath} style={{ height: '40px' }} alt="'9asset Logo'" />
+      <img src={logoPath} style={{ height: '40px', width: '34px' }} alt="'9asset Logo'" />
     </a>
 
     <Box sx={{ flexGrow: 1, pl: 4, display: { xs: 'flex', md: 'none' } }}>
