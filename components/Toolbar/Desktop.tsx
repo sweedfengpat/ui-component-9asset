@@ -3,7 +3,7 @@ import { Box, Button, Grid, Link, Toolbar } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Profile } from "../../Layouts/Profile";
-import { AdvanceSearch } from "../../Layouts/MainLayoutAppBar";
+import { AdvanceSearch } from "../../Layouts/AdvanceSearch";
 import { User } from "firebase/auth";
 import { MenuItem, menubar } from ".";
 import { UserInfo } from "../../store/users/reducer";
