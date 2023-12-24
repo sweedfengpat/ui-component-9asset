@@ -1,5 +1,6 @@
 import { AddHomeOutlined, Apps, HomeOutlined, Person2Outlined } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
+import React from "react";
 
 export interface SellerBottomBarProps {
   onMeRequest?: () => void;

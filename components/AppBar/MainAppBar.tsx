@@ -1,7 +1,8 @@
 import { AppBar, Box, Button, ThemeProvider, useMediaQuery, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { DesktopToolbar } from '../Toolbar/Desktop';
-import { ButtomMenuBar } from "../../Layouts/ButtomBar";
+import { ButtomMenuBar } from "../../Layouts/BottomBar";
+import { ActivitiesBottomBar } from "../../Layouts/ActivitiesBottomBar"
 import { BuyerModal } from "../../Layouts/BuyerModal";
 import { MobileToolbar } from "../Toolbar/Mobile";
 
@@ -13,6 +14,7 @@ import { MenuItem } from "../Toolbar";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import axios from "axios";
 import { MeMenu } from "../Menu/MeMenu";
+import { useRouter } from "next/router";
 
 const loggedMenuItems = [
   {
@@ -50,7 +52,7 @@ export interface AppBarState {
 export interface MainAppBarProps {
   logoPath: string;
   app: FirebaseApp;
-
+  context: any | null;
   auth: Auth;
 
   onLanguageChanged?: (ln: string) => void;
@@ -63,7 +65,9 @@ export type LoginFor = 'appointment' | 'requirements' | 'interested' | 'recently
 
 export const MainAppBar = (props: MainAppBarProps) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const router = useRouter();
+  const { pathname, asPath, query } = router;
 
   const [isBuyerModalOpen, setIsBuyerModalOpen] = useState<boolean>(false);
   const [isLoginModalOpened, setIsLoginModalOpened] = useState<boolean>(false);
@@ -88,7 +92,12 @@ export const MainAppBar = (props: MainAppBarProps) => {
       unsub && unsub();
       window.removeEventListener('loginrequested', loginRequested);
     };
+    console.log(props.context)
   }, []);
+
+  useEffect(() => {
+    console.log(props.context)
+  }, [props.context])
 
   useEffect(() => {
     console.log(loginFor)
@@ -105,27 +114,12 @@ export const MainAppBar = (props: MainAppBarProps) => {
     return onAuthStateChanged(props.auth || getAuth(props.app), async (user: User | null) => {
 
       if (user) {
-      //   const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
-      //   if (userInfo && (state.user?.uid && userInfo.firebaseId === state.user?.uid)) {
         setState({ ...state, user: user });
         const token = await user.getIdToken();
         console.log('my token: ', token);
         const uInfo = (await axios.get(`${process.env.NEXT_PUBLIC_USER_SERVICE_API_BASE || process.env.REACT_APP_USER_SERVICE_API_BASE}/users`, { headers: { 'Authorization': `token ${token}`} })).data;
         console.log('user-info')
         setUserInfo(uInfo);
-      //   } else {
-      //     setState({ ...state, userInfo: null });
-      //     console.log('set interval!')
-      //     const interval = setInterval(() => {
-      //       const userInfo = JSON.parse(localStorage.getItem(`9asset.userinfo`) || 'null');
-      //       if (userInfo && (state.user?.uid && userInfo.firebaseId === state.user?.uid)) {
-      //         setState({ ...state, userInfo: userInfo });
-      //         clearInterval(interval);
-
-      //         console.log('interval cleared!')
-      //       }
-      //     }, 500);
-      //   }
       } else {
         setState({ ...state, user: null });
       }
@@ -158,10 +152,6 @@ export const MainAppBar = (props: MainAppBarProps) => {
 
   const handleLoginClosed = (isLoggedIn?: boolean) => {
     setIsLoginModalOpened(false);
-
-    // if (isLoggedIn) {
-    //   setIsBuyerModalOpen(true);
-    // }
   }
 
   const handleMeMenuRequested = () => {
@@ -169,7 +159,6 @@ export const MainAppBar = (props: MainAppBarProps) => {
       setIsBuyerModalOpen(true);
     } else {
       setIsMeMenuOpened(true);
-      // setIsLoginModalOpened(true);
     }
   }
 
@@ -258,6 +247,42 @@ export const MainAppBar = (props: MainAppBarProps) => {
     props.onRequirementClicked?.(true);
   }
 
+  const handelBottomMenuClicked = (key: string) => {
+    if (key === 'call' && props.context?.seller) {
+      const callElement = document.createElement('a');
+      callElement.href = `tel:${props.context.seller.mobile}`;
+      callElement.click();
+    } else if (key === 'appointment') {
+
+    } else if (key === 'navigate') {
+      if (props.context.data) {
+        const data = props.context.data;
+        const callElement = document.createElement('a');
+        callElement.href = `https://www.google.com/maps/search/?api=1&query=${encodeURI(`${data.project_Latitude},${data.project_Longitude}`)}`;
+        callElement.target = '_blank';
+        callElement.click();
+      }
+    }
+  }
+
+  const renderBottomBar = () => {
+    if (isMobile) {
+      switch (pathname) {
+        case '/[...action]':
+          return (<ActivitiesBottomBar
+            onMeRequested={handleMeMenuRequested}
+            onRequirementClicked={handleRequirementClicked}
+            onMenuClicked={handelBottomMenuClicked}
+          />);
+        case '/':
+        default:
+          return (<ButtomMenuBar onMeRequest={handleMeMenuRequested} onRequirementClick={handleRequirementClicked} />);
+      }
+    } else {
+      return (<></>);
+    }
+  }
+
   return (
   <ThemeProvider theme={natheme}>
     <AppBar position="fixed" color={'inherit'} style={{ zIndex: 999 }}>
@@ -283,7 +308,7 @@ export const MainAppBar = (props: MainAppBarProps) => {
         onSearchClicked={handleSearchClicked}
       />
     </AppBar>
-    <ButtomMenuBar onMeRequest={handleMeMenuRequested} onRequirementClick={handleRequirementClicked} />
+    { renderBottomBar() }
     <BuyerModal
       open={isBuyerModalOpen}
       path={path}
