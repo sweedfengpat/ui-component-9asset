@@ -1,3 +1,3 @@
 export * from './components/card'
 export * from './components/healthcheck'
-export * from './Layouts/MainLayout'
+export * from './Layouts/MainLayoutAppBar'
