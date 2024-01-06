@@ -1,9 +1,6 @@
 import React from "react";
-import { PhoneOutlined } from "@ant-design/icons";
-import { faCalendar, faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import { CalendarMonthOutlined, ChatOutlined, NearMe, NearMeOutlined, Person2Outlined, Phone } from "@mui/icons-material";
+import { CalendarMonthOutlined, ChatOutlined, NearMeOutlined, Person2Outlined, Phone } from "@mui/icons-material";
 
 type MenuKey = 'call' | 'appointment' | 'inquiry' | 'favorite' | 'navigate';
 
