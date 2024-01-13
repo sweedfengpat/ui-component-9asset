@@ -17,7 +17,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
   }
 
   return (<>
-  <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 450 }} elevation={6}>
+  <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1001 }} elevation={6}>
     <BottomNavigation showLabels>
       <BottomNavigationAction
         // sx={{ pl: 4 }}
