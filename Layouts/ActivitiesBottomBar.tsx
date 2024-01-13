@@ -17,10 +17,10 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
   }
 
   return (<>
-  <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 4 }} elevation={6}>
+  <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 450 }} elevation={6}>
     <BottomNavigation showLabels>
       <BottomNavigationAction
-        sx={{ pl: 4 }}
+        // sx={{ pl: 4 }}
         label="Require"
         icon={<ChatOutlined />}
         onClick={() => { props.onRequirementClicked?.() }}
@@ -32,12 +32,12 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
         }
         onClick={() => handleMenuClicked('call')}
       />
-      <BottomNavigationAction
+      {/* <BottomNavigationAction
      
         label={'View'}
         icon={<CalendarMonthOutlined />}
         onClick={() => handleMenuClicked('appointment')}
-      />
+      /> */}
       <BottomNavigationAction
       
         label={'Go'}
@@ -45,7 +45,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
         onClick={() => handleMenuClicked('navigate')}
       />
       <BottomNavigationAction
-        sx={{ pr: 4 }}
+        // sx={{ pr: 4 }}
         label="Me" icon={<Person2Outlined />}
         onClick={() => { props.onMeRequested?.(); }}
       />
