@@ -1,11 +1,19 @@
 import {
     AppBar, Toolbar, Divider, Box, 
-    Grid, Button, Menu, MenuItem, Avatar, IconButton,
-    Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar, MenuList, styled
+    Grid, Button, Slide, MenuItem, Avatar, IconButton,
+    Popover, List, ListSubheader, ListItem, ListItemButton, ListItemText, ListItemIcon, ListItemAvatar, MenuList, styled, Dialog, Typography, useTheme, useMediaQuery, DialogTitle, DialogContent, ThemeProvider
 } from "@mui/material";
 import {
     Home as HomeIcon,
     ChevronLeft,
+    Height,
+    Close,
+    Menu,
+    Add,
+    More,
+    Search,
+    AppsRounded,
+    SearchOutlined,
  } from "@mui/icons-material";
 
 import { 
@@ -13,56 +21,25 @@ import {
     red,
     blue
 } from '@mui/material/colors';
-import React, {useEffect, useRef, useState} from "react";
+import React, { MutableRefObject, RefObject, useEffect, useRef, useState} from "react";
 import { Item, MenuBarItem } from "./MenuBarItem";
 import axios from 'axios';
-import SearchIcon from '@mui/icons-material/Search';
 
 // import ProfileMenu from "./ProfileMenu";
 import { FirebaseApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { IMenuItem } from "./DrawerMenu";
-import { Profile } from "./Profile";
-import { ProfileMenuItem } from "./ProfileMenu";
-// import { TFunction as ReactI18NextTFunction } from "react-i18next";
-// import { TFunction } from "next-i18next";
 
-export type MainMenuLanguage = 'th' | 'en' | 'cn';
+import { Profile } from "./Profile";
+
+import { useTranslation } from "react-i18next";
+import { TransitionProps } from "@mui/material/transitions";
+
+import theme from "../theme";
+import ProfileMenuItem from "./ProfileMenuItem";
+
+export type MainMenuLanguage = 'th' | 'en' | 'cn' | string;
 
 export type MenuBar = { text: string, link: string, items?: MenuBar }[];
-
-interface IRecipeProps {
-    userServiceUrl: string;
-    useExternalLinkComponent?: boolean;
-    homeUrl?: string;
-    menubar: MenuBar;
-    menuProfile: ProfileMenuItem[];
-
-    app: FirebaseApp;
-    
-    // onAppChange?: (event: any) => void;
-    onLangChanged?:  (event: any) => void;
-    onMobileFilterClick:  (event: any) => void;
-    onMobileSearchClick:  (event: any) => void;
-    onMenuClick?: (type: 'project' | 'sell' | 'rent') => void;
-    onProfileMenuClick?: (item: ProfileMenuItem) => void;
-    onMenuBarItemClick?: (item: Item) => void;
-
-    logoPath?: string;
-    allowNoLoginAccessSite?: boolean | undefined;
-
-    language: MainMenuLanguage;
-    t: any; // To support next-i18next and react-i18next without project install both frameworks
-}
-
-interface IRecipeState {
-    selectLang: string;
-    isAuth: string;
-    loginBasePath: string;
-    homeUrl?: string;
-    user?: any;
-    menubar?: MenuBar;
-}
 
 export const AdvanceSearch = (props: any) => {
     const frameStyle = {
@@ -107,231 +84,264 @@ export const AdvanceSearch = (props: any) => {
     )
 }
 
-export class LayoutAppBar extends React.Component<IRecipeProps, IRecipeState> {
-   
-    menubar: MenuBar = [];
-    logoPath: string = '';
+interface ILayoutProps {
+    userServiceUrl: string;
+    useExternalLinkComponent?: boolean;
+    homeUrl?: string;
+    menubar: MenuBar;
+    menuProfile: ProfileMenuItem[];
 
-    constructor(props: IRecipeProps) {
-        super(props);
-        const { logoPath } = props;
-        if(logoPath) this.logoPath = logoPath;
+    app: FirebaseApp;
+    
+    // onAppChange?: (event: any) => void;
+    onLangChanged?:  (event: any) => void;
+    onMobileFilterClick:  (event: any) => void;
+    onMobileSearchClick:  (event: any) => void;
+    onMenuClick?: (type: 'project' | 'sell' | 'rent') => void;
+    onProfileMenuClick?: (item: ProfileMenuItem) => void;
+    onMenuBarItemClick?: (item: Item) => void;
+    onRequirementClick?: (isOpen: boolean) => void;
 
-        this.menubar = [...this.props.menubar];
+    logoPath?: string;
+    allowNoLoginAccessSite?: boolean | undefined;
 
-        this.state = {
-            selectLang: props.language ?? 'th',
-            isAuth: 'false',
-            user: null,
-            menubar: [...this.props.menubar],
-            loginBasePath: process.env.REACT_APP_DOMAIN 
-                || process.env.NEXT_PUBLIC_DOMAIN
-                || 'https://my.9asset.com'
+    language: MainMenuLanguage;
+    t: any; // To support next-i18next and react-i18next without project install both frameworks
+}
+
+interface IRecipeState {
+    selectLang: string;
+    isAuth: string;
+    loginBasePath: string;
+    homeUrl?: string;
+    user?: any;
+    menubar?: MenuBar;
+
+    isLoginModalOpened: boolean;
+    iFrameRef: RefObject<HTMLIFrameElement>;
+}
+
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+      children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+  ) {
+    return <Slide direction="right" ref={ref} {...props} />;
+  });
+
+  
+export const LayoutAppBar = (props: ILayoutProps) => {
+
+    const loginBasePath = process.env.REACT_APP_DOMAIN || process.env.NEXT_PUBLIC_DOMAIN || 'https://my.9asset.com';
+    const { t } = useTranslation();
+    const [user, setUser] = useState<any>(null);
+    const [seletedLang, setSelectedLang] = useState<string>(props.language || 'th')
+    const [logoPath, ] = useState<string|undefined>(props.logoPath);
+    const [isAuth, setIsAuth] = useState<'true'|'false'>('false');
+    
+
+    const [menubar, setMenuBar] = useState<MenuBar>(props.menubar || []);
+
+    useEffect(() => {
+        if (!user) {
+            if (typeof window !== "undefined") {
+                const userVal = window.localStorage && JSON.parse(window.localStorage.getItem(`9asset.userinfo`) || 'null');
+                setUser(userVal);
+            }
         }
-        console.log('layoutAppBar: ', this.state)
-    }
-   
-    async componentDidMount () {
-        const token = await this.getToken();
-    }
+    }, []);
 
-    async getToken () {
-        console.log('app: ', this.props.app);
-        const auth = getAuth(this.props.app);
+    const getToken = () => {
+        console.log('app: ', props.app);
+        const auth = getAuth(props.app);
         
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
+        return onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
               // User is signed in, see docs for a list of available properties
               // https://firebase.google.com/docs/reference/js/firebase.User
 
-                const token = await user.getIdToken();
-
+                const token = await firebaseUser.getIdToken();
                 console.log('my token: ', token);
-                if(this.props.userServiceUrl) {
+                if(props.userServiceUrl) {
                     try {
 
-                        const user = (await axios.get(`${this.props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
-                        localStorage && localStorage.setItem(`9asset.userinfo`, JSON.stringify(user));
+                        const userInfo = (await axios.get(`${props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
+                        localStorage && localStorage.setItem(`9asset.userinfo`, JSON.stringify(userInfo));
                         // this.setState({ user: user });
 
-                        console.log('Success get user', user);
-                        this.setState({
-                            ...this.state,
-                            isAuth: 'true',
-                            user: user
-                        })
+                        console.log('Success get user', userInfo);
+                        setIsAuth('true');
+                        setUser(userInfo);
+
                     } catch (error) {
                         // localStorage && localStorage.clear();
-                        this.setState({ user: null, isAuth: 'false' });
+                        setIsAuth('false');
+                        setUser(null);
 
-                        if(!this.props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
+                        if(!props.allowNoLoginAccessSite && process.env.REACT_APP_NODE_ENV === 'production') {
                             const currentUrl = encodeURIComponent(window.location.href);
-                            window.location.href = `${this.state.loginBasePath}/login?redirect=${currentUrl}`;
+                            window.location.href = `${loginBasePath}/login?redirect=${currentUrl}`;
                         }
                     }
                 }
             } else {
                 // User is signed out
                 console.log('User is signed out')
-                this.setState({
-                    ...this.state,
-                    isAuth: 'false',
-                    user: null
-                })
+                setIsAuth('false');
+                setUser(null);
                 
-                if(this.props.allowNoLoginAccessSite !== true 
+                if(props.allowNoLoginAccessSite !== true 
                     && process.env.REACT_APP_NODE_ENV === 'production') {
                     const currentUrl = encodeURIComponent(window.location.href);
-                    window.location.href = `${this.state.loginBasePath}/login?redirect=${currentUrl}`;
+                    window.location.href = `${loginBasePath}/login?redirect=${currentUrl}`;
                 }
             }
-            console.log('onAuthStateChanged', this.state);
+            console.log('onAuthStateChanged', firebaseUser);
         });
-          
-        return auth.currentUser?.getIdToken();
     }
 
-    renderMenu () {
-        if(this.props.menubar) {
-            return this.props.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
-                useExternalLinkComponent={this.props.useExternalLinkComponent || false}
-                onMenuItemClick={(item) => this.props.onMenuBarItemClick && this.props.onMenuBarItemClick(item)}
+    const getUserDisplayName = () => {
+        if(seletedLang.toLowerCase() === 'en') {
+            return user && user.nameEn ? user.lastnameEn : '' ;
+        } else if(seletedLang.toLowerCase() === 'cn') {
+            return user && user.nameCn ? user.lastnameCn : '' ;
+        } else if(seletedLang.toLowerCase() === 'th') {
+            return user && user.nameTh ? user.lastnameTh : '' ;
+        } else {
+            return user && user.displayName ? user.displayName : '' ;
+        }
+    }
+
+    const onMenuClick = (type: 'project' | 'sell' | 'rent') => {
+        props.onMenuClick && props.onMenuClick(type);
+    }
+
+    const onMobileSearchClick = (e: any) => {
+        if(props.onMobileSearchClick) {
+            props.onMobileSearchClick(e);
+        }
+    }
+
+
+    const handeProfileMenuClicked = (item: ProfileMenuItem) => {
+        props.onProfileMenuClick && props.onProfileMenuClick(item);
+    }
+
+    const handeMenuClicked = (e: any) => {
+        // setElementRef(e.currentTarget as HTMLElement);
+        // setIsMenuOpen(true);
+    }
+
+    const renderMenuBar = () => {
+        if(props.menubar) {
+            return props.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
+                useExternalLinkComponent={props.useExternalLinkComponent || false}
+                onMenuItemClick={(item) => props.onMenuBarItemClick && props.onMenuBarItemClick(item)}
             />);
         } 
 
-        return this.menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
-            useExternalLinkComponent={this.props.useExternalLinkComponent || false}
-            onMenuItemClick={(item) => this.props.onMenuBarItemClick && this.props.onMenuBarItemClick(item)}
+        return menubar.map((t: any, i: any) => <MenuBarItem text={t.text} items={t.items} link={t.link}  key={i}
+            useExternalLinkComponent={props.useExternalLinkComponent || false}
+            onMenuItemClick={(item) => props.onMenuBarItemClick && props.onMenuBarItemClick(item)}
         />);
     }
 
-    onLangChange(e: any) {
+    return (
+    <ThemeProvider theme={theme}>
+    <>
+        <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
+            <Toolbar>
+                <a href ={props.homeUrl || '/' }>
+                    <img src={logoPath} style={{ height: '40px', width: '34px'}} alt="'9asset Logo'" />
+                </a>
+                
+                <Box sx={{ flexGrow: 1, pl: 4, display: { xs: 'flex', md: 'none' } }}>
+                    <Button color="primary" variant="contained" disableElevation
+                        sx={{ 
+                            padding: '5px',
+                            borderRadius: '20px',
+                            minWidth: '24px',
+                            width: '34px !important'
+                        }}
+                        onClick={onMobileSearchClick}
+                    >
+                        <SearchOutlined fontSize="medium" />
+                    </Button>
+                </Box>
 
-        this.setState({
-            ...this.state,
-            selectLang: e.target.value
-        })
-        
-        if(this.props && this.props.onLangChanged) {
-            this.props.onLangChanged(e);
-        }
-    }
-
-    onMobileFilterClick(e: any) {
-        if(this.props.onMobileFilterClick) {
-            this.props.onMobileFilterClick(e);
-        }
-    }
-
-    onMobileSearchClick(e: any) {
-        if(this.props.onMobileSearchClick) {
-            this.props.onMobileSearchClick(e);
-        }
-    }
-
-    handelMenuClicked = (item: ProfileMenuItem) => {
-        this.props.onProfileMenuClick && this.props.onProfileMenuClick(item);
-    }
-
-    onMenuClick(type: 'project' | 'sell' | 'rent') {
-        this.props.onMenuClick && this.props.onMenuClick(type);
-    }
-
-    getUserDisplayName() {
-        if(this.state.selectLang.toLowerCase() === 'en') {
-            return this.state.user 
-                && this.state.user.nameEn ? this.state.user.lastnameEn : '' ;
-        } else if(this.state.selectLang.toLowerCase() === 'cn') {
-            return this.state.user 
-                && this.state.user.nameCn ? this.state.user.lastnameCn : '' ;
-        } else if(this.state.selectLang.toLowerCase() === 'th') {
-            return this.state.user 
-                && this.state.user.nameTh ? this.state.user.lastnameTh : '' ;
-        } else {
-            return this.state.user 
-                && this.state.user.displayName ? this.state.user.displayName : '' ;
-        }
-    }
-
-    render() {
-        let user = this.state.user;
-        if (!user) {
-            if (typeof window !== "undefined") {
-                user = window.localStorage && JSON.parse(window.localStorage.getItem(`9asset.userinfo`) || 'null');
-            }
-        }
-        
-        return (
-            <AppBar position="fixed" color={'inherit'} style={{ zIndex: 1201 }} >
-                <Toolbar>
-                    <a href ={this.props.homeUrl || '/' }>
-                        <img src={this.logoPath} style={{ height: '40px' }} alt="'9Asset Logo'" />
-                    </a>
-                    
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
-                        <Button
-                            color="info"
-                            style={{ color: '#5e5e5e'}}
-                            onClick={()=> this.onMenuClick('project')}
-                        >
-                            {`${this.props.t('project')}`}
-                        </Button>
-                        <Button
-                            color="primary"
-                            style={{ color: '#5e5e5e' }}
-                            onClick={()=> this.onMenuClick('sell')}
-                        >
-                            {`${this.props.t('sell')}`}
-                        </Button>
-                        <Button
-                            color="primary"
-                            style={{ color: '#5e5e5e' }}
-                            onClick={()=> this.onMenuClick('rent')}
-                        >
-                            {`${this.props.t('rent')}`}
-                        </Button>
-                        <div style={{position: 'absolute', left: '275px', width: '450px'}}>
-                            <AdvanceSearch />
-                        </div>
-                    </Box>
-                    <div style={{ flexGrow: 1 }}></div>
-                    {/* { this.renderSellerBuyerButtons() } */}
-                    <div style={{marginRight: '10px'}}>
-                        {  this.getUserDisplayName() }
+                <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' } }}>
+                    <Button
+                        color="info"
+                        style={{ color: '#5e5e5e'}}
+                        onClick={()=> onMenuClick('project')}
+                    >
+                        {`${props.t('project')}`}
+                    </Button>
+                    <Button
+                        color="primary"
+                        style={{ color: '#5e5e5e' }}
+                        onClick={()=> onMenuClick('sell')}
+                    >
+                        {`${props.t('sell')}`}
+                    </Button>
+                    <Button
+                        color="primary"
+                        style={{ color: '#5e5e5e' }}
+                        onClick={()=> onMenuClick('rent')}
+                    >
+                        {`${props.t('rent')}`}
+                    </Button>
+                    <div style={{position: 'absolute', left: '275px', width: '450px'}}>
+                        <AdvanceSearch />
                     </div>
-                    <div style={{ display: 'flex' }}>
-                        <Profile
-                            user={user}
-                            t={this.props.t}
-                            language={this.props.language}
-                            isAuth={this.state.isAuth === 'true'}
-                            menuItems={this.props.menuProfile}
-                            onLangChanged={(ln: MainMenuLanguage) => { this.props.onLangChanged && this.props.onLangChanged(ln); }}
-                            onMenuClicked={this.handelMenuClicked}
-                        />
-                    </div>
-                </Toolbar>
-                <Grid container direction={'row'} style={{ background: '#f4762a', height: '42px', color: '#fffff' }} 
-                    justifyContent='center' alignItems='center'   
-                >
-                    <Grid item maxWidth={'900px'} sx={{display: { xs: 'none', sm: 'none', md: 'flex' } }} >
-                        { this.renderMenu() }
-                    </Grid>
-                    <Grid item width={"100%"} sx={{display: { xs: 'flex', sm: 'flex', md: 'none' } }} >
-                        <Grid container justifyContent="space-between" direction="row"  alignItems="center" >
-                            <Grid item xs={12} md={12} style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-                                <Button size="small" variant="outlined" startIcon={<SearchIcon />}
-                                    sx={{ width: '100%', bgcolor: 'white', color: 'black', textAlign: 'left',
-                                        justifyContent: 'left'
-                                    }}
-                                    onClick={this.onMobileSearchClick.bind(this)} 
-                                >Search</Button>
-                            </Grid>
-                        </Grid>
-                    </Grid>
+                </Box>
+                <div style={{ flexGrow: 1 }}></div>
+                {/* { this.renderSellerBuyerButtons() } */}
+                <div style={{marginRight: '10px'}}>
+                    { getUserDisplayName() }
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <IconButton onClick={handeMenuClicked}>
+                        <AppsRounded fontSize="large"  />
+                    </IconButton>
+                </div>
+                <div style={{ display: 'flex' }}>
+                    {/* <Profile
+                        user={user}
+                        t={props.t}
+                        language={props.language}
+                        isAuth={isAuth === 'true'}
+                        menuItems={props.menuProfile}
+                        onLangChanged={(ln: MainMenuLanguage) => { props.onLangChanged && props.onLangChanged(ln); }}
+                        onMenuClicked={handeProfileMenuClicked}
+                        onLoginRequested={handleLoginRequested}
+                    /> */}
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <IconButton onClick={handeMenuClicked}>
+                        <Menu fontSize="large"  />
+                    </IconButton>
+                </div>
+            </Toolbar>
+            <Grid container 
+                direction={'row'} 
+                sx={{ 
+                    background: '#f4762a',
+                    height: '42px',
+                    color: '#fffff',
+                    display: { xs: 'none', sm: 'none', md: 'flex' } 
+                }} 
+                justifyContent='center'
+                alignItems='center'   
+            >
+                <Grid item maxWidth={'900px'}>
+                    { renderMenuBar() }
                 </Grid>
-            </AppBar>
-        );
-    }
-} 
+            </Grid>
+        </AppBar>
+    </>
+    </ThemeProvider>
+    );
+}
