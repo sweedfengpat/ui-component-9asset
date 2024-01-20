@@ -59,7 +59,17 @@ export const LoginModal = ({ open, mode, onLoginClosed }: LoginModalProps) => {
           console.log(iFrameRef.current?.contentWindow);
         })
       }
-    }, [iFrameRef?.current])
+    }, [iFrameRef?.current]);
+
+    const handleClose = () => {
+      window.postMessage({
+        source: 'login-modal',
+        target: '9assetApp',
+        type: 'cancelled'
+      }, '*');
+      window.dispatchEvent(new CustomEvent('login-cancelled'));
+      onLoginClosed?.();
+    }
     
     return ( 
     <Dialog
@@ -85,7 +95,7 @@ export const LoginModal = ({ open, mode, onLoginClosed }: LoginModalProps) => {
           top: 8,
           color: (theme) => theme.palette.grey[500],
         }}
-        onClick={() => onLoginClosed?.()}
+        onClick={handleClose}
       >
         <Close />
       </IconButton>
