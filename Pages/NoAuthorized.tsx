@@ -1,7 +1,25 @@
 import { Box, Typography } from "@mui/material";
 import logo from '../../assets/images/9asset-logo.png';
+import { useEffect, useState } from "react";
  
-export const NotFound = () => {
+export const NoAuthorized = () => {
+  const [countDown, setCountDown] = useState<number>(10);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const current = countDown - 1;
+      setCountDown(current);
+      
+      if (current < 0) {
+        window.location.href = process.env.REACT_APP_LOGIN_BASE_URL || 'https://www.9asset.com';
+      }
+    }, 1000)
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
+
   return (
   <Box
     sx={{
@@ -15,15 +33,18 @@ export const NotFound = () => {
     <Box component={"img"} src={logo} sx={{ width: '100px' }} >
     </Box>
     <Box  sx={{ p: 2}}>
-      <Typography variant="h1" sx={{ textAlign: 'center' }}>
-        404 
+      <Typography variant="h1" sx={{ textAlign: 'left' }}>
+        403
       </Typography>
-      <Typography variant="h6" sx={{ textAlign: 'center', fontSize: '16px' }}>
-        The page you’re looking for doesn’t exist.
+      <Typography variant="h6" sx={{ textAlign: 'left', fontSize: '16px' }}>
+        Forbidden!, You are not allowed!
+      </Typography>
+      <Typography variant="caption"sx={{ textAlign: 'center' }} >
+        { `This page will be redirected to default page in ${countDown}.` }
       </Typography>
     </Box>
       
   </Box>);
 }
 
-export default NotFound;
+export default NoAuthorized;
