@@ -1,8 +1,9 @@
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { Box, Collapse, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import React from "react";
+import { Box, Collapse, List, ListItem, ListItemIcon, ListItemText, useTheme } from "@mui/material";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { matchRoutes, useLocation } from "react-router";
 import { useNavigate } from "react-router";
 
 export const VersionBox = () => {
@@ -34,6 +35,7 @@ export interface DrawerMenuItem {
 export interface DrawerMenuProps {
   menu: DrawerMenuItem[];
   multiActive?: boolean;
+  routes?: { path: string }[];
 
   onMenuItemClick?: (key: string) => void;
 }
@@ -41,8 +43,20 @@ export interface DrawerMenuProps {
 export const DrawerMenu = (props: DrawerMenuProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const location = useLocation();
+  const theme = useTheme();
+  // const [{ route }] = matchRoutes(props?.routes || [], location);
 
   const [expanded, setExpanded] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (expanded.length === 0 && !props.multiActive) {
+      const index = props.menu.findIndex(i => i.items && i.items.some(j => j.link === location.pathname));
+      if (index >= 0) {
+        setExpanded([index])
+      }
+    }
+  }, [])
 
   const toggleExpanding = (index: number) => {
     if (expanded.includes(index)) {
@@ -84,15 +98,16 @@ export const DrawerMenu = (props: DrawerMenuProps) => {
           props.onMenuItemClick?.(item.key);
         }}
       >
-        <ListItemIcon sx={{ minWidth: `32px` }}>
+        <ListItemIcon sx={{ minWidth: `32px`, color: location.pathname === item.link ? theme.palette.primary.main : '#333333', }}>
           {item.icon ? <item.icon /> : <></>}
         </ListItemIcon>
         <ListItemText
           primary={t(`menu.${item.title}`)}
           primaryTypographyProps={{
-            color: '#333333',
+            color: location.pathname === item.link ? theme.palette.primary.main : '#333333',
             fontSize: '16px',
-            fontWeight: '500',
+            fontWeight: location.pathname === item.link ? '700' : '500',
+
           }}
         />
         {
