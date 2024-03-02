@@ -33,10 +33,6 @@ export const LoginModal = ({ open, mode, onLoginClosed }: LoginModalProps) => {
   const iFrameRef = useRef<HTMLIFrameElement|null>(null);
 
   const onLoginMessage = (e: MessageEvent) => {
-    if (e.origin !== process.env.NEXT_PUBLIC_URL_BASE) {
-      return;
-    }
-    
     try {
       console.log('login message');
       if (!e.data) {
