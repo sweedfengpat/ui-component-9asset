@@ -39,6 +39,9 @@ export const LoginModal = ({ open, mode, onLoginClosed }: LoginModalProps) => {
     
     try {
       console.log('login message');
+      if (!e.data) {
+        return;
+      }
       const payload = e.data;
       if (payload.source === 'login' && (payload.type === 'logged-in' || payload.type === 'registered')) {
         onLoginClosed?.(true);
