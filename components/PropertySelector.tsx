@@ -33,7 +33,7 @@ export class PropertySelector extends React.Component<PropertySelectorProps, any
                 <InputLabel id="property-type-label">{this.props.label || 'Property'}</InputLabel>
                 <Select
                     labelId="property-type-label"
-                    value={this.props.selected || ''}
+                    value={this.props.selected ? `${this.props.selected}` : ''}
                     onChange={(e) => this.onPropertyChanged(e as any)}
                     id="property-type"
                     label={this.props.label || 'Property'}
