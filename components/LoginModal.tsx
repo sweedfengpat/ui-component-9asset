@@ -33,13 +33,15 @@ export const LoginModal = ({ open, mode, onLoginClosed }: LoginModalProps) => {
   const iFrameRef = useRef<HTMLIFrameElement|null>(null);
 
   const onLoginMessage = (e: MessageEvent) => {
-    if (e.origin !== process.env.NEXT_PUBLIC_URL_BASE) {
-      return;
-    }
-    
     try {
-      const payload = e.data;
-      if (payload.source === 'login' && (payload.type === 'logged-in' || payload.type === 'registered')) {
+      console.log('login message');
+      if (!e.data.source) {
+
+      }
+
+      const { source, type, data } = e.data;
+
+      if (source === 'login' && (type === 'logged-in' || type === 'registered')) {
         onLoginClosed?.(true);
       } else {
           
