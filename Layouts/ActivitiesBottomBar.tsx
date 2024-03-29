@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { CalendarMonthOutlined, ChatOutlined, NearMeOutlined, Person2Outlined, Phone } from "@mui/icons-material";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -14,7 +14,8 @@ export interface ActivitiesButtomBarProps {
 
 export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
 
-  const [action, setAction] = useState<string|null>(null);
+  // const [action, setAction] = useState<string|null>(null);
+  const action = useRef<string|null>(null);
 
   const handleMenuClicked = (key: MenuKey, option?: any) => {
     props.onMenuClicked(key, option);
@@ -23,17 +24,17 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
   const handleLoggedIn = () => {
     window.removeEventListener('logged-in', handleLoggedIn);
     window.removeEventListener('login-cancelled', handleLoginCancelled);
-    if (action === 'require') {
+    if (action.current === 'require') {
       props?.onRequirementClicked();
-    } else if(action === 'call') {
+    } else if(action.current === 'call') {
       handleMenuClicked('call', { reload: true });
-    } else if (action === 'navigate') {
+    } else if (action.current === 'navigate') {
       handleMenuClicked('navigate', { reload: true });
     }
   }
 
   const handleLoginCancelled = () => {
-    setAction(null);
+    action.current = null;
     window.removeEventListener('logged-in', handleLoggedIn);
     window.removeEventListener('login-cancelled', handleLoginCancelled);
   }
@@ -48,7 +49,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
         onClick={() => {
           const user = getUser();
           if (!user?.id) {
-            setAction('require');
+            action.current = 'require';
             const loginRequested = new CustomEvent('loginrequested', { detail: { reload: false } });
             window.addEventListener('logged-in', handleLoggedIn);
             window.addEventListener('login-cancelled', handleLoginCancelled);
@@ -66,7 +67,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
         onClick={() => {
           const user = getUser();
           if (!user?.id) {
-            setAction('call');
+            action.current = 'call';
             const loginRequested = new CustomEvent('loginrequested', { detail: { reload: false } });
             window.addEventListener('logged-in', handleLoggedIn);
             window.addEventListener('login-cancelled', handleLoginCancelled);
@@ -89,7 +90,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
         onClick={() => {
           const user = getUser();
           if (!user?.id) {
-            setAction('navigate');
+            action.current =  'navigate';
             const loginRequested = new CustomEvent('loginrequested', { detail: { reload: false } });
             window.addEventListener('logged-in', handleLoggedIn);
             window.addEventListener('login-cancelled', handleLoginCancelled);
