@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { CalendarMonthOutlined, ChatOutlined, NearMeOutlined, Person2Outlined, Phone } from "@mui/icons-material";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { getUser } from "../../utils/utils";
+import { getUser } from "../utils";
 
 type MenuKey = 'call' | 'appointment' | 'inquiry' | 'favorite' | 'navigate';
 
@@ -25,7 +25,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
     window.removeEventListener('logged-in', handleLoggedIn);
     window.removeEventListener('login-cancelled', handleLoginCancelled);
     if (action.current === 'require') {
-      props?.onRequirementClicked();
+      props?.onRequirementClicked?.();
     } else if(action.current === 'call') {
       handleMenuClicked('call', { reload: true });
     } else if (action.current === 'navigate') {
@@ -55,7 +55,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
             window.addEventListener('login-cancelled', handleLoginCancelled);
             window.dispatchEvent(loginRequested);
           } else {
-            props?.onRequirementClicked();
+            props?.onRequirementClicked?.();
           }
         }}
       />
