@@ -16,6 +16,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
 
   // const [action, setAction] = useState<string|null>(null);
   const action = useRef<string|null>(null);
+  const [userInfo] = useLocalStorage('9asset.userinfo');
 
   const handleMenuClicked = (key: MenuKey, option?: any) => {
     props.onMenuClicked(key, option);
