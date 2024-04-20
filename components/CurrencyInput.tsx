@@ -8,7 +8,6 @@ export interface CurrencyInputProps extends BaseTextFieldProps {
 }
 
 export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
-
     return (
     <NumberFormat
         fullWidth={ (props as TextFieldProps).fullWidth }
@@ -32,7 +31,7 @@ export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
         thousandSeparator={true}
         allowNegative={false}
         allowLeadingZeros={false}
-        decimalScale={props?.decimalScale || 0}
+        decimalScale={props?.decimalScale || 0 }
         value={props.value as any || ''}
         onChange={props.onChange}
     />
