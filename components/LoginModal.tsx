@@ -108,7 +108,7 @@ export const LoginModal = ({ open, mode, onLoginClosed }: LoginModalProps) => {
         src={`${process.env.NEXT_PUBLIC_LOGIN_URL_BASE || process.env.REACT_APP_LOGIN_BASE_URL}${mode === 'register' ? '/register' : ''}?isHeadlessMode=true`}
         style={{ 
           border: 'none',
-          height: isMobile ? '100%' : '590px',
+          height: isMobile ? '100%' : '640px',
           width: isMobile ? '100%': '100%'
         }} 
       />
