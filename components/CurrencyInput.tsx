@@ -4,7 +4,7 @@ import NumberFormat from "react-number-format";
 export interface CurrencyInputProps extends BaseTextFieldProps {
     unit?: string;
     dataValidateKey?: string; 
-    decimalScale?: number 
+    decimalScale?: number; 
 }
 
 export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
