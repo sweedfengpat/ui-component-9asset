@@ -210,7 +210,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
         <Stack direction="column" sx={{ p:0 }}>
           <Box sx={{ display: 'inline-flex' }}>
             <Typography component="span" sx={{ fontSize: '12px', fontStyle: props.userInfo?.email ? 'normal' : 'italic' }}>{props.userInfo && props.userInfo.email ? props.userInfo.email : 'no email'}</Typography>
-            { props.userInfo.emailVerified  && <Typography component="span" sx={{ fontSize: '12px', pl: 1 }} color="green">{'Verified'}</Typography> }
+            { props.userInfo?.emailVerified  && <Typography component="span" sx={{ fontSize: '12px', pl: 1 }} color="green">{'Verified'}</Typography> }
           </Box>
           <Typography component="span" sx={{ fontSize: '10px' }} color="primary">150 Coins</Typography>
         </Stack>
