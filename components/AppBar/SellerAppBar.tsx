@@ -15,6 +15,7 @@ import { Search } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { namespaces } from "../../../i18n/i18n.constants";
 import { UserInfo } from "../../store/users/reducer";
+import { i18n } from "../../../i18n/i18n";
 
 export const menuItems = [
   {
@@ -216,6 +217,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
 
       hideSellerCenter={true}
       onProfileMenuClick={handleProfileMenuClicked}
+      onLanguageChanged={(lng) =>  { i18n.changeLanguage(lng); }}
     />
     <MobileToolbar
       title={getTitle()}
