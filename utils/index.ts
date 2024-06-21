@@ -27,6 +27,6 @@ export const getUserSync = () => {
             clearInterval(looper);
             return resolve(null);
         }
-    }, 200);
+    }, 1000);
   })
 }
