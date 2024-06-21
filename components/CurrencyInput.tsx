@@ -8,7 +8,7 @@ export interface CurrencyInputProps extends BaseTextFieldProps {
     decimalScale?: number; 
     minValue?: number;
     maxValue?: number;
-    updateValue?: any;
+    updateValue?: (event: any, index: number) => void;
     index?: number;
 }
 
