@@ -108,7 +108,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
       'th': 'ไทย',
       'cn': '中文'
     };
-    return lang[i18n.language]; 
+    return lang[i18n.language as 'en' | 'th' | 'cn']; 
   }
 
   const handleLanguageClick = (event: React.MouseEvent<HTMLButtonElement>) => {
