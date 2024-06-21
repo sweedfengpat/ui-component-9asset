@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Grid, Link, Toolbar } from "@mui/material";
+import { Box, Button, Grid, Link, Menu, MenuItem as MItem, Toolbar } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Profile } from "../../Layouts/Profile";
@@ -7,6 +7,7 @@ import { AdvanceSearch } from "../../Layouts/AdvanceSearch";
 import { User } from "firebase/auth";
 import { MenuItem, menubar } from ".";
 import { UserInfo } from "../../store/users/reducer";
+import { LanguageOutlined } from "@mui/icons-material";
 
 export interface DesktopToolbarProps {
   namespace: string;
@@ -29,6 +30,9 @@ export interface DesktopToolbarProps {
 export const DesktopToolbar = (props: DesktopToolbarProps) => {
   const { t, i18n } = useTranslation(props.namespace);
   const [logoPath, ] = useState<string|undefined>(props.logoPath);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   const isAuth = () => {
     return !!props.user;
@@ -98,6 +102,27 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     ));
   }
 
+  const getCurrentLanguageText = () => {
+    const lang = {
+      'en': 'English',
+      'th': 'ไทย',
+      'cn': '中文'
+    };
+    return lang[i18n.language]; 
+  }
+
+  const handleLanguageClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleLanguageClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLanguageChanged = (lang: 'en' | 'cn' | 'th') => {
+    props.onLanguageChanged?.(lang);
+    setAnchorEl(null);
+  }
+
   return (<>
   <Toolbar sx={{ display: { xs: 'none', sm: 'flex' } }}>
     <a href ={ '/' }>
@@ -120,7 +145,30 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
       { !props.hideSellerCenter && <Button
         variant="text"
         sx={{ textTransform: 'none' }}
-        href="/seller">Seller Center</Button> }
+        href="/seller">{t('menu.sellerCenter')}</Button> }
+    </Box>
+    <Box component={"div"} sx={{ p: '2px' }}>
+      <Button
+        variant="outlined"
+        size="small"
+        sx={{ textTransform: 'none' }}
+        startIcon={<LanguageOutlined />}
+        onClick={handleLanguageClick}
+      >
+        { getCurrentLanguageText() }
+      </Button>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleLanguageClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MItem selected={i18n.language === 'th'} onClick={() => handleLanguageChanged('th')}>ไทย</MItem>
+        <MItem selected={i18n.language === 'en'} onClick={() => handleLanguageChanged('en')}>English</MItem>
+        <MItem selected={i18n.language === 'cn'} onClick={() => handleLanguageChanged('cn')}>中文</MItem>
+      </Menu>
     </Box>
     <Box component={"div"} sx={{ marginRight: '10px' }}>
     { isAuth() && getUserDisplayName() }

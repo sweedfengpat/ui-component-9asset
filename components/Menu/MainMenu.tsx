@@ -203,18 +203,18 @@ export const MainMenu = (props: MainMenuProps) => {
     }
 
     const generalMenu = [
-        { key: 'project', text: "โครงการ", onClick: () => props.onMenuClicked?.('project') },
-        { key: 'sale', text: "ขาย", onClick: () => props.onMenuClicked?.('sale') },
-        { key: 'rent', text: "เช่า", onClick: () => props.onMenuClicked?.('rent') },
+        { key: 'project', text: t('project'), onClick: () => props.onMenuClicked?.('project') },
+        { key: 'sale', text: t('sale'), onClick: () => props.onMenuClicked?.('sale') },
+        { key: 'rent', text: t('rent'), onClick: () => props.onMenuClicked?.('rent') },
+        { key: 'article', text: t('article'), onClick: () => props.onMenuClicked?.('article')  }
     ] as MenuItem[];
 
     const configurationMenu = [
         { key: 'language', text: 'ภาษา', onClick: onLanguageChangeRequested },
-        { key: 'country', text: 'ประเทศ' }
     ] as MenuItem[];
 
     const languagesMenu = [
-        { text: 'ภาษาไทย', onClick: () => onLanguageChanged('th') },
+        { text: 'ไทย', onClick: () => onLanguageChanged('th') },
         { text: 'English', onClick: () => onLanguageChanged('en') },
         { text: '中文', onClick: () => onLanguageChanged('cn') }
     ] as MenuItem[];
@@ -225,7 +225,7 @@ export const MainMenu = (props: MainMenuProps) => {
 
     const generateMobileGenericMenu = (item: MenuItem, index: number) => {
         return (
-        <ListItem disablePadding key={index}>
+        <ListItem disablePadding key={index} sx={{ paddingTop: '10px' }}>
             <ListItemButton sx={{ py: "2px" }} onClick={item.onClick}>
                 <ListItemText 
                     primary={
@@ -254,6 +254,7 @@ export const MainMenu = (props: MainMenuProps) => {
             secondaryAction={
                 <Typography>{getValue(item.key)}</Typography>
             }
+            sx={{ paddingTop: '10px' }}
         >
             <ListItemButton sx={{ py: "2px" }} onClick={item.onClick}>
                 <ListItemText 
@@ -337,7 +338,7 @@ export const MainMenu = (props: MainMenuProps) => {
         if (isMobile) {
             if (menuType === MenuType.Default) {
                 return (
-                <List>
+                <List sx={{ paddingTop: '15px' }}>
                     {/* { isAuth ? renderAuthMenu() : renderNonAuthMenu()} */}
                     { generalMenu.map(generateMobileGenericMenu) }
                     { isAuth && renderLoggedInMenu() }

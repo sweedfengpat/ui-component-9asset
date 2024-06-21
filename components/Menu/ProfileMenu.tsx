@@ -257,7 +257,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
     >
       { isAuth ? renderAuthMenu() : renderNonAuthMenu() }
       { isAuth ? renderLoggedInMenu() : renderNonLoggedInMenu() }
-      { renderCommonMenu() }
+      {/* { renderCommonMenu() } */}
       { isAuth && logoutMenu }
     </List>
     ) : (
