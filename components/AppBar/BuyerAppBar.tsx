@@ -55,7 +55,7 @@ export interface BuyerAppBarProps {
 
   onBackRequested?: () => void;
   onClose?: () => void;
-  onLanguageChanged?: (lng: 'th' | 'en' | 'th') => void;
+  onLanguageChanged?: (lng: string) => void;
 }
 
 export const BuyerAppBar = (props: BuyerAppBarProps) => {
@@ -99,8 +99,8 @@ export const BuyerAppBar = (props: BuyerAppBarProps) => {
     }
   }
 
-  const onLanguageChanged = () => {
-
+  const onLanguageChanged = (ln: string) => {
+    props.onLanguageChanged?.(ln);
   }
 
   return (
