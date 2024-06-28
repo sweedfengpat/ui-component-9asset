@@ -232,6 +232,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
     onMeRequest={handleMeMenuRequested}
   />
   <MeMenu
+    user={user}
     open={isMeMenuOpened}
     logo={logo}
     items={menuItems}
