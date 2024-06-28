@@ -52,7 +52,7 @@ export interface MenuDialogTitleProps {
 
 
 export const MenuDialogTitle = (props: MenuDialogTitleProps) => {
-
+    const { t } = useTranslation();
     const closeButton = (
     <IconButton 
         sx={{ position: 'absolute', right: 4, color: (theme) => theme.palette.grey[500] }}
@@ -111,7 +111,7 @@ export const MenuDialogTitle = (props: MenuDialogTitleProps) => {
                 >
                     <NavigateBefore />
                 </IconButton>
-                <Typography component="span" color="black">Language</Typography>
+                <Typography component="span" color="black">{t('Language')}</Typography>
             </Box>);
         }
     }
