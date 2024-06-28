@@ -204,7 +204,7 @@ export const MainMenu = (props: MainMenuProps) => {
 
     const generalMenu = [
         { key: 'project', text: t('project'), onClick: () => props.onMenuClicked?.('project') },
-        { key: 'sale', text: t('sale'), onClick: () => props.onMenuClicked?.('sale') },
+        { key: 'sale', text: t('sell'), onClick: () => props.onMenuClicked?.('sale') },
         { key: 'rent', text: t('rent'), onClick: () => props.onMenuClicked?.('rent') },
         { key: 'article', text: t('article'), onClick: () => props.onMenuClicked?.('article')  }
     ] as MenuItem[];
@@ -251,9 +251,6 @@ export const MainMenu = (props: MainMenuProps) => {
         <ListItem
             disablePadding
             key={index}
-            secondaryAction={
-                <Typography>{getValue(item.key)}</Typography>
-            }
             sx={{ paddingTop: '10px' }}
         >
             <ListItemButton sx={{ py: "2px" }} onClick={item.onClick}>
@@ -262,6 +259,7 @@ export const MainMenu = (props: MainMenuProps) => {
                         <Typography component="span" color="text.primary" sx={{ fontSize: '1.1em' }}>{ item.text }</Typography>
                     }
                 />
+                <ListItemText sx={{ textAlign: 'right' }} primary={<Typography>{getValue(item.key)}</Typography>} />
             </ListItemButton>
         </ListItem>
         )
