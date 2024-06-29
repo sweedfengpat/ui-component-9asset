@@ -210,7 +210,7 @@ export const MainMenu = (props: MainMenuProps) => {
     ] as MenuItem[];
 
     const configurationMenu = [
-        { key: 'language', text: 'ภาษา', onClick: onLanguageChangeRequested },
+        { key: 'language', text: t('Language'), onClick: onLanguageChangeRequested },
     ] as MenuItem[];
 
     const languagesMenu = [
