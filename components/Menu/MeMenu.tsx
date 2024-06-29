@@ -4,6 +4,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { MenuItem as IMenuItem } from "../Toolbar";
+import { User } from "firebase/auth";
 
 const RightTransition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -25,6 +26,7 @@ const MenuSubItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 export interface MenuProps {
+  user: User | null;
   open: boolean;
   logo?: string;
   items?: IMenuItem[];
@@ -38,6 +40,10 @@ export const MeMenu = (props: MenuProps) => {
   const { open } = props;
   const { t, i18n } = useTranslation();
 
+  const getIsAuth = () => {
+    return  props.user !== null || (process.env.NODE_ENV || 'development') === 'development';
+  }
+
   const closeButton = (
   <IconButton 
       sx={{ position: 'absolute', right: 4, color: (theme) => theme.palette.grey[500] }}
@@ -47,26 +53,43 @@ export const MeMenu = (props: MenuProps) => {
   </IconButton>);
 
   const renderMenuItems = () => {
-    return (<>{
-      (props.items || []).map((item, index) => (<React.Fragment key={item.key || index}>
+    const items = (props.items || []).map((item, index) => (<React.Fragment key={item.key || index}>
+      <MenuItem
+        disabled={!!item.items}
+        onClick={() => props.onMenuClicked?.(item.key, item.link)}
+      >
+        <ListItemText>{ t(item.text) }</ListItemText>
+      </MenuItem>
+      {
+        (item.items || []).map((s) => (
+          <MenuSubItem key={s.key} onClick={() => props.onMenuClicked?.(s.key, s.link)}>
+            <ListItemText inset>{ t(s.text) }</ListItemText>
+          </MenuSubItem>
+        ))
+      }
+    </React.Fragment>))
+  
+    if (getIsAuth()) {
+      items.push(
+      <React.Fragment key={'logout'}>
         <MenuItem
-          disabled={!!item.items}
-          onClick={() => props.onMenuClicked?.(item.key, item.link)}
+   
+          onClick={() => props.onMenuClicked?.('logout')}
         >
-          <ListItemText>{ t(item.text) }</ListItemText>
+          <ListItemText>{ t('menu.logout') }</ListItemText>
         </MenuItem>
-        {
-          (item.items || []).map((s) => (
-            <MenuSubItem key={s.key} onClick={() => props.onMenuClicked?.(s.key, s.link)}>
-              <ListItemText inset>{ t(s.text) }</ListItemText>
-            </MenuSubItem>
-          ))
-        }
-      </React.Fragment>))
+      </React.Fragment>);
+    }
+    return (<>{
+      items
     }</>);
   }
 
-  const renderAuthMenu = () => (
+  const renderAuthMenu = () => {
+    if (getIsAuth()) {
+      return;
+    }
+    return (<>
     <ListItem component="div" disablePadding>
       <ListItemButton 
         sx={{ textAlign: 'center', marginRight: '10px' }}
@@ -97,7 +120,11 @@ export const MeMenu = (props: MenuProps) => {
         />
       </ListItemButton>
     </ListItem>
-  );
+    <Divider />
+    </>);
+  };
+
+
     
   return (
     <Dialog
@@ -151,7 +178,6 @@ export const MeMenu = (props: MenuProps) => {
       <DialogContent sx={{ py: 0, px: 0 }}>
         <List>
           { renderAuthMenu() }
-          <Divider />
           { renderMenuItems() }
         </List>
       </DialogContent>

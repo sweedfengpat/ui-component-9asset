@@ -53,7 +53,7 @@ class HotActionBar extends React.Component<HotActionBarProps> {
             {/* { this.props.type === 'buyer' ? (
                 <> */}
                     {/* <Button variant="contained" color="success" style={{ marginRight: 5 }} onClick={this.onCreateNewRequirement}>Create Requirement</Button> */}
-                    <Button variant="contained" color="warning" onClick={this.onCreateNewProperty}>Add Listing</Button>
+                    <Button variant="contained" color="warning" onClick={this.onCreateNewProperty}>Create Requirement</Button>
                 {/* </>)  : (
                 <>
                     <Button variant="contained" color="primary" style={{ marginRight: 5, backgroundColor: '#ff5e5e' }} onClick={this.onCreateNewProperty}>Create Property</Button>
