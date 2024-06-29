@@ -247,11 +247,6 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
           <ListSubheader sx={{ lineHeight: '30px', px: 0 }}>
             {t('My Account')}
           </ListSubheader>
-          {/* <Button
-            variant="text"
-            sx={{ textTransform: 'none', fontWeight: '600' }}
-            onClick={() => props.onMenuClicked?.('seller')}
-          >Seller Center</Button> */}
         </Stack>
       }
     >
