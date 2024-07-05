@@ -234,6 +234,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   />
   <MeMenu
     user={user}
+    userInfo={props.user}
     open={isMeMenuOpened}
     logo={logo}
     items={menuItems}
