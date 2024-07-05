@@ -1,8 +1,8 @@
-import { AppBar, Avatar, Box, Button, Dialog, DialogContent, DialogTitle, Divider, Fade, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, MenuList, Popover, Slide, Toolbar, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
+import { AppBar, Avatar, Box, Button, Dialog, DialogContent, DialogTitle, Divider, Fade, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, MenuItem, MenuList, Popover, Slide, Toolbar, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import React from "react";
 import { TransitionProps } from "@mui/material/transitions";
-import { Close, NavigateBefore } from "@mui/icons-material";
+import { Close, Language, NavigateBefore } from "@mui/icons-material";
 import logoImage from '../assets/images/9asset-logo.png';
 import { useTranslation } from "react-i18next";
 import { MenuItem as IMenuItem } from "../Toolbar";
@@ -11,6 +11,7 @@ import { getUserName } from "../../Layouts/Profile";
 
 type MenuItem = IMenuItem & {
     onClick?: () => void;
+    icon?: JSX.Element;
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -203,14 +204,15 @@ export const MainMenu = (props: MainMenuProps) => {
     }
 
     const generalMenu = [
-        { key: 'project', text: t('project'), onClick: () => props.onMenuClicked?.('project') },
         { key: 'sale', text: t('sell'), onClick: () => props.onMenuClicked?.('sale') },
         { key: 'rent', text: t('rent'), onClick: () => props.onMenuClicked?.('rent') },
+        { key: 'lease', text: t('mortgageOrRedemption'), onClick: () => props.onMenuClicked?.('lease') },
+        { key: 'project', text: t('project'), onClick: () => props.onMenuClicked?.('project') },
         { key: 'article', text: t('article'), onClick: () => props.onMenuClicked?.('article')  }
     ] as MenuItem[];
 
     const configurationMenu = [
-        { key: 'language', text: t('Language'), onClick: onLanguageChangeRequested },
+        { key: 'language', text: t('Language'), icon: <Language />, onClick: onLanguageChangeRequested },
     ] as MenuItem[];
 
     const languagesMenu = [
@@ -246,7 +248,7 @@ export const MainMenu = (props: MainMenuProps) => {
         return '';
     }
 
-    const generateMobileConfigMenu = (item: any, index: number) => {
+    const generateMobileConfigMenu = (item: MenuItem, index: number) => {
         return (
         <ListItem
             disablePadding
@@ -254,6 +256,7 @@ export const MainMenu = (props: MainMenuProps) => {
             sx={{ paddingTop: '10px' }}
         >
             <ListItemButton sx={{ py: "2px" }} onClick={item.onClick}>
+                { item.icon && <ListItemIcon sx={{ width: '30px', minWidth: '30px' }}>{item.icon}</ListItemIcon>}
                 <ListItemText 
                     primary={
                         <Typography component="span" color="text.primary" sx={{ fontSize: '1.1em' }}>{ item.text }</Typography>

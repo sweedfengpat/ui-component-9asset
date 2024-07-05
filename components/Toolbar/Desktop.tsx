@@ -157,21 +157,9 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
       >
         { getCurrentLanguageText() }
       </Button>
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleLanguageClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MItem selected={i18n.language === 'th'} onClick={() => handleLanguageChanged('th')}>ไทย</MItem>
-        <MItem selected={i18n.language === 'en'} onClick={() => handleLanguageChanged('en')}>English</MItem>
-        <MItem selected={i18n.language === 'cn'} onClick={() => handleLanguageChanged('cn')}>中文</MItem>
-      </Menu>
     </Box>
-    <Box component={"div"} sx={{ marginRight: '10px' }}>
-    { isAuth() && getUserDisplayName() }
+    <Box component={"div"} sx={{ marginRight: '10px', marginLeft: '10px' }}>
+    { isAuth() && ( getUserDisplayName() || props.userInfo?.nameEn) }
     </Box>
     {/* <Box component={"div"} sx={{ display: 'flex' }}>
       <IconButton>
@@ -186,6 +174,20 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
         onMenuClicked={handleMenuClicked}
         onLanguageChanged={props.onLanguageChanged}
       />
+    </Box>
+    <Box component={"div"} sx={{ p: '2px' }}>
+      <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleLanguageClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+        >
+        <MItem selected={i18n.language === 'th'} onClick={() => handleLanguageChanged('th')}>ไทย</MItem>
+        <MItem selected={i18n.language === 'en'} onClick={() => handleLanguageChanged('en')}>English</MItem>
+        <MItem selected={i18n.language === 'cn'} onClick={() => handleLanguageChanged('cn')}>中文</MItem>
+      </Menu>
     </Box>
   </Toolbar>
   <Grid
