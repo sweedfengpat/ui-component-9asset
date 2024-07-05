@@ -206,7 +206,7 @@ export const MainMenu = (props: MainMenuProps) => {
     const generalMenu = [
         { key: 'sale', text: t('sell'), onClick: () => props.onMenuClicked?.('sale') },
         { key: 'rent', text: t('rent'), onClick: () => props.onMenuClicked?.('rent') },
-        { key: 'lease', text: t('mortgageOrRedemption'), onClick: () => props.onMenuClicked?.('lease') },
+        { key: 'mortgage', text: t('mortgageOrRedemption'), onClick: () => props.onMenuClicked?.('lease') },
         { key: 'project', text: t('project'), onClick: () => props.onMenuClicked?.('project') },
         { key: 'article', text: t('article'), onClick: () => props.onMenuClicked?.('article')  }
     ] as MenuItem[];
