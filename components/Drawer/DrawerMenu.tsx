@@ -12,9 +12,10 @@ export const VersionBox = () => {
     component={"div"}
     sx={{
       fontSize: '12px',
-      bottom: '12px',
-      position: 'absolute',
-      right: '20px',
+      color: '#cbcbcb',
+      bottom: '5px',
+      position: 'fixed',
+      right: '7px',
       textAlign: 'right'
     }}
   >
@@ -128,7 +129,7 @@ export const DrawerMenu = (props: DrawerMenuProps) => {
     </React.Fragment>);
   }
   return (<>
-  <List>
+  <List sx={{ marginBottom: '18px' }}>
     {
       (props.menu || []).map((item: DrawerMenuItem, index: number) => renderMenuItem(item, index))
     }

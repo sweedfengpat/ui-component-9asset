@@ -1,10 +1,11 @@
 import React from "react";
-import { AppBar, Box, Button, Dialog, DialogContent, Divider, IconButton, List, ListItem, ListItemButton, ListItemText, MenuItem, Slide, Toolbar, styled } from "@mui/material";
+import { AppBar, Avatar, Box, Button, Dialog, DialogContent, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Slide, Stack, Toolbar, Typography, styled } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { MenuItem as IMenuItem } from "../Toolbar";
 import { User } from "firebase/auth";
+import { getUserName } from "../../Layouts/Profile";
 
 const RightTransition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -27,6 +28,7 @@ const MenuSubItem = styled(MenuItem)(({ theme }) => ({
 
 export interface MenuProps {
   user: User | null;
+  userInfo: any;
   open: boolean;
   logo?: string;
   items?: IMenuItem[];
@@ -85,9 +87,46 @@ export const MeMenu = (props: MenuProps) => {
     }</>);
   }
 
+  const getName = () => {
+    const currentLanguage = i18n.language || 'th';
+    console.log(currentLanguage);
+    console.log(props.userInfo)
+    if (props.userInfo) {
+      if(currentLanguage === 'en') {
+        return `${props.userInfo.nameEn || '' } ${props.userInfo.lastnameEn || '' }`.trim();
+      } else if(currentLanguage === 'cn') {
+        return `${props.userInfo.nameCn || '' } ${props.userInfo.lastnameCn || '' }`.trim();
+      } else {
+        return `${props.userInfo.nameTh || '' } ${props.userInfo.lastnameTh || '' }`.trim();
+      }
+    }
+    else {
+      return props.user?.displayName || '9asset';
+    }
+  }
+
   const renderAuthMenu = () => {
     if (getIsAuth()) {
-      return;
+      return (
+      <ListItem alignItems="center" sx={{ py: 0 }}>
+        <ListItemAvatar sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar>{ getUserName(props.user) }</Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={getName()}
+          // secondary={props.user && props.user.email ? props.user.email : ''}
+          secondaryTypographyProps={{ component: 'div' }}
+          secondary={
+          <Stack direction="column" sx={{ p:0 }}>
+            <Box sx={{ display: 'inline-flex' }}>
+              <Typography component="span" sx={{ fontSize: '12px', fontStyle: props.userInfo?.email ? 'normal' : 'italic' }}>{props.userInfo && props.userInfo.email ? props.userInfo.email : 'no email'}</Typography>
+              { props.userInfo?.emailVerified  && <Typography component="span" sx={{ fontSize: '12px', pl: 1 }} color="green">{'Verified'}</Typography> }
+            </Box>
+            <Typography component="span" sx={{ fontSize: '10px' }} color="primary">150 Coins</Typography>
+          </Stack>
+          }
+        />
+      </ListItem>);
     }
     return (<>
     <ListItem component="div" disablePadding>

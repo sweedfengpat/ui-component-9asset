@@ -158,10 +158,11 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   }
 
   const handleOnClose = () => {
+    const language = (i18n.language) || 'th';
     if (location.pathname === '/') {
-      window.location.href = `${process.env.REACT_APP_DOMAIN}`;
+      window.location.href = `${process.env.REACT_APP_DOMAIN}/${language}`;
     } else {
-      navigate('/');
+      navigate(`/${language}`);
     }
   }
 
@@ -233,6 +234,7 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   />
   <MeMenu
     user={user}
+    userInfo={props.user}
     open={isMeMenuOpened}
     logo={logo}
     items={menuItems}
