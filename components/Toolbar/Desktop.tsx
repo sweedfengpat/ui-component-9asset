@@ -73,12 +73,12 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     if (type === 'article') {
       return `${i18n.language === 'th' ? '' : i18n.language}/article`;
     }
-    return i18n.language === 'th' ? `/${t(type)}/${t('estate')}` : `/${i18n.language}/${t(type)}/${t('estate')}`;
+    return i18n.language === 'th' ? `/${t(type).replace('/', '')}/${t('estate')}` : `/${i18n.language}/${t(type).replace('/', '')}/${t('estate')}`;
   }
 
   const linkComponent = (type: string) => (
     <Link
-      sx={{ fontSize: '1rem', pl: 0, pr: 3 }}
+      sx={{ fontSize: '1rem', pl: 0, pr: 2 }}
       color={"#5e5e5e"}
       underline="none"
       href={getUrl(type)}
@@ -132,9 +132,11 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' }, pl: 2 }}>
       { linkComponent('sell') }
       { linkComponent('rent') }
+      { linkComponent('lease') }
+      { linkComponent('mortgageOrRedemption') }
       { linkComponent('project') }
       { linkComponent('article') }
-      <Box component={"div"} sx={{ marginTop: '-10px', position: 'absolute', left: '320px', width: '450px' }}>
+      <Box component={"div"} sx={{ marginTop: '-10px', position: 'absolute', left: '480px', width: '450px' }}>
         <AdvanceSearch />
       </Box>
     </Box>
