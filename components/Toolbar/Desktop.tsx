@@ -158,8 +158,8 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
         { getCurrentLanguageText() }
       </Button>
     </Box>
-    <Box component={"div"} sx={{ marginRight: '10px', marginLeft: '10px' }}>
-    { isAuth() && ( getUserDisplayName() || props.userInfo?.nameEn) }
+    <Box component={"div"} sx={{ marginRight: '0px', marginLeft: '10px' }}>
+    { isAuth() && ( getUserDisplayName() || props.userInfo?.nameEn || props.userInfo?.nameTh || props.userInfo?.nameCn) }
     </Box>
     {/* <Box component={"div"} sx={{ display: 'flex' }}>
       <IconButton>
