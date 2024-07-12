@@ -158,11 +158,24 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   }
 
   const handleOnClose = () => {
-    if (location.pathname === '/') {
-      const language = i18n.language && i18n.language !== 'th' ? `/${i18n.language}` : '';
-      window.location.href = `${process.env.REACT_APP_DOMAIN}${language}`;
+    if (window.self !== window.top) {
+
+      if (location.pathname === '/') {
+        window.parent?.postMessage({
+          source: 'seller',
+          type: 'close-window',
+        }, '*');
+      } else {
+        navigate('/');
+      }
+
     } else {
-      navigate(`/`);
+      if (location.pathname === '/') {
+        const language = i18n.language && i18n.language !== 'th' ? `/${i18n.language}` : '';
+        window.location.href = `${process.env.REACT_APP_DOMAIN}${language}`;
+      } else {
+        navigate(`/`);
+      }
     }
   }
 
