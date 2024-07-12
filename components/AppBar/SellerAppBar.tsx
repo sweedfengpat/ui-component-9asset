@@ -242,9 +242,9 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
       onClose={handleOnClose}
     />
   </AppBar>
-  <BottomBar
+  {/* <BottomBar
     onMeRequest={handleMeMenuRequested}
-  />
+  /> */}
   <MeMenu
     user={user}
     userInfo={props.user}
