@@ -159,8 +159,8 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
 
   const handleOnClose = () => {
     if (location.pathname === '/') {
-      const language = i18n.language && i18n.language !== 'th' ? i18n.language : '';
-      window.location.href = `${process.env.REACT_APP_DOMAIN}/${language}`;
+      const language = i18n.language && i18n.language !== 'th' ? `/${i18n.language}` : '';
+      window.location.href = `${process.env.REACT_APP_DOMAIN}${language}`;
     } else {
       navigate(`/`);
     }
