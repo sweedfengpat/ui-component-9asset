@@ -158,11 +158,11 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   }
 
   const handleOnClose = () => {
-    const language = (i18n.language) || 'th';
     if (location.pathname === '/') {
+      const language = i18n.language && i18n.language !== 'th' ? i18n.language : '';
       window.location.href = `${process.env.REACT_APP_DOMAIN}/${language}`;
     } else {
-      navigate(`/${language}`);
+      navigate(`/`);
     }
   }
 
