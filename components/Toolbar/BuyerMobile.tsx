@@ -49,7 +49,7 @@ export const BuyerMobileToolbar = (props: BuyerMobileToolbarProps) => {
           >
             <NavigateBefore />
           </IconButton>) : (
-          <Box component={"img"} src={props.logoPath} sx={{ height: '40px', pl: 1, width: '34px' }} alt="'9asset Logo'" />
+          <Box component={"img"} src={props.logoPath} sx={{ height: '40px', pl: 1 }} alt="'9asset Logo'" />
           )
         }
       
