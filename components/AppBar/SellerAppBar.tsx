@@ -158,11 +158,24 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
   }
 
   const handleOnClose = () => {
-    const language = (i18n.language) || 'th';
-    if (location.pathname === '/') {
-      window.location.href = `${process.env.REACT_APP_DOMAIN}/${language}`;
+    if (window.self !== window.top) {
+
+      if (location.pathname === '/') {
+        window.parent?.postMessage({
+          source: 'seller',
+          type: 'close-window',
+        }, '*');
+      } else {
+        navigate('/');
+      }
+
     } else {
-      navigate(`/${language}`);
+      if (location.pathname === '/') {
+        const language = i18n.language && i18n.language !== 'th' ? `/${i18n.language}` : '';
+        window.location.href = `${process.env.REACT_APP_DOMAIN}${language}`;
+      } else {
+        navigate(`/`);
+      }
     }
   }
 
@@ -229,9 +242,9 @@ export const SellerAppBar = (props: SellerAppBarProps) => {
       onClose={handleOnClose}
     />
   </AppBar>
-  <BottomBar
+  {/* <BottomBar
     onMeRequest={handleMeMenuRequested}
-  />
+  /> */}
   <MeMenu
     user={user}
     userInfo={props.user}
