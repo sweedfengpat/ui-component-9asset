@@ -129,14 +129,14 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
         <img src={logoPath} style={{ height: '40px' , width: '34px' }} alt="'9asset Logo'" />
     </a>
 
-    <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' }, pl: 2 }}>
+    <Box sx={{ flexGrow: 1, alignItems: 'center', display: { xs: 'none', sm: 'flex' }, pl: 2 }}>
       { linkComponent('sell') }
       { linkComponent('rent') }
       { linkComponent('lease') }
       { linkComponent('mortgageOrRedemption') }
       { linkComponent('project') }
       { linkComponent('article') }
-      <Box component={"div"} sx={{ marginTop: '-10px', position: 'absolute', left: '480px', width: '450px' }}>
+      <Box component={"div"} sx={{ marginTop: '0px', position: 'relative', width: '450px' }}>
         <AdvanceSearch />
       </Box>
     </Box>
