@@ -27,7 +27,7 @@ export const BuyerModal = (props: BuyerMenuProps) => {
 
   const onMessageReceived = (e: MessageEvent) => {
     const { source, type } = e.data;
-    if (source === 'buyer') {
+    if (source === 'buyer' || source === 'seller') {
       switch(type) {
         case 'close-window':
           props.onClose?.();
