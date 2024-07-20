@@ -124,7 +124,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
   }
 
   return (<>
-  <Toolbar sx={{ display: { xs: 'none', sm: 'flex' } }}>
+  <Toolbar sx={{ display: { xs: 'none', sm: 'flex' }, maxHeight: '64px' }}>
     <a href ={ `/${i18n.language !== 'th' ? i18n.language : ''}` }>
         <img src={logoPath} style={{ height: '40px' , width: '34px' }} alt="'9asset Logo'" />
     </a>
