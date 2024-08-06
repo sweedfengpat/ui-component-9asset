@@ -79,7 +79,8 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
         'en': 'Provide%20Property%20Mortgage%20Loan',
         'cn': '提供房地产抵押贷款'
       }
-      return `${i18n.language === 'th' ? '' : i18n.language}/${action[i18n.language] || action['th']}/${t('estate')}`;
+      // @ts-ignore
+      return `${i18n.language === 'th' ? '' : i18n.language}/${action[`${i18n.language}`] || action['th']}/${t('estate')}`;
     }
     return i18n.language === 'th' ? `/${t(type).replace('/', '')}/${t('estate')}` : `/${i18n.language}/${t(type).replace('/', '')}/${t('estate')}`;
   }
