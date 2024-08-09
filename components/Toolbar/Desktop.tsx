@@ -71,7 +71,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
 
   const getUrl = (type: string, link: string) => {debugger;
     if (type === 'article') {
-      return `${i18n.language === 'th' ? '' : i18n.language}/${t(type)}`;
+      return `${i18n.language === 'th' ? '' : i18n.language}/${type}`;
     }
     if (type === 'mortgageOrRedemption') {
       const action = {
