@@ -167,7 +167,7 @@ export const LayoutAppBar = (props: ILayoutProps) => {
                 if(props.userServiceUrl) {
                     try {
 
-                        const userInfo = (await axios.get(`${props.userServiceUrl}`, { headers: { 'Authorization': `token ${token}`} })).data;
+                        const userInfo = (await axios.get(`${props.userServiceUrl}`, { headers: { 'Authorization': `Bearer ${token}`} })).data;
                         localStorage && localStorage.setItem(`9asset.userinfo`, JSON.stringify(userInfo));
                         // this.setState({ user: user });
 

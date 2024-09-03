@@ -74,7 +74,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
       return `${i18n.language === 'th' ? '' : i18n.language}/${type}`;
     }
     if (type === 'mortgageOrRedemption') {
-      const action = {
+      const action: { [key:string]: string }  = {
         'th': 'จำนองขายฝาก',
         'en': 'Provide%20Property%20Mortgage%20Loan',
         'cn': '提供房地产抵押贷款'

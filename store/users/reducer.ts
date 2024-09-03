@@ -51,7 +51,7 @@ export const fetchUserInfo = createAsyncThunk<UserInfo, User>(
       `${process.env.REACT_APP_USER_SERVICE_API_BASE}/users`,
       {
         method: 'GET',
-        headers: { 'Authorization': `token ${token}`}
+        headers: { 'Authorization': `Bearer ${token}`}
       }
     );
     return (await response.json());
