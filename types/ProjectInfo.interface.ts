@@ -17,6 +17,8 @@ export interface Location {
     addressText?: I18N;
     alley?: I18N;
     road?: I18N;
+    road_ID?: number;
+    soi_ID?: number;
 
     district?: {
         id?: number;
