@@ -56,6 +56,7 @@ export interface BuyerAppBarProps {
   onBackRequested?: () => void;
   onClose?: () => void;
   onLanguageChanged?: (lng: string) => void;
+  onSearchClicked?: () => void;
 }
 
 export const BuyerAppBar = (props: BuyerAppBarProps) => {
