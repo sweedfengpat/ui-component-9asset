@@ -69,19 +69,28 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     }
   }
 
-  const getUrl = (type: string) => {
+  const getUrl = (type: string, link: string) => {
     if (type === 'article') {
-      return `${i18n.language === 'th' ? '' : i18n.language}/article`;
+      return `${i18n.language === 'th' ? '' : i18n.language}/${type}`;
     }
-    return i18n.language === 'th' ? `/${t(type).replace('/', '')}/${t('estate')}` : `/${i18n.language}/${t(type).replace('/', '')}/${t('estate')}`;
+    if (type === 'mortgageOrRedemption') {
+      const action: { [key:string]: string }  = {
+        'th': 'จำนองขายฝาก',
+        'en': 'Provide%20Property%20Mortgage%20Loan',
+        'cn': '提供房地产抵押贷款'
+      }
+      // @ts-ignore
+      return `${i18n.language === 'th' ? '' : i18n.language}/${action[`${i18n.language}`] || action['th']}/${t('estate')}`;
+    }
+    return i18n.language === 'th' ? `/${t(link).replace('/', '')}/${t('estate')}` : `/${i18n.language}/${t(link).replace('/', '')}/${t('estate')}`;
   }
 
-  const linkComponent = (type: string) => (
+  const linkComponent = (type: string, link: string) => (
     <Link
       sx={{ fontSize: '1rem', pl: 0, pr: 2 }}
       color={"#5e5e5e"}
       underline="none"
-      href={getUrl(type)}
+      href={getUrl(type, link)}
     >
       {t(type)}
     </Link>
@@ -130,12 +139,12 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     </a>
 
     <Box sx={{ flexGrow: 1, alignItems: 'center', display: { xs: 'none', sm: 'flex' }, pl: 2 }}>
-      { linkComponent('sell') }
-      { linkComponent('rent') }
-      { linkComponent('lease') }
-      { linkComponent('mortgageOrRedemption') }
-      { linkComponent('project') }
-      { linkComponent('article') }
+      { linkComponent('sell', 'link.sell') }
+      { linkComponent('rent', 'link.rent') }
+      { linkComponent('lease', 'link.lease') }
+      { linkComponent('mortgageOrRedemption', 'link.mortgageOrRedemption') }
+      { linkComponent('project', 'link.project') }
+      { linkComponent('article', 'link.article') }
       <Box component={"div"} sx={{ marginTop: '0px', position: 'relative', width: '450px' }}>
         <AdvanceSearch />
       </Box>

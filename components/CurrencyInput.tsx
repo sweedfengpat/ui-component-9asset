@@ -32,7 +32,7 @@ export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
 
     const handleBlur = () => {
         let updatedValue = Number(value);
-        let errorMessage = null;
+        let errorMessage: string | null = null;
 
         if (props.minValue !== undefined && updatedValue < props.minValue) {
             updatedValue = props.minValue;
@@ -74,7 +74,7 @@ export const CurrencyInput = (props: CurrencyInputProps & TextFieldProps) => {
         thousandSeparator={true}
         allowNegative={false}
         allowLeadingZeros={false}
-        decimalScale={props?.decimalScale || 0}
+        decimalScale={props?.decimalScale || 0 }
         value={props.value as any || ''}
         onChange={props.onChange}
         onValueChange={handleValueChange}

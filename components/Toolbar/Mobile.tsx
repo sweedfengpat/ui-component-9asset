@@ -4,6 +4,7 @@ import { Menu, SearchOutlined } from "@mui/icons-material";
 import { MainMenu } from "../Menu/MainMenu";
 import { User } from "firebase/auth";
 import { getUserName } from "../../Layouts/Profile";
+import { useTranslation } from "react-i18next";
 
 export interface ToolbarProps {
   logoPath?: string;
@@ -15,10 +16,14 @@ export interface ToolbarProps {
   onLanguageChanged?: (ln: string) => void;
   onSearchClicked?: () => void;
   onAvatarClicked: () => void;
+
+  namespace?: string;
 }
 
 export const MobileToolbar = (props: ToolbarProps) => {
 
+  const { t, i18n } = useTranslation(props.namespace);
+  
   const [logoPath, ] = useState<string|undefined>(props.logoPath);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
@@ -70,7 +75,7 @@ export const MobileToolbar = (props: ToolbarProps) => {
 
   return (<>
   <Toolbar sx={{ display: { xs:'flex', sm: 'none'} }}>
-    <a href ={ '/' }>
+    <a href ={ `/${i18n.language !== 'th' ? i18n.language : ''}` }>
       <img src={logoPath} style={{ height: '40px', width: '34px' }} alt="'9asset Logo'" />
     </a>
 
