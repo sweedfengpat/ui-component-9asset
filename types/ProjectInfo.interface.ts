@@ -19,6 +19,7 @@ export interface Location {
     road?: I18N;
     road_ID?: number;
     soi_ID?: number;
+    POST_CODE?: number;    
 
     district?: {
         id?: number;

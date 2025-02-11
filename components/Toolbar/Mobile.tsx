@@ -15,7 +15,7 @@ export interface ToolbarProps {
   onMenuItemClicked?: (type: string, link?: string) => void;
   onLanguageChanged?: (ln: string) => void;
   onSearchClicked?: () => void;
-  onAvatarClicked: () => void;
+  onAvatarClicked?: () => void;
 
   namespace?: string;
 }
