@@ -29,7 +29,7 @@ export interface DesktopToolbarProps {
 
 export const DesktopToolbar = (props: DesktopToolbarProps) => {
   const { t, i18n } = useTranslation(props.namespace);
-  const [logoPath, ] = useState<string|undefined>(props.logoPath);
+  const [logoPath,] = useState<string | undefined>(props.logoPath);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -45,14 +45,14 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
 
     const user = props.userInfo;
     const lang = i18n.language.toLowerCase();
-    if(lang === 'en') {
-        return user && user.nameEn ? user.lastnameEn : '' ;
-    } else if(lang === 'cn') {
-        return user && user.nameCn ? user.lastnameCn : '' ;
-    } else if(lang === 'th') {
-        return user && user.nameTh ? user.lastnameTh : '' ;
+    if (lang === 'en') {
+      return user && user.nameEn ? user.lastnameEn : '';
+    } else if (lang === 'cn') {
+      return user && user.nameCn ? user.lastnameCn : '';
+    } else if (lang === 'th') {
+      return user && user.nameTh ? user.lastnameTh : '';
     } else {
-        return user && user.displayName ? user.displayName : '' ;
+      return user && user.displayName ? user.displayName : '';
     }
   }
 
@@ -74,7 +74,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
       return `${i18n.language === 'th' ? '' : i18n.language}/${type}`;
     }
     if (type === 'mortgageOrRedemption') {
-      const action: { [key:string]: string }  = {
+      const action: { [key: string]: string } = {
         'th': 'จำนองขายฝาก',
         'en': 'Provide%20Property%20Mortgage%20Loan',
         'cn': '提供房地产抵押贷款'
@@ -87,8 +87,8 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
 
   const linkComponent = (type: string, link: string) => (
     <Link
-      sx={{ fontSize: '1rem', pl: 0, pr: 2 }}
-      color={"#5e5e5e"}
+      sx={{ fontSize: '1.4rem', pl: 0, pr: 2 }}
+      color={"#fff"}
       underline="none"
       href={getUrl(type, link)}
     >
@@ -104,7 +104,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
         color="#fff"
         underline="hover"
         href={item.link}
-        sx={{ mx:'10px', fontSize: '0.95rem' }}
+        sx={{ mx: '10px', fontSize: '0.95rem' }}
       >
         {item.text}
       </Link>
@@ -117,7 +117,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
       'th': 'ไทย',
       'cn': '中文'
     };
-    return lang[i18n.language as 'en' | 'th' | 'cn']; 
+    return lang[i18n.language as 'en' | 'th' | 'cn'];
   }
 
   const handleLanguageClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -133,61 +133,66 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
   }
 
   return (<>
-  <Toolbar sx={{ display: { xs: 'none', sm: 'flex' }, maxHeight: '64px' }}>
-    <a href ={ `/${i18n.language !== 'th' ? i18n.language : ''}` }>
-        <img src={logoPath} style={{ height: '40px' , width: '34px' }} alt="'9asset Logo'" />
-    </a>
+    <Toolbar sx={{
+      display: { xs: 'none', sm: 'flex' },
+      maxHeight: '96px',
+      backgroundColor: 'transparent',
+      padding: '16px 0px !important',
+      width: '100%'
+    }}>
+      <a href={`/${i18n.language !== 'th' ? i18n.language : ''}`}>
+        <img src={logoPath} style={{ height: '64px', width: '54px' }} alt="'9asset Logo'" />
+      </a>
 
-    <Box sx={{ flexGrow: 1, alignItems: 'center', display: { xs: 'none', sm: 'flex' }, pl: 2 }}>
-      { linkComponent('sell', 'link.sell') }
-      { linkComponent('rent', 'link.rent') }
-      { linkComponent('lease', 'link.lease') }
-      { linkComponent('mortgageOrRedemption', 'link.mortgageOrRedemption') }
-      { linkComponent('project', 'link.project') }
-      { linkComponent('article', 'link.article') }
-      <Box component={"div"} sx={{ marginTop: '0px', position: 'relative', width: '450px' }}>
-        <AdvanceSearch />
+      <Box sx={{ flexGrow: 1, alignItems: 'center', display: { xs: 'none', sm: 'flex' }, pl: '32px' }}>
+        {linkComponent('sell', 'link.sell')}
+        {linkComponent('rent', 'link.rent')}
+        {linkComponent('project', 'link.project')}
+        {linkComponent('mortgageOrRedemption', 'link.mortgageOrRedemption')}
+        {linkComponent('article', 'link.article')}
+        {linkComponent('agent', 'link.lease')}
+
+
       </Box>
-    </Box>
 
-    <Box component={"div"} sx={{ flexGrow: 1 }} />
+      <Box component={"div"} sx={{ flexGrow: 1 }} />
 
-    <Box component={"div"}>
-      { !props.hideSellerCenter && <Button
-        variant="text"
-        sx={{ textTransform: 'none' }}
-        href="/seller">{t('menu.sellerCenter')}</Button> }
-    </Box>
-    <Box component={"div"} sx={{ p: '2px' }}>
-      <Button
-        variant="outlined"
-        size="small"
-        sx={{ textTransform: 'none' }}
-        startIcon={<LanguageOutlined />}
-        onClick={handleLanguageClick}
-      >
-        { getCurrentLanguageText() }
-      </Button>
-    </Box>
-    <Box component={"div"} sx={{ marginRight: '0px', marginLeft: '10px' }}>
-    { isAuth() && ( getUserDisplayName() || props.userInfo?.nameEn || props.userInfo?.nameTh || props.userInfo?.nameCn) }
-    </Box>
-    {/* <Box component={"div"} sx={{ display: 'flex' }}>
+      <Box component={"div"}>
+        {!props.hideSellerCenter && <Button
+          variant="text"
+          sx={{ textTransform: 'none' }}
+          href="/seller">{t('menu.sellerCenter')}</Button>}
+      </Box>
+      <Box component={"div"} sx={{ p: '2px' }}>
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{ textTransform: 'none' }}
+          startIcon={<LanguageOutlined />}
+          onClick={handleLanguageClick}
+        >
+          {getCurrentLanguageText()}
+        </Button>
+      </Box>
+      <Box component={"div"} sx={{ marginRight: '0px', marginLeft: '10px' }}>
+        {isAuth() && (getUserDisplayName() || props.userInfo?.nameEn || props.userInfo?.nameTh || props.userInfo?.nameCn)}
+      </Box>
+      {/* <Box component={"div"} sx={{ display: 'flex' }}>
       <IconButton>
         <AppsRounded fontSize="large"  />
       </IconButton>
     </Box> */}
-    <Box component={"div"} sx={{ display: 'flex' }}>
-      <Profile
-        user={props.user}
-        userInfo={props.userInfo}
-        menuItems={props.menuItems}
-        onMenuClicked={handleMenuClicked}
-        onLanguageChanged={props.onLanguageChanged}
-      />
-    </Box>
-    <Box component={"div"} sx={{ p: '2px' }}>
-      <Menu
+      <Box component={"div"} sx={{ display: 'flex' }}>
+        <Profile
+          user={props.user}
+          userInfo={props.userInfo}
+          menuItems={props.menuItems}
+          onMenuClicked={handleMenuClicked}
+          onLanguageChanged={props.onLanguageChanged}
+        />
+      </Box>
+      <Box component={"div"} sx={{ p: '2px' }}>
+        <Menu
           anchorEl={anchorEl}
           open={open}
           onClose={handleLanguageClose}
@@ -195,13 +200,13 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
             'aria-labelledby': 'basic-button',
           }}
         >
-        <MItem selected={i18n.language === 'th'} onClick={() => handleLanguageChanged('th')}>ไทย</MItem>
-        <MItem selected={i18n.language === 'en'} onClick={() => handleLanguageChanged('en')}>English</MItem>
-        <MItem selected={i18n.language === 'cn'} onClick={() => handleLanguageChanged('cn')}>中文</MItem>
-      </Menu>
-    </Box>
-  </Toolbar>
-  <Grid
+          <MItem selected={i18n.language === 'th'} onClick={() => handleLanguageChanged('th')}>ไทย</MItem>
+          <MItem selected={i18n.language === 'en'} onClick={() => handleLanguageChanged('en')}>English</MItem>
+          <MItem selected={i18n.language === 'cn'} onClick={() => handleLanguageChanged('cn')}>中文</MItem>
+        </Menu>
+      </Box>
+    </Toolbar>
+    {/* <Grid
     container
     direction={'row'} 
     sx={{ 
@@ -214,6 +219,6 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     alignItems='center'   
   >
     { renderMenuBar() }
-  </Grid>
+  </Grid> */}
   </>);
 }
