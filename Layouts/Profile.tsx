@@ -1,11 +1,13 @@
 import React from "react";
-import { Avatar } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
 import { User, UserInfo } from "firebase/auth";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ProfileMenu } from "../components/Menu/ProfileMenu";
 import { MainMenuLanguage } from "./AdvanceSearch";
 import { MenuItem } from "../components/Toolbar";
+import { AccountCircleOutlined } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
 const getFirstLetter = (userInfo: UserInfo | null) => {
   if (userInfo) {
@@ -43,7 +45,15 @@ export interface ProfileProps {
 export const Profile = (props: ProfileProps) => {
   const { t, i18n } = useTranslation(props.namespace || 'common');
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const avatarRef = useRef<HTMLDivElement | null>(null);
+  const avatarRef = useRef<HTMLButtonElement | null>(null);
+  const [isHomePage, setIsHomePage] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    // ตรวจสอบว่าอยู่ที่หน้าหลักหรือไม่
+    const path = router.pathname;
+    setIsHomePage(path === "/" || path === `/${i18n.language}` || path === `/${i18n.language}/`);
+  }, [router.pathname, i18n.language]);
 
   const handleMenuClicked = (key: string, link?: string) => {
     setIsMenuOpen(false);
@@ -83,14 +93,17 @@ export const Profile = (props: ProfileProps) => {
   };
 
     return (<>
-    <Avatar
-      alt="9 Asset"
-      sx={{ height: '30px', width: '30px', margin: '12px', display: { xs: 'none', sm: 'flex' } }}
+    <IconButton
       ref={avatarRef}
       onClick={handleAvatarClicked}
+      sx={{ 
+        color: isHomePage ? '#fff' : '#000', 
+        padding: '8px',
+        display: { xs: 'none', sm: 'flex' }
+      }}
     >
-      { getUserName(props.user) }
-    </Avatar>
+      <AccountCircleOutlined fontSize="medium" />
+    </IconButton>
     { renderMenu() }
     </>);
 }
