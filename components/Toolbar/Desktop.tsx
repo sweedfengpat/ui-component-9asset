@@ -13,9 +13,27 @@ import { UserInfo } from "../../store/users/reducer";
 import { LanguageOutlined, FavoriteBorderOutlined, KeyboardArrowDownOutlined, AccountCircleOutlined, EditOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
 
+// Custom Search Icon Component
+const CustomSearchIcon = ({ color = "#FFFFFF" }) => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clipPath="url(#clip0_6002_7469)">
+      <path d="M7.2884 0.0227753C12.3047 -0.335673 16.2707 3.59378 15.9863 8.59206C15.7695 12.4039 12.4269 15.7355 8.60542 15.9526C5.94621 16.1037 3.14528 15.835 0.471151 15.9526C0.24178 15.9465 0.0282603 15.7443 0.0012207 15.5165V7.37073C0.266489 3.56309 3.45064 0.296609 7.2884 0.0227753ZM1.11824 14.8377L8.39609 14.8391C14.6343 14.4458 17.2301 6.57108 12.2819 2.60862C7.93828 -0.869859 1.46043 2.08141 1.11684 7.54508L1.11824 14.8372V14.8377Z" fill={color}/>
+      <path d="M4.18003 8.16391L10.9763 8.15601C11.636 8.19413 11.7418 9.13 11.0821 9.26994H4.1707C3.53807 9.12907 3.56138 8.3071 4.18003 8.16391Z" fill={color}/>
+      <path d="M11.3656 5.34883C11.6915 5.65707 11.4975 6.25959 11.0472 6.31166L4.20661 6.31073C3.54414 6.2052 3.54274 5.30327 4.20661 5.19727L11.1591 5.22377C11.2215 5.26514 11.3129 5.29862 11.3656 5.34883Z" fill={color}/>
+      <path d="M8.39965 11.2997C8.74044 11.6577 8.49569 12.2226 8.01084 12.2621L4.20991 12.2588C3.57308 12.1389 3.519 11.2979 4.17121 11.1477C5.42296 11.2309 6.81177 11.0398 8.04674 11.1472C8.1796 11.1589 8.30594 11.2016 8.39965 11.2997Z" fill={color}/>
+    </g>
+    <defs>
+      <clipPath id="clip0_6002_7469">
+        <rect width="16" height="16" fill="white"/>
+      </clipPath>
+    </defs>
+  </svg>
+);
+
 export interface DesktopToolbarProps {
   namespace: string;
   logoPath?: string;
+  scrolled?: boolean;
   menuItems: {
     auth: MenuItem[];
     nonauth: MenuItem[];
@@ -159,7 +177,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
 
   return (<>
     <Toolbar sx={{
-      display: { xs: 'none', sm: 'flex' },
+      display: { xs: 'none', sm: 'none', lg: 'flex' },
       maxHeight: '96px',
       backgroundColor: isHomePage ? 'transparent' : '#fff',
       padding: '16px 0px !important',
@@ -170,7 +188,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
         <img src={logoPath} style={{ height: '64px', width: '54px' }} alt="'9asset Logo'" />
       </a>
 
-      <Box sx={{ flexGrow: 1, alignItems: 'center', display: { xs: 'none', sm: 'flex' }, pl: '32px' }}>
+      <Box sx={{ flexGrow: 1, alignItems: 'center', display: { xs: 'none', sm: 'none', lg: 'flex' }, pl: '32px' }}>
         {linkComponent('sell', 'link.sell')}
         {linkComponent('rent', 'link.rent')}
         {linkComponent('project', 'link.project')}
@@ -187,14 +205,19 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
           variant="outlined"
           sx={{
             borderRadius: '40px',
-            border: `1px solid ${isHomePage ? '#fff' : '#000'}`,
-            padding: '12px 16px',
+            border: props.scrolled ? '0.5px solid #BFBFBF' : '0.5px solid rgba(255, 255, 255, 0.5)',
+            padding: '10px 16px;',
             textTransform: 'none',
-            color: isHomePage ? '#fff' : '#000',
+            color: props.scrolled ? '#000000' : (isHomePage ? '#FFFFFF' : '#000000'),
             fontFamily: 'inherit',
             fontSize: '16px',
+            backgroundColor: 'transparent',
+            '&:hover': {
+              borderColor: props.scrolled ? '#BFBFBF' : 'rgba(255, 255, 255, 0.7)',
+              backgroundColor: props.scrolled ? 'rgba(191, 191, 191, 0.1)' : 'rgba(255, 255, 255, 0.1)',
+            },
           }}
-          endIcon={<FavoriteBorderOutlined />}
+          endIcon={<CustomSearchIcon color={props.scrolled ? '#F4762A' : (isHomePage ? '#FFFFFF' : '#F4762A')} />}
         >
           {t('ทรัพย์ที่สนใจ')}
         </Button>
@@ -205,7 +228,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
             variant="contained"
             sx={{
               borderRadius: '40px',
-              padding: '12px 16px',
+              padding: '10px 16px;',
               textTransform: 'none',
               backgroundColor: '#F4762A',
               color: '#fff',
@@ -238,13 +261,13 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
             sx={{
               fontFamily: 'inherit',
               fontSize: '16px',
-              color: isHomePage ? '#fff' : '#000',
+              color: props.scrolled ? '#000000' : (isHomePage ? '#fff' : '#000'),
               display: 'flex',
               alignItems: 'center',
             }}
           >
             {getCurrentLanguageText()}
-            <KeyboardArrowDownOutlined sx={{ ml: 0.5 }} />
+            <KeyboardArrowDownOutlined sx={{ ml: 0.5, color: props.scrolled ? '#000000' : (isHomePage ? '#fff' : '#000') }} />
           </Typography>
         </Box>
 
