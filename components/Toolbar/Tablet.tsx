@@ -173,7 +173,7 @@ export const TabletToolbar = (props: TabletToolbarProps) => {
               },
             }}
             endIcon={<CustomSearchIcon color={props.scrolled ? '#F4762A' : '#FFFFFF'} />}
-            onClick={() => props.onMenuItemClicked && props.onMenuItemClicked('requirement')}
+            onClick={() => props.onRequirementClicked?.()}
           >
             ฝากเราช่วยหา
           </Button>
@@ -283,7 +283,6 @@ export const TabletToolbar = (props: TabletToolbarProps) => {
           sx: {
             fontFamily: 'Prompt, Inter, Noto Serif SC, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
             borderRadius: '10px',
-            boxShadow: '0px 2px 10px 0px rgba(0, 0, 0, 0.1)',
             padding: '24px',
             minWidth: '130px'
           }
