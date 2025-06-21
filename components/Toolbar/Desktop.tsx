@@ -218,6 +218,9 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
             },
           }}
           endIcon={<CustomSearchIcon color={props.scrolled ? '#F4762A' : (isHomePage ? '#FFFFFF' : '#F4762A')} />}
+          onClick={() => {
+            window.location.href = '/seller/buyer-requirement';
+          }}
         >
           {t('ทรัพย์ที่สนใจ')}
         </Button>
