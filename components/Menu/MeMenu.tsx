@@ -43,7 +43,8 @@ export const MeMenu = (props: MenuProps) => {
   const { t, i18n } = useTranslation();
 
   const getIsAuth = () => {
-    return  props.user !== null || (process.env.NODE_ENV || 'development') === 'development';
+    const allowDevLogin = process.env.NEXT_PUBLIC_ALLOW_DEV_LOGIN === 'true';
+    return  props.user !== null || (allowDevLogin && (process.env.NODE_ENV || 'development') === 'development');
   }
 
   const closeButton = (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Avatar, Box, Collapse, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, Stack, Typography, styled, useMediaQuery, useTheme } from "@mui/material";
-import { ChevronLeft, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Avatar, Box, Collapse, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListSubheader, MenuItem, Popover, Stack, Typography, styled, useMediaQuery, useTheme, Button, Card, CardContent } from "@mui/material";
+import { ChevronLeft, ExpandLess, ExpandMore, PersonOutlined, LoginOutlined, AppRegistrationOutlined, Close, FavoriteBorderOutlined, HistoryOutlined, CalendarTodayOutlined, HelpOutlineOutlined, AssignmentOutlined } from "@mui/icons-material";
 import { User } from "firebase/auth";
 import { getUserName } from "../../Layouts/Profile";
 import { MenuItem as IMenuItem } from "../Toolbar";
@@ -13,6 +13,46 @@ const MenuSubItem = styled(MenuItem)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
       fontSize: '1.1em',
     }
+  }
+}));
+
+// Modern styled components
+const StyledCard = styled(Card)(({ theme }) => ({
+  borderRadius: '20px',
+  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
+  border: 'none',
+  overflow: 'visible',
+  width: '300px',
+  fontFamily: 'Prompt, Inter, Noto Serif SC, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: '20px',
+  textTransform: 'none',
+  fontWeight: 500,
+  padding: '8px 16px',
+  fontSize: '14px',
+  transition: 'all 0.2s ease',
+  height: '36px',
+  fontFamily: 'Prompt, Inter, Noto Serif SC, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
+  '&:hover': {
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  }
+}));
+
+const ProfileMenuHeader = styled(Box)(({ theme }) => ({
+  padding: '12px 20px',
+  borderBottom: '1px solid #f0f0f0',
+  background: '#F5F5F6',
+  borderTopLeftRadius: '12px',
+  borderTopRightRadius: '12px',
+}));
+
+const MenuItemStyled = styled(ListItemButton)(({ theme }) => ({
+  padding: '8px 20px',
+  minHeight: '40px',
+  '&:hover': {
+    backgroundColor: 'rgba(244, 118, 42, 0.04)',
   }
 }));
 
@@ -62,7 +102,8 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
   }, [isMobile]);
 
   const getIsAuth = () => {
-    return  props.user !== null || (process.env.NODE_ENV || 'development') === 'development';
+    const allowDevLogin = process.env.NEXT_PUBLIC_ALLOW_DEV_LOGIN === 'true';
+    return  props.user !== null || (allowDevLogin && (process.env.NODE_ENV || 'development') === 'development');
   }
 
   const getName = () => {
@@ -107,6 +148,178 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
       <ListItemText>{t('Logout')}</ListItemText>
     </MenuItem>
   </>);
+
+  // Header ตาม Figma design
+  const renderFigmaHeader = () => (
+    <ProfileMenuHeader>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        {/* Logo และชื่อ */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box 
+            component="img"
+            src="/assets/9asset-logo.png"
+            alt="9asset logo"
+            loading="lazy"
+            sx={{ 
+              width: 24, 
+              height: 24, 
+              borderRadius: '20px',
+              objectFit: 'contain'
+            }}
+          />
+          <Typography 
+            sx={{ 
+              fontSize: '16px', 
+              fontWeight: 500, 
+              color: '#1a1a1a',
+              fontFamily: 'Prompt, Inter, Noto Serif SC, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif'
+            }}
+          >
+            9asset
+          </Typography>
+        </Box>
+
+        {/* ลงประกาศฟรี และปุ่มปิด */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, cursor: 'pointer' }}>
+          <Typography 
+            sx={{ 
+              fontSize: '12px', 
+              color: '#666',
+              fontWeight: 400,
+              fontFamily: 'Prompt, Inter, Noto Serif SC, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif'
+            }}
+          >
+            ลงประกาศฟรี
+          </Typography>
+          <Box 
+            onClick={props.onClose}
+            sx={{ 
+              width: 20, 
+              height: 20, 
+              borderRadius: '50%',
+              bgcolor: '#f5f5f5',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              '&:hover': {
+                bgcolor: '#e0e0e0'
+              }
+            }}
+          >
+            <Close sx={{ fontSize: 14, color: '#666' }} />
+          </Box>
+        </Box>
+      </Stack>
+    </ProfileMenuHeader>
+  );
+
+  // ปุ่มเข้าสู่ระบบและลงทะเบียนตาม Figma
+  const renderAuthButtons = () => (
+    <Box sx={{ padding: '16px 20px' }}>
+      <Box sx={{ 
+        display: 'grid', 
+        gridTemplateColumns: '1fr auto 1fr', 
+        alignItems: 'center', 
+        gap: 1 
+      }}>
+        {/* ปุ่มเข้าสู่ระบบ */}
+        <StyledButton
+          variant="contained"
+          onClick={handleLogin}
+          sx={{
+            bgcolor: '#f4762a',
+            color: 'white',
+            '&:hover': {
+              bgcolor: '#e8651f',
+            }
+          }}
+        >
+          เข้าสู่ระบบ
+        </StyledButton>
+
+        {/* ข้อความ "หรือ" */}
+        <Typography 
+          sx={{ 
+            color: '#999',
+            fontSize: '12px',
+            fontWeight: 400,
+            textAlign: 'center',
+            px: 1,
+            fontFamily: 'Prompt, Inter, Noto Serif SC, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif'
+          }}
+        >
+          หรือ
+        </Typography>
+
+        {/* ปุ่มลงทะเบียน */}
+        <StyledButton
+          variant="outlined"
+          onClick={handleRegister}
+          sx={{
+            borderColor: '#d0d0d0',
+            color: '#666',
+            bgcolor: '#f8f8f8',
+            '&:hover': {
+              borderColor: '#f4762a',
+              bgcolor: 'rgba(244, 118, 42, 0.04)',
+              color: '#f4762a',
+            }
+          }}
+        >
+          ลงทะเบียน
+        </StyledButton>
+      </Box>
+    </Box>
+  );
+
+  // เมนูรายการตาม Figma design
+  const renderMenuList = () => {
+    const menuItems = [
+      {
+        key: 'requirements',
+        text: 'ความต้องการของฉัน'
+      },
+      {
+        key: 'interested',
+        text: 'ทรัพย์ที่สนใจ'
+      },
+      {
+        key: 'recently',
+        text: 'รายการที่ดูล่าสุด'
+      },
+      {
+        key: 'appointment',
+        text: 'นัดชม'
+      },
+      {
+        key: 'inquiry',
+        text: 'สอบถาม'
+      }
+    ];
+
+    return (
+      <Box>
+        {menuItems.map((item, index) => (
+          <MenuItemStyled 
+            key={item.key}
+            onClick={() => props.onMenuClicked?.(item.key)}
+          >
+            <ListItemText 
+              primary={item.text}
+              primaryTypographyProps={{
+                fontSize: '14px',
+                fontWeight: 400,
+                color: '#333',
+                fontFamily: 'Prompt, Inter, Noto Serif SC, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif'
+              }}
+            />
+          </MenuItemStyled>
+        ))}
+      </Box>
+    );
+  };
 
   const renderSubMenuItems = (key: string, items?: IMenuItem[]) => {
     if (!items) {
@@ -164,38 +377,6 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
     return (<>{renderMenuItems(props.items.nonauth)}</>);;
   }
 
-  const renderNonAuthMenu = () => (
-    <ListItem component="div" disablePadding>
-      <ListItemButton component="a"
-        sx={{ textAlign: 'center', marginRight: '10px' }}
-        onClick={handleLogin}
-      >
-        <ListItemText
-          primary={t('Sign in')}
-          primaryTypographyProps={{
-            color: '#f4762a',
-            fontWeight: 'medium',
-            variant: 'body1',
-          }}
-        />
-      </ListItemButton>
-        { t('or') }
-      <ListItemButton component="a" 
-        sx={{ textAlign: 'center', marginLeft: '10px' }}
-        onClick={handleRegister}
-      >
-        <ListItemText
-          primary={t('Sign up')}
-          primaryTypographyProps={{
-            color: '#f4762a',
-            fontWeight: 'medium',
-            variant: 'body1',
-          }}
-        />
-      </ListItemButton>
-    </ListItem>
-  );
-
   const renderAuthMenu = () => {
     return (
     <ListItem alignItems="center" sx={{ py: 0 }}>
@@ -235,26 +416,28 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
   const renderMenuDetail = () => {
     const isAuth = getIsAuth();
     return menuType === 'default' ? (
-    <List
-      sx={{
-        width: '100%',
-        minWidth: 300,
-        maxWidth: isMobile ? undefined : 360,
-        bgcolor: theme.palette.background.paper
-      }}
-      subheader={
-        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1} sx={{ marginTop: '5px', px: 1 }}>
-          <ListSubheader sx={{ lineHeight: '30px', px: 0 }}>
-            {t('My Account')}
-          </ListSubheader>
-        </Stack>
-      }
-    >
-      { isAuth ? renderAuthMenu() : renderNonAuthMenu() }
-      { isAuth ? renderLoggedInMenu() : renderNonLoggedInMenu() }
-      {/* { renderCommonMenu() } */}
-      { isAuth && logoutMenu }
-    </List>
+    <StyledCard>
+      {/* Header ตาม Figma */}
+      {renderFigmaHeader()}
+      
+      {/* Content */}
+      {isAuth ? (
+        // Logged in content
+        <List sx={{ py: 1 }}>
+          {renderLoggedInMenu()}
+          {logoutMenu}
+        </List>
+      ) : (
+        // Non-auth content ตาม Figma
+        <Box>
+          {renderAuthButtons()}
+          <Divider sx={{ mx: 2, my: 1 }} />
+          <Box sx={{ py: 1 }}>
+            {renderMenuList()}
+          </Box>
+        </Box>
+      )}
+    </StyledCard>
     ) : (
     <List
       sx={{
@@ -307,6 +490,13 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       keepMounted
       onClose={handlePopoverClose}
+      PaperProps={{
+        sx: {
+          mt: 1,
+          overflow: 'visible',
+          borderRadius: '20px',
+        },
+      }}
     >
       { renderMenuDetail() }
     </Popover>);

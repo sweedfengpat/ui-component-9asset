@@ -32,10 +32,8 @@ export const AuthProvider  = (props: any) => {
         const user = await dispatch(fetchUserInfo(firebaseUser));
         setUser(user.payload);
       } else {
-        if ((process.env.NODE_ENV || 'development') !== 'development') {
-          setState({ user: null });
-          setUser(null);
-        }
+        setState({ user: null });
+        setUser(null);
       }
     })
   }
