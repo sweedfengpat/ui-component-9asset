@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
-import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import { CalendarMonthOutlined, ChatOutlined, NearMeOutlined, Person2Outlined, Phone } from "@mui/icons-material";
+import { BottomNavigation, BottomNavigationAction, Paper, useMediaQuery } from "@mui/material";
+import { ChatOutlined, NearMeOutlined, Person2Outlined, Phone, HomeOutlined } from "@mui/icons-material";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getUser } from "../utils";
+import { useTranslation } from "react-i18next";
 
 type MenuKey = 'call' | 'appointment' | 'inquiry' | 'favorite' | 'navigate';
 
@@ -13,6 +14,8 @@ export interface ActivitiesButtomBarProps {
 }
 
 export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
+  const { t } = useTranslation();
+  const isSmallMobile = useMediaQuery('(max-width: 374px)');
 
   // const [action, setAction] = useState<string|null>(null);
   const action = useRef<string|null>(null);
@@ -43,9 +46,17 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
   return (<>
   <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1001 }} elevation={6}>
     <BottomNavigation showLabels>
+      {!isSmallMobile && (
+        <BottomNavigationAction
+          label={t('bottomMenu.home')}
+          icon={<HomeOutlined />}
+          onClick={() => {
+            window.location.href = '/';
+          }}
+        />
+      )}
       <BottomNavigationAction
-        // sx={{ pl: 4 }}
-        label="Require"
+        label={t('bottomMenu.require')}
         icon={<ChatOutlined />}
         onClick={() => {
           const user = getUser();
@@ -61,7 +72,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
         }}
       />
       <BottomNavigationAction
-        label={'Call'} 
+        label={t('bottomMenu.contact')}
         icon={
           <Phone />
         }
@@ -85,8 +96,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
         onClick={() => handleMenuClicked('appointment')}
       /> */}
       <BottomNavigationAction
-      
-        label={'Go'}
+        label={t('bottomMenu.go')}
         icon={<NearMeOutlined />}
         onClick={() => {
           const user = getUser();
@@ -102,8 +112,7 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
         }}
       />
       <BottomNavigationAction
-        // sx={{ pr: 4 }}
-        label="Me" icon={<Person2Outlined />}
+        label={t('bottomMenu.me')} icon={<Person2Outlined />}
         onClick={() => { props.onMeRequested?.(); }}
       />
     </BottomNavigation>
