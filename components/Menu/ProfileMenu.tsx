@@ -236,7 +236,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
             }
           }}
         >
-          เข้าสู่ระบบ
+          {t('login')}
         </StyledButton>
 
         {/* ข้อความ "หรือ" */}
@@ -250,7 +250,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
             fontFamily: 'Prompt, Inter, Noto Serif SC, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif'
           }}
         >
-          หรือ
+          {t('or')}
         </Typography>
 
         {/* ปุ่มลงทะเบียน */}
@@ -268,7 +268,7 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
             }
           }}
         >
-          ลงทะเบียน
+          {t('register')}
         </StyledButton>
       </Box>
     </Box>
@@ -279,23 +279,23 @@ export const ProfileMenu = (props: ProfileMenuProps) => {
     const menuItems = [
       {
         key: 'requirements',
-        text: 'ความต้องการของฉัน'
+        text: t('my_requirements')
       },
       {
         key: 'interested',
-        text: 'ทรัพย์ที่สนใจ'
+        text: t('interested_properties')
       },
       {
         key: 'recently',
-        text: 'รายการที่ดูล่าสุด'
+        text: t('recently_viewed')
       },
       {
         key: 'appointment',
-        text: 'นัดชม'
+        text: t('appointments')
       },
       {
         key: 'inquiry',
-        text: 'สอบถาม'
+        text: t('inquiries')
       }
     ];
 

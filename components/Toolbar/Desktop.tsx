@@ -206,7 +206,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
           sx={{
             borderRadius: '40px',
             border: props.scrolled ? '0.5px solid #BFBFBF' : '0.5px solid rgba(255, 255, 255, 0.5)',
-            padding: '10px 16px;',
+            padding: '8px 16px;',
             textTransform: 'none',
             color: props.scrolled ? '#000000' : (isHomePage ? '#FFFFFF' : '#000000'),
             fontFamily: 'inherit',
@@ -222,7 +222,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
             window.location.href = '/seller/buyer-requirement';
           }}
         >
-          {t('ทรัพย์ที่สนใจ')}
+          {t('interested_properties')}
         </Button>
 
         {/* ลงประกาศฟรี (แทน ศูนย์ผู้ขาย) */}
@@ -231,7 +231,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
             variant="contained"
             sx={{
               borderRadius: '40px',
-              padding: '10px 16px;',
+              padding: '8px 16px;',
               textTransform: 'none',
               backgroundColor: '#F4762A',
               color: '#fff',
@@ -245,7 +245,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
             endIcon={<LogoIcon />}
             href="/seller"
           >
-            {t('ลงประกาศฟรี')}
+            {t('post_free')}
           </Button>
         )}
 

@@ -72,7 +72,7 @@ export const LeaveYourRequirementDrawer: React.FC<LeaveYourRequirementDrawerProp
               color: '#000000'
             }}
           >
-            ฝากเราช่วยหา
+            {t('help_me_find')}
           </Typography>
         </Box>
 
@@ -85,19 +85,37 @@ export const LeaveYourRequirementDrawer: React.FC<LeaveYourRequirementDrawerProp
             padding: 0
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '2px',
-              width: '17px',
-              height: '16px'
-            }}
-          >
-            <Box sx={{ width: '17px', height: '2px', backgroundColor: '#919192' }} />
-            <Box sx={{ width: '17px', height: '2px', backgroundColor: '#919192' }} />
-            <Box sx={{ width: '17px', height: '2px', backgroundColor: '#919192' }} />
-          </Box>
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '17px',
+                  height: '17px'
+                }}
+              >
+                {/* X icon using CSS */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: '17px',
+                    height: '2px',
+                    backgroundColor: '#919192',
+                    transform: 'translate(-50%, -50%) rotate(45deg)'
+                  }}
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: '17px',
+                    height: '2px',
+                    backgroundColor: '#919192',
+                    transform: 'translate(-50%, -50%) rotate(-45deg)'
+                  }}
+                />
+              </Box>
         </IconButton>
       </Box>
 
@@ -141,6 +159,84 @@ export const LeaveYourRequirementDrawer: React.FC<LeaveYourRequirementDrawerProp
             fontFamily: 'Prompt',
             fontSize: '16px'
           },
+          // Material-UI TextField outlined variant styling to match Figma
+          '& .MuiTextField-root': {
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: '#FFFFFF',
+              borderRadius: '5px',
+              '& fieldset': {
+                borderColor: '#E1E1E2 !important',
+                borderWidth: '1px !important',
+                borderStyle: 'solid !important'
+              },
+              '&:hover fieldset': {
+                borderColor: '#E1E1E2 !important',
+                borderWidth: '1px !important'
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#F4762A !important',
+                borderWidth: '1px !important'
+              }
+            },
+            '& .MuiInputLabel-root': {
+              fontFamily: 'Prompt',
+              fontSize: '16px',
+              fontWeight: 400,
+              color: '#919192',
+              backgroundColor: '#FFFFFF',
+              padding: '0 4px',
+              '&.Mui-focused': {
+                color: '#F4762A'
+              },
+              '&.MuiInputLabel-shrink': {
+                backgroundColor: '#FFFFFF',
+                padding: '0 4px'
+              }
+            },
+            '& .MuiInputBase-input': {
+              fontFamily: 'Prompt',
+              fontSize: '16px',
+              fontWeight: 400,
+              padding: '16px',
+              color: '#000000'
+            },
+            '& .MuiInputBase-input::placeholder': {
+              color: '#919192'
+            }
+          },
+          // Material-UI Select outlined variant styling to match Figma
+          '& .MuiFormControl-root .MuiOutlinedInput-root': {
+            backgroundColor: '#FFFFFF',
+            borderRadius: '5px',
+            '& fieldset': {
+              borderColor: '#E1E1E2 !important',
+              borderWidth: '1px !important',
+              borderStyle: 'solid !important'
+            },
+            '&:hover fieldset': {
+              borderColor: '#E1E1E2 !important',
+              borderWidth: '1px !important'
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#F4762A !important',
+              borderWidth: '1px !important'
+            }
+          },
+          '& .MuiFormControl-root .MuiInputLabel-root': {
+            fontFamily: 'Prompt',
+            fontSize: '16px',
+            fontWeight: 400,
+            color: '#919192',
+            backgroundColor: '#FFFFFF',
+            padding: '0 4px',
+            '&.Mui-focused': {
+              color: '#F4762A'
+            },
+            '&.MuiInputLabel-shrink': {
+              backgroundColor: '#FFFFFF',
+              padding: '0 4px'
+            }
+          },
           '& .ant-btn': {
             borderRadius: '40px',
             fontFamily: 'Prompt',
@@ -154,7 +250,7 @@ export const LeaveYourRequirementDrawer: React.FC<LeaveYourRequirementDrawerProp
           }
         }}
       >
-        <LeaveYourRequirement t={t} />
+        <LeaveYourRequirement t={t} variant="outlined" />
       </Box>
     </Drawer>
   );
