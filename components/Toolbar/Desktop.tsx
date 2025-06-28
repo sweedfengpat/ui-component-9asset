@@ -13,20 +13,10 @@ import { UserInfo } from "../../store/users/reducer";
 import { LanguageOutlined, FavoriteBorderOutlined, KeyboardArrowDownOutlined, AccountCircleOutlined, EditOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
 
-// Custom Search Icon Component
-const CustomSearchIcon = ({ color = "#FFFFFF" }) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g clipPath="url(#clip0_6002_7469)">
-      <path d="M7.2884 0.0227753C12.3047 -0.335673 16.2707 3.59378 15.9863 8.59206C15.7695 12.4039 12.4269 15.7355 8.60542 15.9526C5.94621 16.1037 3.14528 15.835 0.471151 15.9526C0.24178 15.9465 0.0282603 15.7443 0.0012207 15.5165V7.37073C0.266489 3.56309 3.45064 0.296609 7.2884 0.0227753ZM1.11824 14.8377L8.39609 14.8391C14.6343 14.4458 17.2301 6.57108 12.2819 2.60862C7.93828 -0.869859 1.46043 2.08141 1.11684 7.54508L1.11824 14.8372V14.8377Z" fill={color}/>
-      <path d="M4.18003 8.16391L10.9763 8.15601C11.636 8.19413 11.7418 9.13 11.0821 9.26994H4.1707C3.53807 9.12907 3.56138 8.3071 4.18003 8.16391Z" fill={color}/>
-      <path d="M11.3656 5.34883C11.6915 5.65707 11.4975 6.25959 11.0472 6.31166L4.20661 6.31073C3.54414 6.2052 3.54274 5.30327 4.20661 5.19727L11.1591 5.22377C11.2215 5.26514 11.3129 5.29862 11.3656 5.34883Z" fill={color}/>
-      <path d="M8.39965 11.2997C8.74044 11.6577 8.49569 12.2226 8.01084 12.2621L4.20991 12.2588C3.57308 12.1389 3.519 11.2979 4.17121 11.1477C5.42296 11.2309 6.81177 11.0398 8.04674 11.1472C8.1796 11.1589 8.30594 11.2016 8.39965 11.2997Z" fill={color}/>
-    </g>
-    <defs>
-      <clipPath id="clip0_6002_7469">
-        <rect width="16" height="16" fill="white"/>
-      </clipPath>
-    </defs>
+// Custom Heart Icon Component for Favorite Properties
+const HeartIcon = ({ color = "#FFFFFF" }) => (
+  <svg width="19" height="16" viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4.77651 0.0598608C6.06587 -0.0346964 7.34681 0.320656 8.36652 1.10952C8.77043 1.42179 9.09783 1.8168 9.47458 2.15995C10.0667 1.62997 10.5425 1.07406 11.2616 0.682108C16.3811 -2.10847 21.4537 4.28672 17.703 8.64055L10.8202 15.5017C10.0544 16.1647 8.95555 16.1617 8.17719 15.5204L1.25534 8.62072C-1.48709 5.42675 0.522877 0.372128 4.77651 0.0598608ZM4.81514 1.25174C1.3632 1.54876 0.0887555 5.55143 2.37373 8.08274C4.37375 10.2984 6.77729 12.3024 8.8125 14.5023C9.30055 14.9156 9.67462 14.9172 10.1642 14.5023C12.1983 12.31 14.5834 10.3094 16.5842 8.10256C19.4502 4.94176 16.6856 0.282909 12.6339 1.39739C11.4233 1.73024 10.6737 2.66895 9.81614 3.50853C9.64402 3.62025 9.33153 3.61986 9.16018 3.50853C8.82665 3.29235 8.32751 2.63655 7.9848 2.33534C7.07792 1.53808 6.03909 1.14651 4.81475 1.25174H4.81514Z" fill={color}/>
   </svg>
 );
 
@@ -217,7 +207,7 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
               backgroundColor: props.scrolled ? 'rgba(191, 191, 191, 0.1)' : 'rgba(255, 255, 255, 0.1)',
             },
           }}
-          endIcon={<CustomSearchIcon color={props.scrolled ? '#F4762A' : (isHomePage ? '#FFFFFF' : '#F4762A')} />}
+          endIcon={<HeartIcon color={props.scrolled ? '#F4762A' : (isHomePage ? '#FFFFFF' : '#F4762A')} />}
           onClick={() => {
             window.location.href = '/seller/buyer-requirement';
           }}
