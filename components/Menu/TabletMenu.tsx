@@ -37,7 +37,7 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
       link: `/${t('project')}`
     },
     { 
-      label: 'จำนองขายฝาก', 
+      label: t('link.mortgageOrRedemption'), 
       value: 'mortgage',
       link: '/mortgage'
     },
@@ -47,7 +47,7 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
       link: '/article'
     },
     { 
-      label: 'ตัวแทน', 
+      label: t('agent'), 
       value: 'agent',
       link: '/agent'
     }
@@ -122,10 +122,10 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
               }}
             >
               <Image
-                src="/assets/single-logo.webp"
+                src="/assets/_single-logo.png"
                 alt="9asset logo"
-                width={42}
-                height={50}
+                width={54}
+                height={64}
               />
               <Typography
                 sx={{
@@ -239,53 +239,55 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
               </React.Fragment>
             ))}
 
-            {/* Language Selection Item */}
-            <Divider
-              sx={{
-                borderColor: '#E1E1E2',
-                width: '100%',
-              }}
-            />
-            <Box
-              onClick={handleLanguageClick}
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                cursor: 'pointer',
-                padding: '10px',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                  borderRadius: '8px'
-                }
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <Language sx={{ fontSize: '28px', color: '#000000' }} />
+            {/* Language Selection Item - Show only on mobile */}
+            <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+              <Divider
+                sx={{
+                  borderColor: '#E1E1E2',
+                  width: '100%',
+                }}
+              />
+              <Box
+                onClick={handleLanguageClick}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  padding: '10px',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                    borderRadius: '8px'
+                  }
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <Language sx={{ fontSize: '28px', color: '#000000' }} />
+                  <Typography
+                    sx={{
+                      fontFamily: 'Prompt',
+                      fontWeight: 500,
+                      fontSize: '28px',
+                      lineHeight: 1.3,
+                      color: '#000000'
+                    }}
+                  >
+                    {t('Language')}
+                  </Typography>
+                </Box>
                 <Typography
                   sx={{
                     fontFamily: 'Prompt',
-                    fontWeight: 500,
-                    fontSize: '28px',
+                    fontWeight: 400,
+                    fontSize: '18px',
                     lineHeight: 1.3,
-                    color: '#000000'
+                    color: '#919192'
                   }}
                 >
-                  {t('Language')}
+                  {getCurrentLanguageLabel()}
                 </Typography>
               </Box>
-              <Typography
-                sx={{
-                  fontFamily: 'Prompt',
-                  fontWeight: 400,
-                  fontSize: '18px',
-                  lineHeight: 1.3,
-                  color: '#919192'
-                }}
-              >
-                {getCurrentLanguageLabel()}
-              </Typography>
             </Box>
           </Box>
         </Box>
