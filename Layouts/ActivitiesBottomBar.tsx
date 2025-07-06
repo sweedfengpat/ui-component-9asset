@@ -1,9 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { BottomNavigation, BottomNavigationAction, Paper, useMediaQuery } from "@mui/material";
-import { ChatOutlined, NearMeOutlined, Person2Outlined, Phone, HomeOutlined } from "@mui/icons-material";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getUser } from "../utils";
 import { useTranslation } from "react-i18next";
+import HomeIcon from "../components/Icons/HomeIcon";
+import ChatBubbleIcon from "../components/Icons/ChatBubbleIcon";
+import PhoneCallIcon from "../components/Icons/PhoneCallIcon";
+import NavigateIcon from "../components/Icons/NavigateIcon";
+import UserProfileIcon from "../components/Icons/UserProfileIcon";
+
 
 type MenuKey = 'call' | 'appointment' | 'inquiry' | 'favorite' | 'navigate';
 
@@ -44,12 +49,19 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
   }
 
   return (<>
-  <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1001 }} elevation={6}>
+  <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1001 }} elevation={3}>
     <BottomNavigation showLabels>
       {!isSmallMobile && (
         <BottomNavigationAction
           label={t('bottomMenu.home')}
-          icon={<HomeOutlined />}
+          sx={{
+            color: 'common.black',
+            '& .MuiBottomNavigationAction-label': {
+              fontSize: 10,
+              marginTop: 0.5
+            },
+          }}
+          icon={<HomeIcon />}
           onClick={() => {
             window.location.href = '/';
           }}
@@ -57,7 +69,14 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
       )}
       <BottomNavigationAction
         label={t('bottomMenu.require')}
-        icon={<ChatOutlined />}
+        sx={{
+          color: 'common.black',
+          '& .MuiBottomNavigationAction-label': {
+            fontSize: 10,
+            marginTop: 0.5
+          },
+        }}
+        icon={<ChatBubbleIcon />}
         onClick={() => {
           const user = getUser();
           if (!user?.id) {
@@ -73,8 +92,15 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
       />
       <BottomNavigationAction
         label={t('bottomMenu.contact')}
+        sx={{
+          color: 'common.black',
+          '& .MuiBottomNavigationAction-label': {
+            fontSize: 10,
+            marginTop: 0.5
+          },
+        }}
         icon={
-          <Phone />
+          <PhoneCallIcon />
         }
         onClick={() => {
           const user = getUser();
@@ -97,7 +123,14 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
       /> */}
       <BottomNavigationAction
         label={t('bottomMenu.go')}
-        icon={<NearMeOutlined />}
+        sx={{
+          color: 'common.black',
+          '& .MuiBottomNavigationAction-label': {
+            fontSize: 10,
+            marginTop: 0.5
+          },
+        }}
+        icon={<NavigateIcon />}
         onClick={() => {
           const user = getUser();
           if (!user?.id) {
@@ -112,7 +145,15 @@ export const ActivitiesBottomBar = (props: ActivitiesButtomBarProps) => {
         }}
       />
       <BottomNavigationAction
-        label={t('bottomMenu.me')} icon={<Person2Outlined />}
+        label={t('bottomMenu.me')}
+        sx={{
+          color: 'common.black',
+          '& .MuiBottomNavigationAction-label': {
+            fontSize: 10,
+            marginTop: 0.5
+          },
+        }}
+        icon={<UserProfileIcon />}
         onClick={() => { props.onMeRequested?.(); }}
       />
     </BottomNavigation>
