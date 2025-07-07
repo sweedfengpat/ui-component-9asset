@@ -108,7 +108,7 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '16px 57px',
+              padding: '16px 27px',
               backgroundColor: '#F5F5F6',
               borderBottom: '1px solid #E1E1E2'
             }}
@@ -118,14 +118,14 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '24px'
+                gap: '16px'
               }}
             >
               <Image
                 src="/assets/_single-logo.png"
                 alt="9asset logo"
-                width={54}
-                height={64}
+                width={34}
+                height={40}
               />
               <Typography
                 sx={{
@@ -192,7 +192,7 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
               display: 'flex',
               flexDirection: 'column',
               gap: '16px',
-              padding: '64px 57px',
+              padding: '34px 27px',
               flex: 1
             }}
           >
@@ -217,7 +217,7 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
                     sx={{
                       fontFamily: 'Prompt',
                       fontWeight: 500,
-                      fontSize: '28px',
+                      fontSize: '24px',
                       lineHeight: 1.3,
                       color: '#000000',
                       textAlign: 'center'
@@ -254,7 +254,7 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   cursor: 'pointer',
-                  padding: '10px',
+                  padding: '20px 10px 10px',
                   transition: 'all 0.2s ease',
                   '&:hover': {
                     backgroundColor: 'rgba(0, 0, 0, 0.04)',
@@ -263,12 +263,12 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <Language sx={{ fontSize: '28px', color: '#000000' }} />
+                  <Language sx={{ fontSize: '24px', color: '#000000' }} />
                   <Typography
                     sx={{
                       fontFamily: 'Prompt',
                       fontWeight: 500,
-                      fontSize: '28px',
+                      fontSize: '24px',
                       lineHeight: 1.3,
                       color: '#000000'
                     }}
@@ -282,7 +282,7 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
                     fontWeight: 400,
                     fontSize: '18px',
                     lineHeight: 1.3,
-                    color: '#919192'
+                    color: '#F4762A'
                   }}
                 >
                   {getCurrentLanguageLabel()}
@@ -320,7 +320,7 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '16px 57px',
+              padding: '16px 27px',
               backgroundColor: '#F5F5F6',
               borderBottom: '1px solid #E1E1E2'
             }}

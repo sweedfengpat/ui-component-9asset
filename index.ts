@@ -1,3 +1,5 @@
 export * from './components/card'
 export * from './components/healthcheck'
+export * from './components/LogoSection'
+export * from './components/DrawerHeader'
 export * from './Layouts/MainLayoutAppBar'

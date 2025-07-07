@@ -41,7 +41,7 @@ export const MobileToolbar = (props: ToolbarProps) => {
       <img src={logoPath} style={{ height: '40px', width: '34px' }} alt="'9asset Logo'" />
     </a>
 
-    <Box sx={{ flexGrow: 1, pl: 4, display: { xs: 'flex', md: 'none' } }}>
+    <Box sx={{ flexGrow: 1, pl: 3, display: { xs: 'flex', md: 'none' } }}>
       <Button color="primary" variant="contained" disableElevation
           sx={{ 
               padding: '5px',

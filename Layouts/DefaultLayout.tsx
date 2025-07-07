@@ -1,9 +1,9 @@
 import { Box, CssBaseline, Grid, Toolbar, styled } from "@mui/material";
-import { Outlet } from "react-router-dom";
 import { DefaultAppBar as AppBar } from "../components/AppBar/DefaultAppBar";
-import logoPath from '../../assets/images/9asset-logo.png';
 import { Auth } from "firebase/auth";
 import { auth } from "../firebase";
+import React from "react";
+import { Outlet } from "@mui/icons-material";
 
 const LayoutRoot = styled(Box)({
   display: 'flex'
