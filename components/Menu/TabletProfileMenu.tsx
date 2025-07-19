@@ -1,26 +1,32 @@
 import React from 'react';
-import { Box, Typography, Divider, IconButton, Button, Drawer } from '@mui/material';
+import { Box, Typography, Divider, IconButton, Button, Drawer, Avatar, Stack } from '@mui/material';
 import { useTranslation } from 'next-i18next';
 import { DrawerHeader } from '../..';
+import { getUserName } from '../../Layouts/Profile';
+import { buildImageUrl } from '../../../utils/utils';
 
 interface TabletProfileMenuProps {
   open: boolean;
   user: any | null;
+  userInfo?: any | null;
   onClose: () => void;
   onMenuItemClick: (type: string) => void;
   onLoginClick: () => void;
   onRegisterClick: () => void;
+  onLogoutClick?: () => void;
 }
 
 export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
   open,
   user,
+  userInfo,
   onClose,
   onMenuItemClick,
   onLoginClick,
-  onRegisterClick
+  onRegisterClick,
+  onLogoutClick
 }) => {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
 
   const menuItems = [
     { 
@@ -44,6 +50,53 @@ export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
       value: 'inquiry'
     }
   ];
+
+  // Helper function to get user display name based on locale
+  const getUserDisplayName = () => {
+    const currentLanguage = i18n.language || 'th';
+    if (userInfo) {
+      if (currentLanguage === 'en') {
+        return `${userInfo.nameEn || ''} ${userInfo.lastnameEn || ''}`.trim();
+      } else if (currentLanguage === 'cn') {
+        return `${userInfo.nameCn || ''} ${userInfo.lastnameCn || ''}`.trim();
+      } else {
+        return `${userInfo.nameTh || ''} ${userInfo.lastnameTh || ''}`.trim();
+      }
+    }
+    return user?.displayName || '9Asset User';
+  };
+
+  // Helper function to get user avatar
+  const getUserAvatar = () => {
+    // Try to get from userInfo.photoUrl first
+    if (userInfo?.photoUrl) {
+      return userInfo.photoUrl;
+    }
+    
+    // Try to build from firebase_uid if available
+    if (userInfo?.firebase_uid) {
+      return buildImageUrl({
+        fileName: `${userInfo.firebase_uid}.jpeg`,
+        bucketName: 'staging-user-service-bucket',
+        galleryPath: 'user-images',
+        width: 100,
+        height: 100,
+      });
+    }
+
+    // Return null to show letter avatar
+    return null;
+  };
+
+  const handleLogoutClick = () => {
+    onClose();
+    if (onLogoutClick) {
+      onLogoutClick();
+    } else {
+      // Default logout behavior
+      window.location.href = `${process.env.NEXT_PUBLIC_LOGIN_URL_BASE}/logout`;
+    }
+  };
 
   return (
     <Drawer
@@ -69,6 +122,74 @@ export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
       >
         {/* Header */}
         <DrawerHeader onClose={onClose} />
+
+        {/* User Profile Section - Show if user is logged in */}
+        {user && (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '24px 27px',
+              gap: '16px'
+            }}
+          >
+            {/* User Avatar */}
+            <Avatar
+              src={getUserAvatar()}
+              sx={{
+                width: 60,
+                height: 60,
+                fontSize: '24px',
+                fontWeight: 500,
+                bgcolor: '#F4762A'
+              }}
+            >
+              {getUserName(user)}
+            </Avatar>
+
+            {/* User Info */}
+            <Box sx={{ flex: 1 }}>
+              <Typography
+                sx={{
+                  fontFamily: 'Prompt',
+                  fontWeight: 500,
+                  fontSize: '18px',
+                  lineHeight: 1.3,
+                  color: '#000000',
+                  mb: '4px'
+                }}
+              >
+                {getUserDisplayName()}
+              </Typography>
+              
+              <Typography
+                sx={{
+                  fontFamily: 'Prompt',
+                  fontWeight: 400,
+                  fontSize: '14px',
+                  lineHeight: 1.3,
+                  color: '#919192',
+                  mb: '4px'
+                }}
+              >
+                {userInfo?.email || user?.email || 'ไม่มีอีเมล'}
+              </Typography>
+
+              {/* Coins/Points */}
+              <Typography
+                sx={{
+                  fontFamily: 'Prompt',
+                  fontWeight: 400,
+                  fontSize: '12px',
+                  lineHeight: 1.3,
+                  color: '#F4762A'
+                }}
+              >
+                150 เหรียญ
+              </Typography>
+            </Box>
+          </Box>
+        )}
 
         {/* Login/Register Section - Only show if user is not logged in */}
         {!user && (
@@ -142,13 +263,13 @@ export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
           </Box>
         )}
 
-        {/* Divider line - Only show if user is not logged in */}
-        {!user && (
+        {/* Divider line */}
+        {(user || !user) && (
           <Box
             sx={{
               position: 'relative',
               height: '0px',
-              margin: '0 57px',
+              margin: '0 27px',
               borderTop: '1px solid #E1E1E2'
             }}
           />
@@ -184,6 +305,40 @@ export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
               {item.label}
             </Typography>
           ))}
+
+          {/* Logout Button - Show only if user is logged in */}
+          {user && (
+            <Box
+              sx={{
+                marginTop: 'auto',
+                paddingTop: '20px',
+                borderTop: '1px solid #E1E1E2',
+              }}
+            >
+              <Button
+                onClick={handleLogoutClick}
+                variant="contained"
+                fullWidth
+                sx={{
+                  backgroundColor: '#F4762A',
+                  borderRadius: '40px',
+                  padding: '12px 22px',
+                  textTransform: 'none',
+                  color: '#FFFFFF',
+                  fontFamily: 'Prompt',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  lineHeight: 1.3,
+                  '&:hover': {
+                    backgroundColor: '#cc3333',
+                  },
+                  boxShadow: 'none',
+                }}
+              >
+                {t('logout')}
+              </Button>
+            </Box>
+          )}
         </Box>
       </Box>
     </Drawer>
