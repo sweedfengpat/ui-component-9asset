@@ -91,7 +91,7 @@ export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
                 textTransform: 'none',
                 color: '#FFFFFF',
                 fontFamily: 'Prompt',
-                fontSize: '23px',
+                fontSize: '16px',
                 fontWeight: 400,
                 lineHeight: 1.3,
                 '&:hover': {
@@ -109,7 +109,7 @@ export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
               sx={{
                 fontFamily: 'Prompt',
                 fontWeight: 400,
-                fontSize: '23px',
+                fontSize: '16px',
                 lineHeight: 1.3,
                 color: '#919192'
               }}
@@ -127,7 +127,7 @@ export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
                 textTransform: 'none',
                 color: '#000000',
                 fontFamily: 'Prompt',
-                fontSize: '23px',
+                fontSize: '16px',
                 fontWeight: 400,
                 lineHeight: 1.3,
                 '&:hover': {
@@ -171,7 +171,7 @@ export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
               sx={{
                 fontFamily: 'Prompt',
                 fontWeight: 500,
-                fontSize: '28px',
+                fontSize: '18px',
                 lineHeight: 1.3,
                 color: '#000000',
                 cursor: 'pointer',
