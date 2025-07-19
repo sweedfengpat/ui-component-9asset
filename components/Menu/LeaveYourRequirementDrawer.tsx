@@ -35,7 +35,7 @@ export const LeaveYourRequirementDrawer: React.FC<LeaveYourRequirementDrawerProp
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '16px 57px',
+          padding: '16px 24px',
           backgroundColor: '#F5F5F6',
           gap: '32px',
           borderBottom: '1px solid #E1E1E2'
@@ -85,37 +85,37 @@ export const LeaveYourRequirementDrawer: React.FC<LeaveYourRequirementDrawerProp
             padding: 0
           }}
         >
-              <Box
-                sx={{
-                  position: 'relative',
-                  width: '17px',
-                  height: '17px'
-                }}
-              >
-                {/* X icon using CSS */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '17px',
-                    height: '2px',
-                    backgroundColor: '#919192',
-                    transform: 'translate(-50%, -50%) rotate(45deg)'
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '17px',
-                    height: '2px',
-                    backgroundColor: '#919192',
-                    transform: 'translate(-50%, -50%) rotate(-45deg)'
-                  }}
-                />
-              </Box>
+          <Box
+            sx={{
+              position: 'relative',
+              width: '17px',
+              height: '17px'
+            }}
+          >
+            {/* X icon using CSS */}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                width: '17px',
+                height: '2px',
+                backgroundColor: '#919192',
+                transform: 'translate(-50%, -50%) rotate(45deg)'
+              }}
+            />
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                width: '17px',
+                height: '2px',
+                backgroundColor: '#919192',
+                transform: 'translate(-50%, -50%) rotate(-45deg)'
+              }}
+            />
+          </Box>
         </IconButton>
       </Box>
 
@@ -131,7 +131,7 @@ export const LeaveYourRequirementDrawer: React.FC<LeaveYourRequirementDrawerProp
             boxShadow: 'none'
           },
           '& .ant-card-body': {
-            padding: '40px 57px'
+            padding: '16px 24px'
           },
           // Hide the orange title bar
           '& .leaveyourrequirement_title__MEHei': {
