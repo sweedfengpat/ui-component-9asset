@@ -93,17 +93,34 @@ export const Profile = (props: ProfileProps) => {
   };
 
     return (<>
-    <IconButton
-      ref={avatarRef}
-      onClick={handleAvatarClicked}
-      sx={{ 
-        color: isHomePage ? '#fff' : '#000', 
-        padding: '8px',
-        display: { xs: 'none', sm: 'flex' }
-      }}
-    >
-      <AccountCircleOutlined fontSize="medium" />
-    </IconButton>
+    {props.user ? (
+      <Avatar
+        ref={avatarRef}
+        onClick={handleAvatarClicked}
+        sx={{ 
+          width: 34, 
+          height: 34,
+          cursor: 'pointer',
+          border: isHomePage ? '1px solid #fff' : '1px solid #000',
+          fontSize: '14px',
+          display: { xs: 'none', sm: 'flex' }
+        }}
+      >
+        {getUserName(props.user)}
+      </Avatar>
+    ) : (
+      <IconButton
+        ref={avatarRef}
+        onClick={handleAvatarClicked}
+        sx={{ 
+          color: isHomePage ? '#fff' : '#000', 
+          padding: '8px',
+          display: { xs: 'none', sm: 'flex' }
+        }}
+      >
+        <AccountCircleOutlined fontSize="medium" />
+      </IconButton>
+    )}
     { renderMenu() }
     </>);
 }

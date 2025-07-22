@@ -1,6 +1,6 @@
 import React, { MouseEvent, useState } from "react";
 import { Avatar, Box, Button, IconButton, Toolbar } from "@mui/material";
-import { Menu, SearchOutlined } from "@mui/icons-material";
+import { Menu, SearchOutlined, AccountCircleOutlined } from "@mui/icons-material";
 import { User } from "firebase/auth";
 import { getUserName } from "../../Layouts/Profile";
 import { useTranslation } from "react-i18next";
@@ -57,12 +57,24 @@ export const MobileToolbar = (props: ToolbarProps) => {
     
     <div style={{ flexGrow: 1 }}></div>
     <Box component={"div"} sx={{ display: { xs: 'flex', sm: 'none' }, mr: '10px'}}>
-      <Avatar
-        sx={{ width: 34, height: 34 }}
-        onClick={handleAvatarClicked}
-      >
-      { getUserName(props.user) }
-      </Avatar>
+      {props.user ? (
+        <Avatar
+          sx={{ width: 34, height: 34 }}
+          onClick={handleAvatarClicked}
+        >
+        { getUserName(props.user) }
+        </Avatar>
+      ) : (
+        <IconButton
+          onClick={handleAvatarClicked}
+          sx={{ 
+            color: '#000', 
+            padding: '8px'
+          }}
+        >
+          <AccountCircleOutlined fontSize="medium" />
+        </IconButton>
+      )}
     </Box>
     <Box component={"div"} sx={{ display: { xs: 'flex', sm: 'none' }}}>
       <IconButton onClick={handleMenuClicked}>
