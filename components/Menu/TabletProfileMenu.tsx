@@ -335,7 +335,7 @@ export const TabletProfileMenu: React.FC<TabletProfileMenuProps> = ({
                   boxShadow: 'none',
                 }}
               >
-                {t('logout')}
+                {t('menu.logout')}
               </Button>
             </Box>
           )}

@@ -76,8 +76,17 @@ export const MeMenu = (props: MenuProps) => {
       items.push(
       <React.Fragment key={'logout'}>
         <MenuItem
-   
           onClick={() => props.onMenuClicked?.('logout')}
+          sx={{
+            backgroundColor: '#F4762A',
+            color: '#FFFFFF',
+            borderRadius: '8px',
+            margin: '8px 16px',
+            '&:hover': {
+              backgroundColor: '#d6631e',
+            },
+            fontWeight: 500
+          }}
         >
           <ListItemText>{ t('menu.logout') }</ListItemText>
         </MenuItem>
