@@ -1,8 +1,24 @@
-import React, { useState } from 'react';
-import { Box, Typography, Divider, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import React from 'react';
+import { Box, Typography, Divider, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import Image from 'next/image';
-import { useTranslation } from 'next-i18next';
 import { Language } from '@mui/icons-material';
+import { CloseIcon } from '../Icons/CloseIcon';
+import { ArrowLeftIcon } from '../Icons/ArrowLeftIcon';
+import { useTabletMenu } from './hooks/useTabletMenu';
+import { TABLET_MENU_CONSTANTS } from './TabletMenu.constants';
+import {
+  StyledDrawer,
+  DrawerContainer,
+  DrawerHeader,
+  LogoContainer,
+  LogoText,
+  CloseButton,
+  MenuContainer,
+  MenuItem,
+  MenuItemText,
+  LanguageMenuItem,
+  LanguageText
+} from './TabletMenu.styles';
 
 interface TabletMenuProps {
   open: boolean;
@@ -17,221 +33,60 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
   onMenuItemClick,
   onLanguageChanged
 }) => {
-  const { t, i18n } = useTranslation('common');
-  const [languageDrawerOpen, setLanguageDrawerOpen] = useState(false);
-
-  const menuItems = [
-    { 
-      label: t('sell'), 
-      value: 'sell',
-      link: `/${t('sell')}`
-    },
-    { 
-      label: t('rent'), 
-      value: 'rent',
-      link: `/${t('rent')}`
-    },
-    { 
-      label: t('project'), 
-      value: 'project',
-      link: `/${t('project')}`
-    },
-    { 
-      label: t('link.mortgageOrRedemption'), 
-      value: 'mortgage',
-      link: '/mortgage'
-    },
-    { 
-      label: t('article'), 
-      value: 'article',
-      link: '/article'
-    },
-    { 
-      label: t('agent'), 
-      value: 'agent',
-      link: '/agent'
-    }
-  ];
-
-  const languageOptions = [
-    { code: 'th', label: 'ไทย' },
-    { code: 'en', label: 'English' },
-    { code: 'cn', label: '中文' }
-  ];
-
-  const getCurrentLanguageLabel = () => {
-    const currentLang = languageOptions.find(lang => lang.code === i18n.language);
-    return currentLang ? currentLang.label : 'ไทย';
-  };
-
-  const handleLanguageClick = () => {
-    setLanguageDrawerOpen(true);
-  };
-
-  const handleLanguageSelect = (langCode: string) => {
-    onLanguageChanged?.(langCode);
-    setLanguageDrawerOpen(false);
-    onClose(); // ปิด main drawer ด้วย
-  };
-
-  const handleLanguageDrawerClose = () => {
-    setLanguageDrawerOpen(false);
-  };
+  const {
+    menuItems,
+    languageOptions,
+    languageDrawerOpen,
+    currentLanguage,
+    getCurrentLanguageLabel,
+    handleLanguageClick,
+    handleLanguageSelect,
+    handleLanguageDrawerClose,
+    handleLanguageDrawerCloseWithMain,
+    t
+  } = useTabletMenu({ onLanguageChanged, onClose });
 
   return (
     <>
       {/* Main Menu Drawer */}
-      <Drawer
+      <StyledDrawer
         anchor="right"
         open={open}
         onClose={onClose}
-        sx={{
-          display: { xs: 'block', lg: 'none' },
-          '& .MuiDrawer-paper': {
-            width: '100vw',
-            backgroundColor: '#F5F5F6',
-            boxSizing: 'border-box',
-          },
-        }}
       >
-        <Box
-          sx={{
-            width: '100vw',
-            height: '100vh',
-            display: 'flex',
-            flexDirection: 'column'
-          }}
-        >
+        <DrawerContainer>
           {/* Header */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '16px 27px',
-              backgroundColor: '#F5F5F6',
-              borderBottom: '1px solid #E1E1E2'
-            }}
-          >
+          <DrawerHeader>
             {/* Logo Section */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px'
-              }}
-            >
+            <LogoContainer>
               <Image
                 src="/assets/_single-logo.png"
                 alt="9asset logo"
-                width={34}
-                height={40}
+                width={TABLET_MENU_CONSTANTS.LOGO_SIZE.width}
+                height={TABLET_MENU_CONSTANTS.LOGO_SIZE.height}
               />
-              <Typography
-                sx={{
-                  fontFamily: 'Prompt',
-                  fontWeight: 500,
-                  fontSize: '23px',
-                  lineHeight: 1.3,
-                  color: '#000000'
-                }}
-              >
-                9asset
-              </Typography>
-            </Box>
+              <LogoText>9asset</LogoText>
+            </LogoContainer>
 
-            {/* Close Button (X icon) */}
-            <IconButton
-              onClick={onClose}
-              sx={{
-                width: '24px',
-                height: '16px',
-                padding: 0,
-                '&:hover': {
-                  backgroundColor: 'transparent'
-                }
-              }}
-            >
-              <Box
-                sx={{
-                  position: 'relative',
-                  width: '17px',
-                  height: '17px'
-                }}
-              >
-                {/* X icon using CSS */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '17px',
-                    height: '2px',
-                    backgroundColor: '#919192',
-                    transform: 'translate(-50%, -50%) rotate(45deg)'
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '17px',
-                    height: '2px',
-                    backgroundColor: '#919192',
-                    transform: 'translate(-50%, -50%) rotate(-45deg)'
-                  }}
-                />
-              </Box>
-            </IconButton>
-          </Box>
+            {/* Close Button */}
+            <CloseButton onClick={onClose}>
+              <CloseIcon />
+            </CloseButton>
+          </DrawerHeader>
 
           {/* Menu Items */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              padding: '34px 27px',
-              flex: 1
-            }}
-          >
+          <MenuContainer>
             {menuItems.map((item, index) => (
               <React.Fragment key={item.value}>
-                <Box
-                  onClick={() => onMenuItemClick(item.value)}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    padding: '10px',
-                    transition: 'all 0.2s ease',
-                    '&:hover': {
-                      backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                      borderRadius: '8px'
-                    }
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontFamily: 'Prompt',
-                      fontWeight: 500,
-                      fontSize: '24px',
-                      lineHeight: 1.3,
-                      color: '#000000',
-                      textAlign: 'center'
-                    }}
-                  >
-                    {item.label}
-                  </Typography>
-                </Box>
-                
+                <MenuItem onClick={() => onMenuItemClick(item.value)}>
+                  <MenuItemText>{item.label}</MenuItemText>
+                </MenuItem>
+
                 {/* Divider - don't show after last item */}
                 {index < menuItems.length - 1 && (
                   <Divider
                     sx={{
-                      borderColor: '#E1E1E2',
+                      borderColor: TABLET_MENU_CONSTANTS.COLORS.BORDER,
                       width: '100%',
                     }}
                   />
@@ -243,194 +98,53 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
             <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
               <Divider
                 sx={{
-                  borderColor: '#E1E1E2',
+                  borderColor: TABLET_MENU_CONSTANTS.COLORS.BORDER,
                   width: '100%',
                 }}
               />
-              <Box
-                onClick={handleLanguageClick}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                  padding: '20px 10px 10px',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                    borderRadius: '8px'
-                  }
-                }}
-              >
+              <LanguageMenuItem onClick={handleLanguageClick}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <Language sx={{ fontSize: '24px', color: '#000000' }} />
-                  <Typography
-                    sx={{
-                      fontFamily: 'Prompt',
-                      fontWeight: 500,
-                      fontSize: '24px',
-                      lineHeight: 1.3,
-                      color: '#000000'
-                    }}
-                  >
-                    {t('Language')}
-                  </Typography>
+                  <Language sx={{ 
+                    fontSize: '24px', 
+                    color: TABLET_MENU_CONSTANTS.COLORS.BLACK 
+                  }} />
+                  <MenuItemText>{t('Language')}</MenuItemText>
                 </Box>
-                <Typography
-                  sx={{
-                    fontFamily: 'Prompt',
-                    fontWeight: 400,
-                    fontSize: '18px',
-                    lineHeight: 1.3,
-                    color: '#F4762A'
-                  }}
-                >
-                  {getCurrentLanguageLabel()}
-                </Typography>
-              </Box>
+                <LanguageText>{getCurrentLanguageLabel()}</LanguageText>
+              </LanguageMenuItem>
             </Box>
-          </Box>
-        </Box>
-      </Drawer>
+          </MenuContainer>
+        </DrawerContainer>
+      </StyledDrawer>
 
       {/* Language Selection Drawer */}
-      <Drawer
+      <StyledDrawer
         anchor="right"
         open={languageDrawerOpen}
         onClose={handleLanguageDrawerClose}
-        sx={{
-          '& .MuiDrawer-paper': {
-            width: '100vw',
-            backgroundColor: '#F5F5F6',
-            boxSizing: 'border-box',
-          },
-        }}
       >
-        <Box
-          sx={{
-            width: '100vw',
-            height: '100vh',
-            display: 'flex',
-            flexDirection: 'column'
-          }}
-        >
+        <DrawerContainer>
           {/* Header */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '16px 27px',
-              backgroundColor: '#F5F5F6',
-              borderBottom: '1px solid #E1E1E2'
-            }}
-          >
+          <DrawerHeader>
             {/* Back Button and Title */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px'
-              }}
-            >
-              <IconButton
-                onClick={handleLanguageDrawerClose}
-                sx={{
-                  padding: 0,
-                  '&:hover': {
-                    backgroundColor: 'transparent'
-                  }
-                }}
-              >
-                <Box
-                  sx={{
-                    width: '24px',
-                    height: '24px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  {/* Left Arrow */}
-                  <Box
-                    sx={{
-                      width: '12px',
-                      height: '12px',
-                      borderLeft: '2px solid #000000',
-                      borderBottom: '2px solid #000000',
-                      transform: 'rotate(45deg)'
-                    }}
-                  />
-                </Box>
-              </IconButton>
-              
-              <Typography
-                sx={{
-                  fontFamily: 'Prompt',
-                  fontWeight: 500,
-                  fontSize: '23px',
-                  lineHeight: 1.3,
-                  color: '#000000'
-                }}
-              >
-                {t('Language')}
-              </Typography>
-            </Box>
+            <LogoContainer>
+              <CloseButton onClick={handleLanguageDrawerClose}>
+                <ArrowLeftIcon />
+              </CloseButton>
+              <LogoText>{t('Language')}</LogoText>
+            </LogoContainer>
 
-            {/* Close Button (X icon) */}
-            <IconButton
-              onClick={() => {
-                handleLanguageDrawerClose();
-                onClose(); // ปิด main drawer ด้วย
-              }}
-              sx={{
-                width: '24px',
-                height: '16px',
-                padding: 0,
-                '&:hover': {
-                  backgroundColor: 'transparent'
-                }
-              }}
-            >
-              <Box
-                sx={{
-                  position: 'relative',
-                  width: '17px',
-                  height: '17px'
-                }}
-              >
-                {/* X icon using CSS */}
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '17px',
-                    height: '2px',
-                    backgroundColor: '#919192',
-                    transform: 'translate(-50%, -50%) rotate(45deg)'
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '17px',
-                    height: '2px',
-                    backgroundColor: '#919192',
-                    transform: 'translate(-50%, -50%) rotate(-45deg)'
-                  }}
-                />
-              </Box>
-            </IconButton>
-          </Box>
+            {/* Close Button */}
+            <CloseButton onClick={handleLanguageDrawerCloseWithMain}>
+              <CloseIcon />
+            </CloseButton>
+          </DrawerHeader>
 
           {/* Language Options */}
           <Box
             sx={{
               flex: 1,
-              backgroundColor: '#FFFFFF'
+              backgroundColor: TABLET_MENU_CONSTANTS.COLORS.WHITE
             }}
           >
             <List sx={{ padding: 0 }}>
@@ -439,10 +153,12 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
                   <ListItemButton
                     onClick={() => handleLanguageSelect(language.code)}
                     sx={{
-                      padding: '24px 57px',
-                      borderBottom: index < languageOptions.length - 1 ? '1px solid #E1E1E2' : 'none',
+                      padding: TABLET_MENU_CONSTANTS.LANGUAGE_PADDING,
+                      borderBottom: index < languageOptions.length - 1 
+                        ? `1px solid ${TABLET_MENU_CONSTANTS.COLORS.BORDER}` 
+                        : 'none',
                       '&:hover': {
-                        backgroundColor: 'rgba(244, 118, 42, 0.08)',
+                        backgroundColor: TABLET_MENU_CONSTANTS.COLORS.LANGUAGE_HOVER,
                       }
                     }}
                   >
@@ -451,23 +167,25 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
                         <Typography
                           sx={{
                             fontFamily: 'Prompt',
-                            fontWeight: i18n.language === language.code ? 600 : 400,
-                            fontSize: '18px',
+                            fontWeight: currentLanguage === language.code ? 600 : 400,
+                            fontSize: TABLET_MENU_CONSTANTS.TYPOGRAPHY.LANGUAGE_SIZE,
                             lineHeight: 1.3,
-                            color: i18n.language === language.code ? '#F4762A' : '#000000'
+                            color: currentLanguage === language.code 
+                              ? TABLET_MENU_CONSTANTS.COLORS.PRIMARY 
+                              : TABLET_MENU_CONSTANTS.COLORS.BLACK
                           }}
                         >
                           {language.label}
                         </Typography>
                       }
                     />
-                    {i18n.language === language.code && (
+                    {currentLanguage === language.code && (
                       <Box
                         sx={{
                           width: '20px',
                           height: '20px',
                           borderRadius: '50%',
-                          backgroundColor: '#F4762A',
+                          backgroundColor: TABLET_MENU_CONSTANTS.COLORS.PRIMARY,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center'
@@ -490,8 +208,8 @@ export const TabletMenu: React.FC<TabletMenuProps> = ({
               ))}
             </List>
           </Box>
-        </Box>
-      </Drawer>
+        </DrawerContainer>
+      </StyledDrawer>
     </>
   );
 }; 

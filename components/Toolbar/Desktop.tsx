@@ -1,16 +1,15 @@
 import React from "react";
 import {
-  Box, Button, Grid, Link, Menu, MenuItem as MItem, Toolbar,
-  SvgIcon, Typography, IconButton
+  Box, Button, Link, Menu, MenuItem as MItem, Toolbar,
+  SvgIcon, Typography
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Profile } from "../../Layouts/Profile";
-import { AdvanceSearch } from "../../Layouts/AdvanceSearch";
 import { User } from "firebase/auth";
-import { MenuItem, menubar } from ".";
+import { MenuItem } from ".";
 import { UserInfo } from "../../store/users/reducer";
-import { LanguageOutlined, FavoriteBorderOutlined, KeyboardArrowDownOutlined, AccountCircleOutlined, EditOutlined } from "@mui/icons-material";
+import { KeyboardArrowDownOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
 
 // Custom Heart Icon Component for Favorite Properties
@@ -54,23 +53,25 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     setIsHomePage(path === "/" || path === `/${i18n.language}` || path === `/${i18n.language}/`);
   }, [router.pathname, i18n.language]);
 
-  const getUserDisplayName = () => {
-    if (!i18n.language) {
+  const getUserDisplayName = (): string => {
+    if (!i18n.language || !props.userInfo) {
       return '';
     }
 
     const user = props.userInfo;
-    const lang = i18n.language.toLowerCase();
-    if (lang === 'en') {
-      return user && user.nameEn ? user.lastnameEn : '';
-    } else if (lang === 'cn') {
-      return user && user.nameCn ? user.lastnameCn : '';
-    } else if (lang === 'th') {
-      return user && user.nameTh ? user.lastnameTh : '';
-    } else {
-      return user && user.displayName ? user.displayName : '';
+    const lang = i18n.language.toLowerCase() as SupportedLanguage;
+    
+    switch (lang) {
+      case 'en':
+        return user.nameEn ? user.lastnameEn || '' : '';
+      case 'cn':
+        return user.nameCn ? user.lastnameCn || '' : '';
+      case 'th':
+        return user.nameTh ? user.lastnameTh || '' : '';
+      default:
+        return user.displayName || '';
     }
-  }
+  };
 
   const handleMenuClicked = (type: string, link?: string) => {
     switch (type) {
@@ -85,24 +86,36 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     }
   }
 
-  const getUrl = (type: string, link: string) => {
-    if (type === 'article') {
-      return `${i18n.language === 'th' ? '' : i18n.language}/${type}`;
-    }
-    if (type === 'mortgageOrRedemption') {
-      const action: { [key: string]: string } = {
-        'th': 'จำนองขายฝาก',
-        'en': 'Provide%20Property%20Mortgage%20Loan',
-        'cn': '提供房地产抵押贷款'
-      }
-      // @ts-ignore
-      return `${i18n.language === 'th' ? '' : i18n.language}/${action[`${i18n.language}`] || action['th']}/${t('estate')}`;
-    }
-    return i18n.language === 'th' ? `/${t(link).replace('/', '')}/${t('estate')}` : `/${i18n.language}/${t(link).replace('/', '')}/${t('estate')}`;
-  }
+  type SupportedLanguage = 'th' | 'en' | 'cn';
+  type MenuItemType = 'sell' | 'rent' | 'lease' | 'mortgageOrRedemption' | 'project' | 'article';
 
-  const linkComponent = (type: string, link: string) => (
+  const MORTGAGE_TRANSLATIONS: Record<SupportedLanguage, string> = {
+    'th': 'จำนองขายฝาก',
+    'en': 'Provide%20Property%20Mortgage%20Loan',
+    'cn': '提供房地产抵押贷款'
+  } as const;
+
+  const getUrl = (type: MenuItemType, link: string): string => {
+    const currentLang = i18n.language as SupportedLanguage;
+    const langPrefix = currentLang === 'th' ? '' : `/${currentLang}`;
+    
+    switch (type) {
+      case 'article':
+        return `${langPrefix}/${type}`;
+      
+      case 'mortgageOrRedemption':
+        const mortgageTranslation = MORTGAGE_TRANSLATIONS[currentLang] || MORTGAGE_TRANSLATIONS.th;
+        return `${langPrefix}/${mortgageTranslation}/${t('estate')}`;
+      
+      default:
+        const translatedLink = t(link).replace('/', '');
+        return `${langPrefix}/${translatedLink}/${t('estate')}`;
+    }
+  };
+
+  const linkComponent = useCallback((type: MenuItemType, link: string) => (
     <Link
+      key={type}
       sx={{ fontSize: '1.4rem', pl: 0, pr: 2 }}
       color={isHomePage ? "#fff" : "#000"}
       underline="none"
@@ -110,22 +123,9 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
     >
       {t(type)}
     </Link>
-  );
+  ), [isHomePage, t, i18n.language]);
 
-  const renderMenuBar = () => {
-    const items = menubar(t, i18n.language);
-    return items.map((item, index) => (
-      <Link
-        key={index}
-        color="#fff"
-        underline="hover"
-        href={item.link}
-        sx={{ mx: '10px', fontSize: '0.95rem' }}
-      >
-        {item.text}
-      </Link>
-    ));
-  }
+
 
   const getCurrentLanguageText = () => {
     const lang = {
@@ -181,10 +181,11 @@ export const DesktopToolbar = (props: DesktopToolbarProps) => {
       <Box sx={{ flexGrow: 1, alignItems: 'center', display: { xs: 'none', sm: 'none', lg: 'flex' }, pl: '32px' }}>
         {linkComponent('sell', 'link.sell')}
         {linkComponent('rent', 'link.rent')}
-        {linkComponent('project', 'link.project')}
+        {linkComponent('lease', 'link.lease')}
         {linkComponent('mortgageOrRedemption', 'link.mortgageOrRedemption')}
+        {linkComponent('project', 'link.project')}
         {linkComponent('article', 'link.article')}
-        {linkComponent('agent', 'link.lease')}
+        
       </Box>
 
       <Box component={"div"} sx={{ flexGrow: 1 }} />
